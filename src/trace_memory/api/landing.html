@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#2563eb" />
   <meta name="description" content="TraceTodo — AI 长期记忆驱动的艾森豪威尔四象限待办、时间画布、沉浸番茄钟、双链星图与全端实时同步中心。" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="icon" type="image/png" href="/icon.png" />
-  <link rel="apple-touch-icon" href="/icon.png" />
+  <link rel="icon" type="image/png" href="/icon.png?v=4" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
   <title>TraceTodo · AI 长期记忆驱动的四象限待办与执行中心</title>
   <style>
     :root {
@@ -106,8 +106,10 @@
     .nav-brand img {
       width: 36px;
       height: 36px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      border-radius: 22.4%;
+      background: transparent;
+      display: block;
+      filter: drop-shadow(0 4px 10px rgba(15, 45, 55, 0.25));
     }
     .nav-wordmark {
       font-weight: 800;
@@ -1080,7 +1082,7 @@
       font-weight: 700;
     }
     .auth-hero { text-align: center; display: grid; gap: 6px; justify-items: center; }
-    .auth-hero img { width: 52px; height: 52px; border-radius: 14px; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22); }
+    .auth-hero img { width: 56px; height: 56px; border-radius: 22.4%; background: transparent; display: block; filter: drop-shadow(0 8px 18px rgba(15, 45, 55, 0.24)); }
     .auth-hero h2 { margin: 4px 0 0; font-size: 20px; font-weight: 800; }
     .auth-hero p { margin: 0; font-size: 13px; color: var(--muted); }
     .seg-tabs {
@@ -1192,7 +1194,7 @@
     <header class="site-nav">
       <div class="container nav-inner">
         <a href="/home" class="nav-brand" aria-label="TraceTodo 官网首页">
-          <img src="/icon.png" alt="TraceTodo 图标" />
+          <img src="/icon.png?v=4" alt="TraceTodo 图标" />
           <span class="nav-wordmark">TraceTodo</span>
           <span class="nav-badge">AI 记忆待办</span>
         </a>
@@ -1706,7 +1708,7 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div style="display:flex;align-items:center;gap:10px;">
-        <img src="/icon.png" alt="TraceTodo" style="width:26px;height:26px;border-radius:7px;" />
+        <img src="/icon.png?v=4" alt="TraceTodo" style="width:28px;height:28px;border-radius:22.4%;background:transparent;display:block;" />
         <span><strong>TraceTodo</strong> · 可追溯长期记忆与四象限待办引擎</span>
       </div>
       <div class="footer-links">
@@ -1725,7 +1727,7 @@
     <div class="auth-sheet">
       <button type="button" class="auth-close" aria-label="关闭登录弹窗" onclick="closeLandingAuth()">✕</button>
       <div class="auth-hero">
-        <img src="/icon.png" alt="TraceTodo" />
+        <img src="/icon.png?v=4" alt="TraceTodo" />
         <h2 id="landingAuthTitle">欢迎回到 TraceTodo</h2>
         <p>登录或创建你的专属记忆与四象限待办空间</p>
       </div>

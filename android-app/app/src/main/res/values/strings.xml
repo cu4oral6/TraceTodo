@@ -20,5 +20,5 @@
     <string name="memo_widget_desc">在手机桌面展示置顶灵感与最新随记便签，一键打开速记</string>
     <string name="calendar_widget_label">TraceTodo 今日日历日程</string>
     <string name="calendar_widget_desc">在手机桌面展示今日日期、时间段排期与全天事项，一键直达周时间轴</string>
-    <color name="ic_launcher_background">#0F172A</color>
+    <color name="ic_launcher_background">#154050</color>
 </resources>

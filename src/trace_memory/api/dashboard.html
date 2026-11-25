@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="TraceTodo" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="icon" type="image/png" href="/icon.png" />
-  <link rel="apple-touch-icon" href="/icon.png" />
+  <link rel="icon" type="image/png" href="/icon.png?v=4" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
   <title>TraceTodo · 融合记忆与四象限待办中心</title>
   <script>
     (function () {
@@ -369,13 +369,14 @@
     header > *:not(.header-theme-art) { position: relative; z-index: 1; }
     .brand { grid-area: brand; display: flex; align-items: center; gap: 9px; min-width: 0; }
     .brand-logo {
-      width: 34px; height: 34px;
-      border-radius: 10px;
+      width: 36px; height: 36px;
+      border-radius: 22.4%;
       overflow: hidden;
+      background: transparent;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px rgba(59,130,246,0.22);
+      filter: drop-shadow(0 3px 8px rgba(15, 45, 55, 0.24));
     }
-    .brand-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .brand-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 22.4%; display: block; }
     .brand h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.2px; color: var(--heading); }
     .pill {
       font-size: 11.5px;
@@ -1588,10 +1589,12 @@
       padding-top: 2px;
     }
     .auth-hero img {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      box-shadow: 0 10px 24px rgba(79, 70, 229, 0.24);
+      width: 66px;
+      height: 66px;
+      border-radius: 22.4%;
+      background: transparent;
+      display: block;
+      filter: drop-shadow(0 10px 22px rgba(15, 45, 55, 0.26));
     }
     .auth-hero h2 {
       margin: 2px 0 0;
@@ -1735,15 +1738,15 @@
     .graph-stage {
       position: relative;
       width: 100%;
-      min-height: 420px;
+      min-height: 440px;
       border-radius: 16px;
       overflow: hidden;
       border: 1px solid #1e293b;
-      background: #111827;
+      background: radial-gradient(ellipse at 32% 38%, #101936 0%, #070b1a 68%, #040610 100%);
     }
     .graph-stage.light-canvas {
       border-color: #cbd5e1;
-      background: #f8fafc;
+      background: radial-gradient(ellipse at 32% 38%, #f8faff 0%, #edf2ff 100%);
     }
     #graphCanvas {
       position: absolute;
@@ -3653,7 +3656,7 @@
   <header>
     <div class="header-theme-art" id="headerThemeArt" aria-hidden="true"></div>
     <div class="brand">
-      <div class="brand-logo"><img src="/icon.png" alt="" /></div>
+      <div class="brand-logo"><img src="/icon.png?v=4" alt="" /></div>
       <h1>TraceTodo</h1>
     </div>
 
@@ -4065,7 +4068,7 @@
     <section id="panel-memories" class="panel">
       <div class="summary-header" style="flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div class="seg-pill-bar">
-          <button type="button" class="seg-pill-btn" data-tab="graph" onclick="switchTab('graph')">🕸️ 双链星图</button>
+          <button type="button" class="seg-pill-btn" data-tab="graph" onclick="switchTab('graph')">🌌 记忆星系</button>
           <button type="button" class="seg-pill-btn active" data-tab="memories" onclick="switchTab('memories')">🗂️ 记忆库</button>
           <button type="button" class="seg-pill-btn" data-tab="ask" onclick="switchTab('ask')">💬 证据问答</button>
         </div>
@@ -4097,11 +4100,11 @@
       </nav>
     </section>
 
-    <!-- TAB 5B: GRAPH CONTEXT (OBSIDIAN FORCE-DIRECTED CANVAS + LIST INSPECTOR) -->
+    <!-- TAB 5B: COSMIC MEMORY GALAXY (DREAM STARS + MINI-GALAXIES + BLACK HOLE / WORMHOLE DEMO) -->
     <section id="panel-graph" class="panel">
       <div class="summary-header" style="flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div class="seg-pill-bar">
-          <button type="button" class="seg-pill-btn active" data-tab="graph" onclick="switchTab('graph')">🕸️ 双链星图</button>
+          <button type="button" class="seg-pill-btn active" data-tab="graph" onclick="switchTab('graph')">🌌 记忆星系</button>
           <button type="button" class="seg-pill-btn" data-tab="memories" onclick="switchTab('memories')">🗂️ 记忆库</button>
           <button type="button" class="seg-pill-btn" data-tab="ask" onclick="switchTab('ask')">💬 证据问答</button>
         </div>
@@ -4163,31 +4166,32 @@
       </div>
 
       <div id="graphStageWrap" class="graph-stage">
-        <canvas id="graphCanvas" tabindex="0" aria-label="记忆图谱。拖动画布平移，滚轮或双指缩放，也可用方向键、加减键和 0 操作。"></canvas>
+        <canvas id="graphCanvas" tabindex="0" aria-label="记忆星系。Dream 归纳为恒星，其余记忆为小星系；拖拽节点进黑洞可演示吞噬与虫洞归位。"></canvas>
 
         <div class="graph-hud-top">
-          <div class="graph-hud-pill" id="graphStatsPill">加载图谱中...</div>
+          <div class="graph-hud-pill" id="graphStatsPill">观测深空星系中...</div>
           <div class="graph-hud-pill graph-legend">
-            <span><i class="graph-legend-dot" style="background:#3b82f6;"></i>任务</span>
-            <span><i class="graph-legend-dot" style="background:#8b5cf6;"></i>事实</span>
-            <span><i class="graph-legend-dot" style="background:#f59e0b;"></i>偏好</span>
-            <span><i class="graph-legend-dot" style="background:#14b8a6;"></i>情景</span>
-            <span><i class="graph-legend-dot" style="background:#ec4899;"></i>归纳</span>
-            <span style="opacity:0.8;">━━ 双链 · ┈┈ 语义</span>
+            <span><i class="graph-legend-dot" style="background:radial-gradient(circle,#fffbeb 0%,#fbbf24 55%,#f43f5e 100%);box-shadow:0 0 6px #fbbf24;"></i>☀ Dream恒星</span>
+            <span><i class="graph-legend-dot" style="background:#38bdf8;"></i>🌀 任务星系</span>
+            <span><i class="graph-legend-dot" style="background:#a78bfa;"></i>🌀 事实星系</span>
+            <span><i class="graph-legend-dot" style="background:#f59e0b;"></i>🌀 偏好星系</span>
+            <span><i class="graph-legend-dot" style="background:#14b8a6;"></i>🌀 情景星系</span>
+            <span style="opacity:0.88;">🕳️ 拖入黑洞吞噬 → 🌀 虫洞归位（仅演示不删数据）</span>
           </div>
         </div>
 
         <div class="graph-empty-hint" id="graphEmptyHint">
-          <div id="graphEmptyLabel">当前筛选条件下暂无记忆节点</div>
-          <div style="font-size:12px;opacity:0.8;">试试录入一条记忆，或调整图谱筛选条件。</div>
+          <div id="graphEmptyLabel">当前深空星域暂无记忆天体</div>
+          <div style="font-size:12px;opacity:0.8;">试试录入一条记忆、运行 Dream 归纳，或调整星系筛选条件。</div>
         </div>
 
         <div class="graph-hud-controls" role="group" aria-label="画布控制">
           <button type="button" class="graph-ctrl-btn" id="graphZoomOutBtn" aria-label="缩小" title="缩小（-）" onclick="zoomGraphBy(0.8)">−</button>
           <output class="graph-hud-pill" id="graphZoomValue" aria-label="当前缩放">100%</output>
           <button type="button" class="graph-ctrl-btn" id="graphZoomInBtn" aria-label="放大" title="放大（+）" onclick="zoomGraphBy(1.25)">+</button>
-          <button type="button" class="graph-ctrl-btn graph-text-btn" title="适应全部节点（0）" onclick="fitGraphCamera()">适应</button>
-          <button type="button" class="graph-ctrl-btn graph-text-btn" title="重新排布节点" onclick="resetGraphLayout()">重排</button>
+          <button type="button" class="graph-ctrl-btn graph-text-btn" title="适应全部星系（0）" onclick="fitGraphCamera()">适应</button>
+          <button type="button" class="graph-ctrl-btn graph-text-btn" title="重排星系轨道" onclick="resetGraphLayout()">重排</button>
+          <button type="button" class="graph-ctrl-btn graph-text-btn" id="graphBlackHoleDemoBtn" title="演示黑洞吞噬与虫洞归位（仅动画演示，不动具体记忆数据）" onclick="triggerDemoBlackHoleDevour()">🕳️ 吞噬演示</button>
           <button type="button" class="graph-ctrl-btn graph-text-btn" id="graphThemeBtn" onclick="toggleGraphCanvasTheme()">亮色</button>
         </div>
 
@@ -4209,7 +4213,7 @@
     <section id="panel-ask" class="panel">
       <div class="summary-header" style="flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div class="seg-pill-bar">
-          <button type="button" class="seg-pill-btn" data-tab="graph" onclick="switchTab('graph')">🕸️ 双链星图</button>
+          <button type="button" class="seg-pill-btn" data-tab="graph" onclick="switchTab('graph')">🌌 记忆星系</button>
           <button type="button" class="seg-pill-btn" data-tab="memories" onclick="switchTab('memories')">🗂️ 记忆库</button>
           <button type="button" class="seg-pill-btn active" data-tab="ask" onclick="switchTab('ask')">💬 证据问答</button>
         </div>
@@ -4612,7 +4616,7 @@
 
       <div id="authGuestPane" style="display:grid;gap:14px;">
         <div class="auth-hero">
-          <img src="/icon.png" alt="TraceTodo" />
+          <img src="/icon.png?v=4" alt="TraceTodo" />
           <h2 id="authModalTitle">欢迎回到 TraceTodo</h2>
           <p>AI 长期记忆驱动的四象限待办与执行中心</p>
         </div>
@@ -6973,7 +6977,7 @@
       if (!isWebNotifEnabled()) return;
       if ('Notification' in window && window.isSecureContext && Notification.permission === 'granted') {
         try {
-          new Notification(title, { body, icon: '/icon.png' });
+          new Notification(title, { body, icon: '/icon.png?v=4' });
         } catch (e) {}
       }
     }
@@ -7386,7 +7390,7 @@
       `;
     }
 
-    /* Interactive graph */
+    /* Interactive Cosmic Memory Galaxy (Dream Stars + Mini-Galaxies + Black Hole / Wormhole) */
     const graphState = {
       query: '',
       seed: '',
@@ -7411,21 +7415,97 @@
       selectedId: null,
       draggingNode: null,
       eventsBound: false,
+      cosmicTime: 0,
+      bgStars: [],
+      stellarOrbits: [],
+      galaxyClusters: [],
+      cosmicAnims: new Map(),
+      cosmicParticles: [],
+      bhShockwaves: [],
+      bhHoverPull: 0,
+      whFlare: 0,
     };
 
+    function isDreamStarNode(n) {
+      return Boolean(n && (n.assertion_kind === 'inferred' || n.memory_type === 'dream'));
+    }
+
+    function hashGraphId(str) {
+      let h = 2166136261;
+      const s = String(str || '');
+      for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return (h >>> 0) / 4294967296;
+    }
+
+    function enrichCelestialNode(n) {
+      const h1 = hashGraphId(n.id || n.title);
+      const h2 = hashGraphId((n.id || '') + ':tilt');
+      const h3 = hashGraphId((n.id || '') + ':spin');
+      n.isDreamStar = isDreamStarNode(n);
+      n.seedPhase = h1 * Math.PI * 2;
+      n.tiltAngle = (h2 - 0.5) * 0.72;
+      n.spinSpeed = (h3 > 0.5 ? 1 : -1) * (n.isDreamStar ? 0.18 : 0.24 + h3 * 0.34);
+      n.armCount = h1 > 0.45 ? 3 : 2;
+    }
+
     function graphNodeColor(n) {
-      if (n.assertion_kind === 'inferred') return '#ec4899';
-      if (n.memory_type === 'task') return n.task_status === 'done' ? '#10b981' : '#3b82f6';
-      if (n.memory_type === 'semantic') return '#8b5cf6';
+      if (isDreamStarNode(n)) return '#fbbf24';
+      if (n.memory_type === 'task') return n.task_status === 'done' ? '#34d399' : '#38bdf8';
+      if (n.memory_type === 'semantic') return '#a78bfa';
       if (n.memory_type === 'preference') return '#f59e0b';
-      if (n.memory_type === 'episodic') return '#14b8a6';
-      return '#6366f1';
+      if (n.memory_type === 'episodic') return '#2dd4bf';
+      return '#818cf8';
     }
 
     function graphNodeRadius(n) {
       const deg = Number(n.degree || 0);
-      const base = n.hop === 0 && graphState.seed ? 9.5 : 7.0;
-      return Math.min(22, base + Math.sqrt(deg) * 3.1);
+      if (isDreamStarNode(n)) {
+        return Math.min(26, 15.0 + Math.sqrt(deg) * 3.3);
+      }
+      const base = n.hop === 0 && graphState.seed ? 11.0 : 9.0;
+      return Math.min(20, base + Math.sqrt(deg) * 2.5);
+    }
+
+    function ensureBgStars() {
+      if (graphState.bgStars.length) return;
+      const palette = ['#ffffff', '#bae6fd', '#fde68a', '#e9d5ff', '#fbcfe8'];
+      for (let i = 0; i < 145; i++) {
+        const s1 = hashGraphId(`star_x_${i}`);
+        const s2 = hashGraphId(`star_y_${i}`);
+        const s3 = hashGraphId(`star_z_${i}`);
+        graphState.bgStars.push({
+          nx: s1,
+          ny: s2,
+          r: 0.55 + s3 * 1.45,
+          speed: 0.7 + s1 * 1.8,
+          phase: s2 * Math.PI * 2,
+          color: palette[i % palette.length],
+        });
+      }
+    }
+
+    function getCosmicPortals(w, h) {
+      const inspOpen = document.getElementById('graphInspector')?.classList.contains('open');
+      const rightInset = (inspOpen && w > 760) ? 364 : 0;
+      const padX = w < 520 ? 60 : 82;
+      const bhX = Math.max(116, w - rightInset - padX);
+      const bhY = Math.max(195, h - (w < 520 ? 92 : 82));
+      const whX = bhX;
+      const whY = Math.max(96, Math.min(bhY - 132, h * 0.26));
+      return {
+        bh: { x: bhX, y: bhY, captureRadius: w < 520 ? 74 : 92, horizonRadius: 19 },
+        wh: { x: whX, y: whY, radius: 22 },
+      };
+    }
+
+    function worldToScreen(wx, wy, w, h) {
+      return {
+        x: w * 0.5 + graphState.camX + wx * graphState.scale,
+        y: h * 0.5 + graphState.camY + wy * graphState.scale,
+      };
     }
 
     function toggleGraphCanvasTheme() {
@@ -7474,7 +7554,11 @@
       const showDerived = document.getElementById('gLayerDerived').checked;
       const showSemantic = document.getElementById('gLayerSemantic').checked;
 
-      const nodes = graphState.rawNodes.map(raw => ({ ...raw, degree: 0 }));
+      const nodes = graphState.rawNodes.map(raw => {
+        const clone = { ...raw, degree: 0 };
+        enrichCelestialNode(clone);
+        return clone;
+      });
       const nodeById = new Map(nodes.map(node => [node.id, node]));
       const adjById = new Map(nodes.map(node => [node.id, new Set()]));
       const edges = [];
@@ -7498,12 +7582,14 @@
       ]);
       document.getElementById('graphEmptyHint').style.display = nodes.length ? 'none' : 'flex';
       document.getElementById('graphEmptyLabel').textContent =
-        graphState.seed ? '没有找到匹配的卡片' : '当前筛选下没有卡片';
+        graphState.seed ? '没有找到匹配的星系天体' : '当前筛选星域暂无记忆节点';
       if (graphState.layoutKey === layoutKey) {
         for (const node of nodes) {
           const rendered = graphState.nodeById.get(node.id);
-          rendered.summary = node.summary;
-          rendered.version = node.version;
+          if (rendered) {
+            rendered.summary = node.summary;
+            rendered.version = node.version;
+          }
         }
         requestGraphDraw();
         return;
@@ -7516,16 +7602,20 @@
       graphState.adjById = adjById;
       graphState.draggingNode = null;
       graphState.hoveredId = null;
+      graphState.cosmicAnims.clear();
+      graphState.cosmicParticles = [];
+      graphState.bhHoverPull = 0;
       if (graphState.selectedId) {
         const selected = nodeById.get(graphState.selectedId);
         if (selected) selectGraphNode(selected);
         else closeGraphInspector();
       }
 
-      const unlinked = nodes.filter(node => node.degree === 0).length;
-      const mode = graphState.seed ? '搜索结果' : '全局图谱';
+      const starsCount = nodes.filter(node => node.isDreamStar).length;
+      const galaxyCount = Math.max(0, nodes.length - starsCount);
+      const mode = graphState.seed ? '局域星域' : '记忆星系';
       document.getElementById('graphStatsPill').textContent =
-        `${mode} · ${nodes.length} 张卡片 · ${edges.length} 条连线${unlinked ? ` · ${unlinked} 张未连接` : ''}`;
+        `${mode} · ☀ ${starsCount} 颗Dream恒星 · 🌀 ${galaxyCount} 个小星系 · ${edges.length} 条引力航道`;
       resetGraphLayout();
     }
 
@@ -7542,63 +7632,137 @@
             if (remaining.delete(neighbor)) component.push(nodeById.get(neighbor));
           }
         }
-        component.sort((a, b) => a.hop - b.hop || b.degree - a.degree);
+        component.sort((a, b) => (b.isDreamStar ? 1 : 0) - (a.isDreamStar ? 1 : 0) || a.hop - b.hop || b.degree - a.degree);
         components.push(component);
       }
       components.sort((a, b) => b.length - a.length);
 
-      // Pack connected groups into separate regions. Real cards without edges get their own grid.
-      const groups = components.map(members => {
-        const extent = 100 + Math.ceil(Math.sqrt(members.length) * 84);
-        return { members, width: extent, height: extent, columns: 0 };
-      });
+      // Group unlinked isolated nodes by celestial category into mini spiral constellations
       const isolated = nodes.filter(node => !node.degree);
+      const isolatedClusters = [];
       if (isolated.length) {
-        const columns = Math.ceil(Math.sqrt(isolated.length));
-        groups.push({
-          members: isolated, columns,
-          width: 40 + columns * 90,
-          height: 40 + Math.ceil(isolated.length / columns) * 64,
-        });
+        const buckets = new Map();
+        for (const n of isolated) {
+          const key = n.isDreamStar ? 'dream_star' : (n.memory_type || 'other');
+          if (!buckets.has(key)) buckets.set(key, []);
+          buckets.get(key).push(n);
+        }
+        for (const members of buckets.values()) {
+          isolatedClusters.push({ members, isIsolatedGroup: true });
+        }
       }
+
+      const allClusters = [
+        ...components.map(members => ({ members, isIsolatedGroup: false })),
+        ...isolatedClusters,
+      ];
+      const groups = allClusters.map(({ members, isIsolatedGroup }) => {
+        const hasStar = members.some(m => m.isDreamStar);
+        const extent = isIsolatedGroup
+          ? Math.max(165, 110 + Math.ceil(Math.sqrt(members.length) * 68))
+          : Math.max(210, 130 + Math.ceil(Math.sqrt(members.length) * (hasStar ? 96 : 86)));
+        return { members, isIsolatedGroup, hasStar, width: extent, height: extent };
+      });
+
       const area = groups.reduce((sum, group) => sum + group.width * group.height, 0);
-      const rowLimit = Math.max(Math.sqrt(area) * 1.35, ...groups.map(group => group.width));
+      const rowLimit = Math.max(Math.sqrt(area) * 1.38, ...groups.map(group => group.width));
       let left = 0;
       let top = 0;
       let rowHeight = 0;
+      const stellarOrbits = [];
+      const galaxyClusters = [];
+
       for (const group of groups) {
         if (left && left + group.width > rowLimit) {
-          top += rowHeight + 20;
+          top += rowHeight + 28;
           left = 0;
           rowHeight = 0;
         }
         const centerX = left + group.width / 2;
         const centerY = top + group.height / 2;
-        group.members.forEach((node, index) => {
-          node.radius = graphNodeRadius(node);
-          node.color = graphNodeColor(node);
-          if (group.columns) {
-            node.x = left + 65 + (index % group.columns) * 90;
-            node.y = top + 52 + Math.floor(index / group.columns) * 64;
+
+        if (group.hasStar) {
+          const stars = group.members.filter(m => m.isDreamStar);
+          const satellites = group.members.filter(m => !m.isDreamStar);
+          const primary = stars[0];
+          primary.radius = graphNodeRadius(primary);
+          primary.color = graphNodeColor(primary);
+          primary.x = centerX;
+          primary.y = centerY;
+          primary.anchorX = centerX;
+          primary.anchorY = centerY;
+          primary.homeX = centerX;
+          primary.homeY = centerY;
+          primary.vx = 0;
+          primary.vy = 0;
+
+          const orbitRadii = [];
+          const otherBodies = [...stars.slice(1), ...satellites];
+          if (otherBodies.length) {
+            const perRing = 6;
+            const totalRings = Math.ceil(otherBodies.length / perRing);
+            for (let rIdx = 0; rIdx < totalRings; rIdx++) {
+              const orbitR = 92 + rIdx * 62;
+              orbitRadii.push(orbitR);
+              const slice = otherBodies.slice(rIdx * perRing, (rIdx + 1) * perRing);
+              slice.forEach((node, sIdx) => {
+                const angle = (sIdx / slice.length) * Math.PI * 2 + rIdx * 0.55;
+                node.radius = graphNodeRadius(node);
+                node.color = graphNodeColor(node);
+                node.x = centerX + Math.cos(angle) * orbitR;
+                node.y = centerY + Math.sin(angle) * orbitR;
+                node.anchorX = node.x;
+                node.anchorY = node.y;
+                node.homeX = node.x;
+                node.homeY = node.y;
+                node.vx = 0;
+                node.vy = 0;
+              });
+            }
+          }
+          stellarOrbits.push({ x: centerX, y: centerY, radii: orbitRadii, color: primary.color });
+        } else {
+          // Non-Dream clusters: arrange along a 2-arm logarithmic spiral mini-galaxy
+          group.members.forEach((node, index) => {
+            node.radius = graphNodeRadius(node);
+            node.color = graphNodeColor(node);
+            if (group.members.length === 1) {
+              node.x = centerX;
+              node.y = centerY;
+            } else {
+              const arm = index % 2;
+              const k = Math.floor(index / 2);
+              const theta = arm * Math.PI + k * 0.92;
+              const dist = 34 + Math.sqrt(k + 0.4) * 38;
+              node.x = centerX + Math.cos(theta) * dist;
+              node.y = centerY + Math.sin(theta) * dist * 0.84;
+            }
             node.anchorX = node.x;
             node.anchorY = node.y;
-          } else {
-            const angle = index * 2.39996323;
-            const distance = 38 * Math.sqrt(index);
-            node.x = centerX + Math.cos(angle) * distance;
-            node.y = centerY + Math.sin(angle) * distance;
-            node.anchorX = centerX;
-            node.anchorY = centerY;
-          }
-          node.vx = 0;
-          node.vy = 0;
-        });
-        left += group.width + 20;
+            node.homeX = node.x;
+            node.homeY = node.y;
+            node.vx = 0;
+            node.vy = 0;
+          });
+          const leadColor = group.members[0] ? graphNodeColor(group.members[0]) : '#6366f1';
+          galaxyClusters.push({
+            x: centerX,
+            y: centerY,
+            radius: group.width * 0.44,
+            color: leadColor,
+          });
+        }
+        left += group.width + 28;
         rowHeight = Math.max(rowHeight, group.height);
       }
+
+      graphState.stellarOrbits = stellarOrbits;
+      graphState.galaxyClusters = galaxyClusters;
+      graphState.cosmicAnims.clear();
+      graphState.cosmicParticles = [];
       fitGraphCamera();
       graphState.fitOnSettle = true;
-      reheatGraphPhysics(0.8);
+      reheatGraphPhysics(0.75);
     }
 
     async function loadGraph(seed = graphState.query) {
@@ -7680,6 +7844,8 @@
       const hitPad = 4 / Math.max(0.4, graphState.scale);
       for (let i = graphState.nodes.length - 1; i >= 0; i--) {
         const n = graphState.nodes[i];
+        const anim = graphState.cosmicAnims.get(n.id);
+        if (anim && anim.alpha <= 0.08) continue;
         const r = n.radius + hitPad;
         const dx = p.x - n.x;
         const dy = p.y - n.y;
@@ -7701,12 +7867,14 @@
       // Repel nearby nodes and keep each group near its assigned region.
       for (let i = 0; i < nLen; i++) {
         const a = nodes[i];
-        if (a !== graphState.draggingNode) {
+        const aBusy = a === graphState.draggingNode || graphState.cosmicAnims.has(a.id);
+        if (!aBusy) {
           a.vx += (a.anchorX - a.x) * 0.012 * alpha;
           a.vy += (a.anchorY - a.y) * 0.012 * alpha;
         }
         for (let j = i + 1; j < nLen; j++) {
           const b = nodes[j];
+          const bBusy = b === graphState.draggingNode || graphState.cosmicAnims.has(b.id);
           let dx = b.x - a.x;
           let dy = b.y - a.y;
           let d2 = dx * dx + dy * dy;
@@ -7725,8 +7893,8 @@
             fx += (dx / dist) * push;
             fy += (dy / dist) * push;
           }
-          if (a !== graphState.draggingNode) { a.vx -= fx; a.vy -= fy; }
-          if (b !== graphState.draggingNode) { b.vx += fx; b.vy += fy; }
+          if (!aBusy) { a.vx -= fx; a.vy -= fy; }
+          if (!bBusy) { b.vx += fx; b.vy += fy; }
         }
       }
 
@@ -7734,6 +7902,8 @@
       for (const e of edges) {
         const s = e.sourceNode;
         const t = e.targetNode;
+        const sBusy = s === graphState.draggingNode || graphState.cosmicAnims.has(s.id);
+        const tBusy = t === graphState.draggingNode || graphState.cosmicAnims.has(t.id);
         const dx = t.x - s.x;
         const dy = t.y - s.y;
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
@@ -7742,13 +7912,13 @@
         const force = (dist - restLen) * k;
         const fx = (dx / dist) * force;
         const fy = (dy / dist) * force;
-        if (s !== graphState.draggingNode) { s.vx += fx; s.vy += fy; }
-        if (t !== graphState.draggingNode) { t.vx -= fx; t.vy -= fy; }
+        if (!sBusy) { s.vx += fx; s.vy += fy; }
+        if (!tBusy) { t.vx -= fx; t.vy -= fy; }
       }
 
       // 3. Integrate velocity with viscous damping
       for (const n of nodes) {
-        if (n === graphState.draggingNode) {
+        if (n === graphState.draggingNode || graphState.cosmicAnims.has(n.id)) {
           n.vx = 0;
           n.vy = 0;
           continue;
@@ -7770,6 +7940,504 @@
       return true;
     }
 
+    function startBlackHoleDevour(node, originScreenPt = null) {
+      if (!node || graphState.cosmicAnims.has(node.id)) return;
+      // Pure visual demo animation: zero API calls, zero mutations to rawNodes or backend memory records.
+      const wrap = document.getElementById('graphStageWrap');
+      const rect = wrap ? wrap.getBoundingClientRect() : { width: 800, height: 480 };
+      const w = Math.max(200, rect.width || 800);
+      const h = Math.max(200, rect.height || 480);
+      const portals = getCosmicPortals(w, h);
+      const startSc = originScreenPt || worldToScreen(node.x, node.y, w, h);
+      const homeX = typeof node.homeX === 'number' ? node.homeX : node.x;
+      const homeY = typeof node.homeY === 'number' ? node.homeY : node.y;
+      const dx = startSc.x - portals.bh.x;
+      const dy = startSc.y - portals.bh.y;
+      node.homeX = homeX;
+      node.homeY = homeY;
+
+      graphState.cosmicAnims.set(node.id, {
+        node,
+        startMs: performance.now(),
+        phase: 'infall',
+        shockFired: false,
+        startDist: Math.max(26, Math.hypot(dx, dy)),
+        startAngle: Math.atan2(dy, dx),
+        homeX,
+        homeY,
+        scaleX: 1,
+        scaleY: 1,
+        spinAngle: 0,
+        alpha: 1,
+      });
+      requestGraphDraw();
+    }
+
+    function devourNodeById(nodeId) {
+      const node = graphState.nodeById.get(nodeId);
+      if (!node) return;
+      if (graphState.cosmicAnims.has(node.id)) {
+        showToast('⏳ 该天体正在穿越虫洞，请稍候归位...');
+        return;
+      }
+      startBlackHoleDevour(node);
+    }
+
+    function triggerDemoBlackHoleDevour() {
+      if (!graphState.nodes.length) {
+        showToast('当前星系中暂无可吞噬演示的记忆节点，请先录入一条记忆或切换筛选条件');
+        return;
+      }
+      const selected = graphState.selectedId ? graphState.nodeById.get(graphState.selectedId) : null;
+      const candidate = (selected && !graphState.cosmicAnims.has(selected.id))
+        ? selected
+        : graphState.nodes.find(n => !graphState.cosmicAnims.has(n.id));
+      if (!candidate) {
+        showToast('🌌 当前已有节点正在穿越虫洞中...');
+        return;
+      }
+      startBlackHoleDevour(candidate);
+    }
+
+    function stepCosmicAnimations(nowMs, w, h) {
+      const portals = getCosmicPortals(w, h);
+      const completed = [];
+
+      for (const [id, anim] of graphState.cosmicAnims.entries()) {
+        const n = anim.node;
+        const elapsed = nowMs - anim.startMs;
+
+        if (elapsed < 880) {
+          // Phase 1: Accretion infall spiral & tidal spaghettification into Black Hole
+          anim.phase = 'infall';
+          const p = Math.min(1, elapsed / 880);
+          const e = p * p;
+          const angle = anim.startAngle + p * Math.PI * 5.2;
+          const curDist = Math.max(2, anim.startDist * (1 - e));
+          const sx = portals.bh.x + Math.cos(angle) * curDist;
+          const sy = portals.bh.y + Math.sin(angle) * curDist;
+          const wp = screenToWorld(sx, sy);
+          n.x = wp.x;
+          n.y = wp.y;
+          anim.scaleX = 1 + p * 1.85;
+          anim.scaleY = Math.max(0.18, 1 - p * 0.78);
+          anim.spinAngle = angle + Math.PI * 0.5;
+          anim.alpha = Math.max(0.15, 1 - p * 0.65);
+
+          if (graphState.cosmicParticles.length < 180) {
+            graphState.cosmicParticles.push({
+              x: sx + (Math.random() - 0.5) * 6,
+              y: sy + (Math.random() - 0.5) * 6,
+              vx: (portals.bh.x - sx) * 0.06 + (Math.random() - 0.5) * 1.4,
+              vy: (portals.bh.y - sy) * 0.06 + (Math.random() - 0.5) * 1.4,
+              r: 1.4 + Math.random() * 2.1,
+              color: p > 0.55 ? '#fde047' : n.color,
+              born: nowMs,
+              life: 440,
+            });
+          }
+        } else if (elapsed < 1300) {
+          // Phase 2: Vanished inside Event Horizon -> emit gravitational shockwave & flare Wormhole
+          anim.phase = 'void';
+          anim.alpha = 0;
+          anim.scaleX = 0.05;
+          anim.scaleY = 0.05;
+          const bhWp = screenToWorld(portals.bh.x, portals.bh.y);
+          n.x = bhWp.x;
+          n.y = bhWp.y;
+          if (!anim.shockFired) {
+            anim.shockFired = true;
+            graphState.bhShockwaves.push({
+              screen: true,
+              x: portals.bh.x,
+              y: portals.bh.y,
+              birth: nowMs,
+              life: 720,
+              maxR: portals.bh.captureRadius * 1.05,
+              color: '#fb923c',
+            });
+            for (let k = 0; k < 18; k++) {
+              const a = (k / 18) * Math.PI * 2;
+              const spd = 1.6 + Math.random() * 2.4;
+              graphState.cosmicParticles.push({
+                x: portals.bh.x,
+                y: portals.bh.y,
+                vx: Math.cos(a) * spd,
+                vy: Math.sin(a) * spd,
+                r: 1.5 + Math.random() * 1.8,
+                color: k % 2 === 0 ? '#fde047' : '#f43f5e',
+                born: nowMs,
+                life: 520,
+              });
+            }
+          }
+          graphState.whFlare = 1.0;
+        } else if (elapsed < 2380) {
+          // Phase 3: Re-emerge from Wormhole along smooth curved hyperspace arc back to home orbit
+          anim.phase = 'return';
+          const p = Math.min(1, (elapsed - 1300) / 1080);
+          const e = 1 - Math.pow(1 - p, 3);
+          const whWp = screenToWorld(portals.wh.x, portals.wh.y);
+          const dx = anim.homeX - whWp.x;
+          const dy = anim.homeY - whWp.y;
+          const ctrlX = (whWp.x + anim.homeX) * 0.5 - dy * 0.24;
+          const ctrlY = (whWp.y + anim.homeY) * 0.5 + dx * 0.24;
+          const oneMinus = 1 - e;
+          n.x = oneMinus * oneMinus * whWp.x + 2 * oneMinus * e * ctrlX + e * e * anim.homeX;
+          n.y = oneMinus * oneMinus * whWp.y + 2 * oneMinus * e * ctrlY + e * e * anim.homeY;
+          const pulseScale = 0.25 + 0.75 * e + Math.sin(p * Math.PI) * 0.2;
+          anim.scaleX = pulseScale;
+          anim.scaleY = pulseScale;
+          anim.spinAngle = (1 - e) * 4.5;
+          anim.alpha = Math.min(1, p * 2.5);
+          graphState.whFlare = Math.max(graphState.whFlare, (1 - p) * 0.85);
+
+          if (graphState.cosmicParticles.length < 200) {
+            const sc = worldToScreen(n.x, n.y, w, h);
+            graphState.cosmicParticles.push({
+              x: sc.x + (Math.random() - 0.5) * 6,
+              y: sc.y + (Math.random() - 0.5) * 6,
+              vx: (Math.random() - 0.5) * 1.1,
+              vy: (Math.random() - 0.5) * 1.1,
+              r: 1.4 + Math.random() * 1.8,
+              color: p < 0.5 ? '#22d3ee' : '#c084fc',
+              born: nowMs,
+              life: 480,
+            });
+          }
+        } else {
+          n.x = anim.homeX;
+          n.y = anim.homeY;
+          n.anchorX = anim.homeX;
+          n.anchorY = anim.homeY;
+          n.vx = 0;
+          n.vy = 0;
+          const homeSc = worldToScreen(n.x, n.y, w, h);
+          graphState.bhShockwaves.push({
+            screen: true,
+            x: homeSc.x,
+            y: homeSc.y,
+            birth: nowMs,
+            life: 620,
+            maxR: n.radius * 3.0 * graphState.scale,
+            color: '#22d3ee',
+          });
+          completed.push(id);
+        }
+      }
+
+      for (const id of completed) {
+        const anim = graphState.cosmicAnims.get(id);
+        graphState.cosmicAnims.delete(id);
+        if (anim?.node) {
+          showToast(`🌌 「${anim.node.title}」被黑洞吞噬后经虫洞重返星轨（仅动画演示，记忆数据未改动）`);
+        }
+      }
+
+      // Advance particle trails & shockwaves
+      graphState.cosmicParticles = graphState.cosmicParticles.filter(pt => {
+        const age = nowMs - pt.born;
+        if (age >= pt.life) return false;
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.vx *= 0.96;
+        pt.vy *= 0.96;
+        return true;
+      });
+      graphState.bhShockwaves = graphState.bhShockwaves.filter(sw => (nowMs - sw.birth) < sw.life);
+      graphState.whFlare *= 0.94;
+    }
+
+    function drawDreamStar(ctx, n, t, isLight, isFocus, isSelected) {
+      const r = n.radius;
+      const pulse = 1 + 0.08 * Math.sin(t * 2.4 + n.seedPhase);
+
+      // 1. Solar Corona Wash
+      const corona = ctx.createRadialGradient(0, 0, r * 0.2, 0, 0, r * 3.1 * pulse);
+      corona.addColorStop(0, 'rgba(255, 251, 235, 0.95)');
+      corona.addColorStop(0.28, 'rgba(251, 191, 36, 0.56)');
+      corona.addColorStop(0.62, 'rgba(244, 63, 94, 0.24)');
+      corona.addColorStop(1, 'rgba(244, 63, 94, 0)');
+      ctx.fillStyle = corona;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 3.1 * pulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Rotating Diffraction Starlight Spikes (恒星光芒)
+      ctx.save();
+      ctx.rotate(t * n.spinSpeed * 0.5 + n.seedPhase);
+      for (let k = 0; k < 4; k++) {
+        ctx.save();
+        ctx.rotate((k * Math.PI) / 2);
+        const rayLen = r * (k % 2 === 0 ? 2.65 : 2.15) * pulse;
+        const rayGrad = ctx.createLinearGradient(-rayLen, 0, rayLen, 0);
+        rayGrad.addColorStop(0, 'rgba(253, 224, 71, 0)');
+        rayGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.92)');
+        rayGrad.addColorStop(1, 'rgba(253, 224, 71, 0)');
+        ctx.fillStyle = rayGrad;
+        ctx.beginPath();
+        ctx.moveTo(-rayLen, 0);
+        ctx.lineTo(0, r * 0.22);
+        ctx.lineTo(rayLen, 0);
+        ctx.lineTo(0, -r * 0.22);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.restore();
+
+      // 3. Blazing Star Photosphere
+      const coreGrad = ctx.createRadialGradient(-r * 0.18, -r * 0.18, r * 0.08, 0, 0, r);
+      coreGrad.addColorStop(0, '#ffffff');
+      coreGrad.addColorStop(0.38, '#fef08a');
+      coreGrad.addColorStop(0.75, '#fb923c');
+      coreGrad.addColorStop(1, '#e11d48');
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fillStyle = coreGrad;
+      ctx.fill();
+      if (isSelected || isFocus) {
+        ctx.lineWidth = isSelected ? 2.4 : 1.6;
+        ctx.strokeStyle = isLight ? '#d97706' : '#fef08a';
+        ctx.stroke();
+      }
+
+      // 4. Inner Stellar Core Symbol
+      ctx.fillStyle = 'rgba(255,255,255,0.96)';
+      ctx.font = `700 ${Math.max(10, Math.round(r * 0.78))}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✦', 0, 0.5);
+    }
+
+    function drawMiniGalaxy(ctx, n, t, isLight, isFocus, isSelected) {
+      const r = n.radius;
+      const baseColor = n.color || '#38bdf8';
+
+      // 1. Soft Nebula Mist Halo
+      const mist = ctx.createRadialGradient(0, 0, r * 0.15, 0, 0, r * 2.15);
+      mist.addColorStop(0, baseColor + '66');
+      mist.addColorStop(0.55, baseColor + '22');
+      mist.addColorStop(1, baseColor + '00');
+      ctx.fillStyle = mist;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 2.15, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Tilted Rotating Multi-Arm Spiral Disk (记忆小星系)
+      ctx.save();
+      ctx.rotate(n.tiltAngle || 0);
+      ctx.scale(1, 0.66);
+      ctx.rotate(t * (n.spinSpeed || 0.3) + (n.seedPhase || 0));
+
+      const arms = n.armCount || 2;
+      const maxArmR = r * 1.55;
+      for (let a = 0; a < arms; a++) {
+        const armOffset = (a * Math.PI * 2) / arms;
+        // Faint Spiral Ribbon
+        ctx.beginPath();
+        for (let step = 0; step <= 14; step++) {
+          const frac = step / 14;
+          const theta = armOffset + frac * 2.75;
+          const dist = frac * maxArmR;
+          const px = Math.cos(theta) * dist;
+          const py = Math.sin(theta) * dist;
+          if (step === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.strokeStyle = baseColor + (isLight ? 'aa' : '99');
+        ctx.lineWidth = Math.max(1.4, r * 0.20);
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        // Glowing Star Knots embedded along each spiral arm
+        for (let knot = 2; knot <= 6; knot++) {
+          const frac = knot / 6;
+          const theta = armOffset + frac * 2.75;
+          const dist = frac * maxArmR;
+          const kx = Math.cos(theta) * dist;
+          const ky = Math.sin(theta) * dist;
+          ctx.beginPath();
+          ctx.arc(kx, ky, Math.max(1.0, (1.1 - frac * 0.45) * r * 0.14), 0, Math.PI * 2);
+          ctx.fillStyle = knot <= 3 ? '#ffffff' : baseColor;
+          ctx.fill();
+        }
+      }
+
+      // 3. Galactic Bulge Core
+      const bulge = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.62);
+      bulge.addColorStop(0, '#ffffff');
+      bulge.addColorStop(0.55, baseColor);
+      bulge.addColorStop(1, baseColor + '00');
+      ctx.fillStyle = bulge;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 0.62, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      if (isFocus || isSelected) {
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 1.48, 0, Math.PI * 2);
+        ctx.lineWidth = isSelected ? 2.2 : 1.4;
+        ctx.strokeStyle = isSelected ? '#ffffff' : baseColor;
+        ctx.stroke();
+      }
+    }
+
+    function drawBlackHole(ctx, bh, t, isLight) {
+      const pull = graphState.bhHoverPull || 0;
+      const isDragging = Boolean(graphState.draggingNode);
+      const pulse = 1 + 0.06 * Math.sin(t * 3.1) + pull * 0.14;
+
+      ctx.save();
+      // Outer Gravitational Capture Zone Ring (visible cue for dragging)
+      if (isDragging || pull > 0.05) {
+        ctx.save();
+        ctx.setLineDash([6, 5]);
+        ctx.lineDashOffset = -t * 28;
+        ctx.beginPath();
+        ctx.arc(bh.x, bh.y, bh.captureRadius * (1 + pull * 0.08), 0, Math.PI * 2);
+        ctx.strokeStyle = pull > 0.25 ? 'rgba(251, 146, 60, 0.92)' : 'rgba(251, 191, 36, 0.46)';
+        ctx.lineWidth = 1.6 + pull * 1.2;
+        ctx.stroke();
+        ctx.fillStyle = `rgba(251, 146, 60, ${0.05 + pull * 0.12})`;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Subtle Gravitational Lensing Glow
+      const lens = ctx.createRadialGradient(bh.x, bh.y, bh.horizonRadius * 0.7, bh.x, bh.y, bh.captureRadius * 0.85 * pulse);
+      lens.addColorStop(0, 'rgba(0, 0, 0, 0.95)');
+      lens.addColorStop(0.28, `rgba(249, 115, 22, ${0.34 + pull * 0.28})`);
+      lens.addColorStop(0.62, `rgba(168, 85, 247, ${0.14 + pull * 0.16})`);
+      lens.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = lens;
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, bh.captureRadius * 0.85 * pulse, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Tilted Spinning Relativistic Accretion Disk
+      ctx.save();
+      ctx.translate(bh.x, bh.y);
+      ctx.rotate(-0.34);
+      ctx.scale(1, 0.36);
+      const diskOuter = bh.horizonRadius * (2.65 + pull * 0.35);
+      const diskGrad = ctx.createRadialGradient(0, 0, bh.horizonRadius * 0.9, 0, 0, diskOuter);
+      diskGrad.addColorStop(0, 'rgba(255, 251, 235, 0.95)');
+      diskGrad.addColorStop(0.45, 'rgba(251, 146, 60, 0.85)');
+      diskGrad.addColorStop(0.82, 'rgba(225, 29, 72, 0.45)');
+      diskGrad.addColorStop(1, 'rgba(225, 29, 72, 0)');
+      ctx.fillStyle = diskGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, diskOuter, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.rotate(t * 2.2);
+      ctx.strokeStyle = 'rgba(254, 240, 138, 0.72)';
+      ctx.lineWidth = 1.6;
+      ctx.setLineDash([16, 10]);
+      ctx.beginPath();
+      ctx.arc(0, 0, bh.horizonRadius * 1.95, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Pitch-Black Event Horizon & Photon Ring
+      ctx.beginPath();
+      ctx.arc(bh.x, bh.y, bh.horizonRadius * (1 + pull * 0.08), 0, Math.PI * 2);
+      ctx.fillStyle = '#02040a';
+      ctx.fill();
+      ctx.lineWidth = 2.0 + pull * 1.4;
+      ctx.strokeStyle = '#fde68a';
+      ctx.stroke();
+
+      // Label pill below Black Hole
+      ctx.font = '600 10.5px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+      const label = pull > 0.2 ? '⚡ 松手吞噬演示' : '🕳️ 黑洞（拖入吞噬）';
+      const tw = ctx.measureText(label).width;
+      const ly = bh.y + bh.horizonRadius + 15;
+      const pw = tw + 14;
+      const px = bh.x - pw * 0.5;
+      const py = ly - 9;
+      ctx.fillStyle = isLight ? 'rgba(15, 23, 42, 0.86)' : 'rgba(2, 6, 23, 0.78)';
+      ctx.beginPath();
+      ctx.moveTo(px + 9, py);
+      ctx.lineTo(px + pw - 9, py);
+      ctx.quadraticCurveTo(px + pw, py, px + pw, py + 9);
+      ctx.quadraticCurveTo(px + pw, py + 18, px + pw - 9, py + 18);
+      ctx.lineTo(px + 9, py + 18);
+      ctx.quadraticCurveTo(px, py + 18, px, py + 9);
+      ctx.quadraticCurveTo(px, py, px + 9, py);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#fde68a';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, bh.x, ly);
+      ctx.restore();
+    }
+
+    function drawWormhole(ctx, wh, t, isLight) {
+      const flare = graphState.whFlare || 0;
+      const baseR = wh.radius * (1 + flare * 0.35);
+
+      ctx.save();
+      // Ambient Einstein-Rosen Portal Halo
+      const glow = ctx.createRadialGradient(wh.x, wh.y, baseR * 0.15, wh.x, wh.y, baseR * 2.3);
+      glow.addColorStop(0, `rgba(240, 253, 250, ${0.7 + flare * 0.3})`);
+      glow.addColorStop(0.32, `rgba(34, 211, 238, ${0.42 + flare * 0.45})`);
+      glow.addColorStop(0.68, `rgba(168, 85, 247, ${0.26 + flare * 0.3})`);
+      glow.addColorStop(1, 'rgba(168, 85, 247, 0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(wh.x, wh.y, baseR * 2.3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Counter-rotating Concentric Vortex Rings
+      for (let i = 0; i < 3; i++) {
+        ctx.save();
+        ctx.translate(wh.x, wh.y);
+        ctx.rotate((i % 2 === 0 ? 1 : -1) * t * (1.5 + i * 0.6));
+        ctx.beginPath();
+        ctx.arc(0, 0, baseR * (0.45 + i * 0.28), 0, Math.PI * 1.65);
+        ctx.strokeStyle = i === 0 ? '#67e8f9' : (i === 1 ? '#c084fc' : '#22d3ee');
+        ctx.lineWidth = 2.1 - i * 0.4;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Luminous Throat
+      ctx.beginPath();
+      ctx.arc(wh.x, wh.y, baseR * 0.34, 0, Math.PI * 2);
+      ctx.fillStyle = flare > 0.2 ? '#ecfeff' : '#0e7490';
+      ctx.fill();
+
+      // Label above Wormhole
+      ctx.font = '600 10.5px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
+      const label = flare > 0.25 ? '✨ 虫洞喷涌回归' : '🌀 虫洞出口';
+      const tw = ctx.measureText(label).width;
+      const ly = wh.y - baseR - 14;
+      const pw = tw + 14;
+      const px = wh.x - pw * 0.5;
+      const py = ly - 9;
+      ctx.fillStyle = isLight ? 'rgba(15, 23, 42, 0.86)' : 'rgba(2, 6, 23, 0.78)';
+      ctx.beginPath();
+      ctx.moveTo(px + 9, py);
+      ctx.lineTo(px + pw - 9, py);
+      ctx.quadraticCurveTo(px + pw, py, px + pw, py + 9);
+      ctx.quadraticCurveTo(px + pw, py + 18, px + pw - 9, py + 18);
+      ctx.lineTo(px + 9, py + 18);
+      ctx.quadraticCurveTo(px, py + 18, px, py + 9);
+      ctx.quadraticCurveTo(px, py, px + 9, py);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#a5f3fc';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, wh.x, ly);
+      ctx.restore();
+    }
+
     function drawGraphFrame() {
       const canvas = document.getElementById('graphCanvas');
       const wrap = document.getElementById('graphStageWrap');
@@ -7778,36 +8446,67 @@
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const w = canvas.width / dpr;
       const h = canvas.height / dpr;
+      const t = graphState.cosmicTime || (performance.now() * 0.001);
+      const isLight = graphState.lightCanvas;
 
+      ensureBgStars();
       ctx.save();
       ctx.scale(dpr, dpr);
       ctx.clearRect(0, 0, w, h);
 
-      const isLight = graphState.lightCanvas;
-      // Subtle panning dot-grid backdrop
-      const gridStep = 32 * graphState.scale;
-      if (gridStep >= 14) {
-        ctx.fillStyle = isLight ? 'rgba(100,116,139,0.16)' : 'rgba(148,163,184,0.12)';
-        const ox = ((w * 0.5 + graphState.camX) % gridStep + gridStep) % gridStep;
-        const oy = ((h * 0.5 + graphState.camY) % gridStep + gridStep) % gridStep;
-        for (let gx = ox; gx < w; gx += gridStep) {
-          for (let gy = oy; gy < h; gy += gridStep) {
-            ctx.fillRect(gx, gy, 1.3, 1.3);
-          }
-        }
+      // 0. Deep-Space Twinkling Background Starfield (parallax drift with camera)
+      for (const s of graphState.bgStars) {
+        const px = ((s.nx * w + graphState.camX * (0.04 + s.r * 0.03)) % w + w) % w;
+        const py = ((s.ny * h + graphState.camY * (0.04 + s.r * 0.03)) % h + h) % h;
+        const tw = 0.25 + 0.65 * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+        ctx.fillStyle = isLight ? 'rgba(99, 102, 241, 0.28)' : s.color;
+        ctx.globalAlpha = isLight ? tw * 0.45 : tw * 0.75;
+        ctx.beginPath();
+        ctx.arc(px, py, s.r, 0, Math.PI * 2);
+        ctx.fill();
       }
+      ctx.globalAlpha = 1.0;
 
+      ctx.save();
       ctx.translate(w * 0.5 + graphState.camX, h * 0.5 + graphState.camY);
       ctx.scale(graphState.scale, graphState.scale);
+
+      // 0.5 Cluster Nebulae & Dream Stellar Orbital Tracks
+      for (const cl of graphState.galaxyClusters || []) {
+        const neb = ctx.createRadialGradient(cl.x, cl.y, 6, cl.x, cl.y, cl.radius * 1.15);
+        neb.addColorStop(0, cl.color + (isLight ? '18' : '22'));
+        neb.addColorStop(0.55, cl.color + '0a');
+        neb.addColorStop(1, cl.color + '00');
+        ctx.fillStyle = neb;
+        ctx.beginPath();
+        ctx.arc(cl.x, cl.y, cl.radius * 1.15, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      for (const orb of graphState.stellarOrbits || []) {
+        ctx.save();
+        ctx.setLineDash([4, 7]);
+        ctx.lineWidth = 1 / Math.sqrt(graphState.scale);
+        ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.20)' : 'rgba(251, 191, 36, 0.16)';
+        for (const r of orb.radii || []) {
+          ctx.beginPath();
+          ctx.arc(orb.x, orb.y, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
 
       const focusId = graphState.hoveredId || graphState.selectedId;
       const focusNeighbors = focusId ? (graphState.adjById.get(focusId) || new Set()) : null;
 
-      // 1. Draw Edges
+      // 1. Draw Gravitational Lanes / Edges
       for (const e of graphState.edges) {
         const s = e.sourceNode;
-        const t = e.targetNode;
-        const isHighlighted = focusId && (s.id === focusId || t.id === focusId);
+        const tNode = e.targetNode;
+        const sAnim = graphState.cosmicAnims.get(s.id);
+        const tAnim = graphState.cosmicAnims.get(tNode.id);
+        const sHidden = sAnim && sAnim.phase === 'void';
+        const tHidden = tAnim && tAnim.phase === 'void';
+        const isHighlighted = focusId && (s.id === focusId || tNode.id === focusId);
         const isDimmed = focusId && !isHighlighted;
 
         ctx.save();
@@ -7815,30 +8514,32 @@
           ctx.setLineDash([5, 5]);
         }
         let stroke = isLight ? 'rgba(100,116,139,0.45)' : 'rgba(148,163,184,0.42)';
-        if (e.edge_kind === 'derived_from') stroke = isHighlighted ? '#f472b6' : 'rgba(236,72,153,0.55)';
+        if (e.edge_kind === 'derived_from') stroke = isHighlighted ? '#fbbf24' : 'rgba(251,191,36,0.52)';
         else if (e.edge_kind === 'wikilink') stroke = isHighlighted ? '#60a5fa' : (isLight ? 'rgba(59,130,246,0.55)' : 'rgba(96,165,250,0.52)');
         else if (e.edge_kind === 'co_evidence') stroke = isHighlighted ? '#2dd4bf' : 'rgba(20,184,166,0.45)';
         else if (e.edge_kind === 'semantic') stroke = isHighlighted ? '#a78bfa' : (isLight ? 'rgba(139,92,246,0.30)' : 'rgba(167,139,250,0.28)');
 
-        ctx.globalAlpha = isDimmed ? 0.11 : (isHighlighted ? 0.98 : 0.78);
+        let edgeAlpha = isDimmed ? 0.11 : (isHighlighted ? 0.98 : 0.72);
+        if (sHidden || tHidden) edgeAlpha *= 0.08;
+        ctx.globalAlpha = edgeAlpha;
         ctx.strokeStyle = stroke;
         ctx.lineWidth = isHighlighted ? 2.1 / Math.sqrt(graphState.scale) : 1.25 / Math.sqrt(graphState.scale);
 
         ctx.beginPath();
         ctx.moveTo(s.x, s.y);
-        ctx.lineTo(t.x, t.y);
+        ctx.lineTo(tNode.x, tNode.y);
         ctx.stroke();
 
         // Directional arrowhead for explicit / Dream edges
-        if (e.directed) {
-          const dx = t.x - s.x;
-          const dy = t.y - s.y;
+        if (e.directed && !sHidden && !tHidden) {
+          const dx = tNode.x - s.x;
+          const dy = tNode.y - s.y;
           const len = Math.hypot(dx, dy);
-          if (len > s.radius + t.radius + 8) {
+          if (len > s.radius + tNode.radius + 8) {
             const ux = dx / len;
             const uy = dy / len;
-            const tipX = t.x - ux * (t.radius + 3);
-            const tipY = t.y - uy * (t.radius + 3);
+            const tipX = tNode.x - ux * (tNode.radius + 3);
+            const tipY = tNode.y - uy * (tNode.radius + 3);
             const aSize = 5.5;
             ctx.setLineDash([]);
             ctx.fillStyle = stroke;
@@ -7852,9 +8553,9 @@
         }
 
         // Edge relation pill label when spotlighted
-        if (isHighlighted && e.label) {
-          const mx = (s.x + t.x) * 0.5;
-          const my = (s.y + t.y) * 0.5;
+        if (isHighlighted && e.label && !sHidden && !tHidden) {
+          const mx = (s.x + tNode.x) * 0.5;
+          const my = (s.y + tNode.y) * 0.5;
           ctx.setLineDash([]);
           ctx.font = '600 10px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
           const tw = ctx.measureText(e.label).width;
@@ -7868,46 +8569,97 @@
         ctx.restore();
       }
 
-      // 2. Draw Nodes & Titles
+      // 2. Draw Dream Stars & Memory Mini-Galaxies
       const seedVal = graphState.seed;
       for (const n of graphState.nodes) {
+        const anim = graphState.cosmicAnims.get(n.id);
+        if (anim && anim.alpha <= 0.02) continue;
+
         const isFocus = n.id === focusId;
         const isNb = focusId ? focusNeighbors.has(n.id) : false;
         const isSelected = n.id === graphState.selectedId;
-        const isDimmed = focusId && !isFocus && !isNb;
+        const isDimmed = focusId && !isFocus && !isNb && !anim;
 
         ctx.save();
-        ctx.globalAlpha = isDimmed ? 0.16 : 1.0;
+        ctx.globalAlpha = (isDimmed ? 0.16 : 1.0) * (anim ? anim.alpha : 1.0);
+        ctx.translate(n.x, n.y);
+        if (anim) {
+          ctx.rotate(anim.spinAngle || 0);
+          ctx.scale(anim.scaleX || 1, anim.scaleY || 1);
+          ctx.rotate(-(anim.spinAngle || 0));
+        }
 
-        // Outer spotlight / seed halo
-        if (isFocus || isSelected || (seedVal && n.hop === 0)) {
+        // Outer seed halo
+        if (seedVal && n.hop === 0) {
           ctx.beginPath();
-          ctx.arc(n.x, n.y, n.radius + 5.5, 0, Math.PI * 2);
-          ctx.fillStyle = n.color + '33';
-          ctx.fill();
+          ctx.arc(0, 0, n.radius * 1.9, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(250, 204, 21, 0.55)';
+          ctx.lineWidth = 1.6;
+          ctx.stroke();
         }
 
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
-        ctx.fillStyle = n.color;
-        ctx.fill();
-        ctx.lineWidth = isSelected ? 2.6 : 1.4;
-        ctx.strokeStyle = isSelected || isLight ? '#ffffff' : '#111827';
-        ctx.stroke();
-
-        // Dream star glyph inside inferred insight nodes
-        if (n.assertion_kind === 'inferred') {
-          ctx.fillStyle = '#ffffff';
-          ctx.font = `700 ${Math.max(9, Math.round(n.radius * 0.95))}px sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('✦', n.x, n.y + 0.5);
+        if (isDreamStarNode(n)) {
+          drawDreamStar(ctx, n, t, isLight, isFocus, isSelected);
+        } else {
+          drawMiniGalaxy(ctx, n, t, isLight, isFocus, isSelected);
         }
-
         ctx.restore();
       }
+
       drawGraphLabels(ctx, w, h, focusId, focusNeighbors, isLight);
-      ctx.restore();
+      ctx.restore(); // end world transform
+
+      // 3. Draw Screen-Space Black Hole, Wormhole, Gravitational Tether & Stardust Particles
+      const portals = getCosmicPortals(w, h);
+      if (graphState.draggingNode) {
+        const sc = worldToScreen(graphState.draggingNode.x, graphState.draggingNode.y, w, h);
+        const pull = graphState.bhHoverPull || 0;
+        if (Math.hypot(sc.x - portals.bh.x, sc.y - portals.bh.y) < portals.bh.captureRadius * 2.1) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(sc.x, sc.y);
+          ctx.quadraticCurveTo(
+            (sc.x + portals.bh.x) * 0.5 - 24,
+            (sc.y + portals.bh.y) * 0.5 - 24,
+            portals.bh.x,
+            portals.bh.y,
+          );
+          ctx.setLineDash([5, 5]);
+          ctx.lineDashOffset = -t * 42;
+          ctx.strokeStyle = pull > 0.2 ? 'rgba(251, 146, 60, 0.92)' : 'rgba(251, 191, 36, 0.55)';
+          ctx.lineWidth = 1.8 + pull * 1.6;
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+
+      drawWormhole(ctx, portals.wh, t, isLight);
+      drawBlackHole(ctx, portals.bh, t, isLight);
+
+      const nowMs = performance.now();
+      for (const sw of graphState.bhShockwaves) {
+        const p = Math.min(1, (nowMs - sw.birth) / sw.life);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, Math.max(4, p * sw.maxR), 0, Math.PI * 2);
+        ctx.strokeStyle = sw.color || '#fde047';
+        ctx.globalAlpha = (1 - p) * 0.78;
+        ctx.lineWidth = 2.6 * (1 - p * 0.65);
+        ctx.stroke();
+        ctx.restore();
+      }
+      for (const pt of graphState.cosmicParticles) {
+        const p = Math.min(1, (nowMs - pt.born) / pt.life);
+        ctx.save();
+        ctx.globalAlpha = (1 - p) * 0.9;
+        ctx.fillStyle = pt.color || '#fde047';
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, pt.r * (1 - p * 0.5), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      ctx.restore(); // end DPR scale
     }
 
     function wrapGraphText(ctx, text, maxWidth, maxLines = 0) {
@@ -7942,11 +8694,14 @@
       const labelRank = node => {
         if (node.id === focusId || node.id === selectedId) return 3;
         if (seed && node.hop === 0) return 2;
+        if (isDreamStarNode(node)) return 1.5;
         return neighbors?.has(node.id) ? 1 : 0;
       };
       // Normal labels (2-line wrapped, zero overlap); active/hovered node gets full untruncated pill on top.
-      const candidates = nodes.filter(node => !focusId || labelRank(node))
-        .sort((a, b) => labelRank(b) - labelRank(a) || b.degree - a.degree);
+      const candidates = nodes.filter(node => {
+        if (graphState.cosmicAnims.has(node.id)) return false;
+        return !focusId || labelRank(node);
+      }).sort((a, b) => labelRank(b) - labelRank(a) || b.degree - a.degree);
       const labelLimit = Math.max(6, Math.floor(width * height / (scale < 0.8 ? 9500 : 6500)));
       const placed = [];
       const fontSize = Math.max(11, Math.min(14, 12 * scale));
@@ -7959,7 +8714,7 @@
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
       ctx.fillStyle = isLight ? '#0f172a' : '#f1f5f9';
-      ctx.strokeStyle = isLight ? '#f8fafc' : '#111827';
+      ctx.strokeStyle = isLight ? '#f8fafc' : '#090d1a';
       ctx.lineWidth = 3 / scale;
 
       for (const node of candidates) {
@@ -7971,10 +8726,10 @@
         const rank = labelRank(node);
         const titleStr = String(node.title || '').trim();
         if (!titleStr) continue;
-        ctx.font = `${rank >= 2 ? 600 : 500} ${worldFontSize}px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif`;
+        ctx.font = `${rank >= 1.5 ? 600 : 500} ${worldFontSize}px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif`;
         const lines = wrapGraphText(ctx, titleStr, maxNormalW, 2);
         if (!lines.length) continue;
-        const textY = node.y + node.radius + 4 / scale;
+        const textY = node.y + node.radius + 5 / scale;
         const x = node.x * scale + width / 2 + camX;
         const y = textY * scale + height / 2 + camY;
         const maxLineScreenW = Math.max(...lines.map(l => ctx.measureText(l).width)) * scale;
@@ -8036,16 +8791,21 @@
 
     function requestGraphDraw() {
       if (graphState.rafId) return;
-      const tick = () => {
+      const tick = (ts) => {
         graphState.rafId = 0;
         const panel = document.getElementById('panel-graph');
-        if (!panel.classList.contains('active')) return;
+        if (!panel || !panel.classList.contains('active') || document.hidden) return;
+        const nowMs = ts || performance.now();
+        graphState.cosmicTime = nowMs * 0.001;
+        const canvas = document.getElementById('graphCanvas');
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = canvas ? (canvas.width / dpr) : 800;
+        const h = canvas ? (canvas.height / dpr) : 480;
         const moving = stepGraphPhysics();
         if (!moving && graphState.fitOnSettle) fitGraphCamera();
+        stepCosmicAnimations(nowMs, w, h);
         drawGraphFrame();
-        if (moving || graphState.draggingNode) {
-          graphState.rafId = requestAnimationFrame(tick);
-        }
+        graphState.rafId = requestAnimationFrame(tick);
       };
       graphState.rafId = requestAnimationFrame(tick);
     }
@@ -8107,11 +8867,13 @@
       const maxY = Math.max(...nodes.map(node => node.y + node.radius));
       const topInset = wrap.querySelector('.graph-hud-top').offsetHeight + 24;
       const bottomInset = wrap.querySelector('.graph-hud-controls').offsetHeight + 24;
-      const width = Math.max(80, rect.width - 32);
+      const rightReserve = rect.width > 640 ? 148 : 76;
+      const width = Math.max(80, rect.width - 32 - rightReserve);
       const height = Math.max(80, rect.height - topInset - bottomInset);
-      setGraphScale(Math.min(1.5, width / (maxX - minX + 48), height / (maxY - minY + 48)));
-      graphState.camX = -(minX + maxX) / 2 * graphState.scale;
-      graphState.camY = (topInset - bottomInset) / 2 - (minY + maxY) / 2 * graphState.scale;
+      setGraphScale(Math.min(1.45, width / (maxX - minX + 56), height / (maxY - minY + 56)));
+      const targetCenterX = 16 + width / 2;
+      graphState.camX = (targetCenterX - rect.width / 2) - ((minX + maxX) / 2) * graphState.scale;
+      graphState.camY = (topInset - bottomInset) / 2 - ((minY + maxY) / 2) * graphState.scale;
       requestGraphDraw();
     }
 
@@ -8150,9 +8912,10 @@
           }).join('')
         : '<span style="opacity:0.68;">暂无直接连线邻居</span>';
 
+      const isStar = isDreamStarNode(node);
       badgesEl.innerHTML = `
         <span class="tag" style="background:${node.color}28;color:${node.color};border:1px solid ${node.color}66;">${esc(node.memory_type)}</span>
-        <span class="tag">${node.assertion_kind === 'inferred' ? '归纳' : '原话陈述'}</span>
+        <span class="tag">${isStar ? '☀ Dream恒星归纳' : '🌀 记忆小星系 · 原话陈述'}</span>
         <span class="tag">v${node.version}</span>
       `;
 
@@ -8161,6 +8924,7 @@
         <div class="graph-insp-card">${esc(node.summary)}</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
           <button type="button" class="ghost-dark" onclick="focusNodeInGraph('${esc(node.memory_id)}')">查看关联</button>
+          <button type="button" class="ghost-dark" onclick="devourNodeById('${esc(node.id)}')" title="仅动画演示：黑洞吞噬后经虫洞回归，不改动任何数据">🕳️ 投入黑洞演示</button>
           <button type="button" class="ghost-dark" onclick="openDetail('${esc(node.memory_id)}', 'form')">✏️ 编辑</button>
           <button type="button" class="ghost-dark" onclick="openDetail('${esc(node.memory_id)}', 'markdown')">📝 Markdown</button>
           <button type="button" class="ghost-dark" onclick="openDetail('${esc(node.memory_id)}', 'provenance')">查看原话</button>
@@ -8206,6 +8970,11 @@
       graphState.eventsBound = true;
       const canvas = document.getElementById('graphCanvas');
       const wrap = document.getElementById('graphStageWrap');
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && document.getElementById('panel-graph')?.classList.contains('active')) {
+          requestGraphDraw();
+        }
+      });
       if (typeof ResizeObserver !== 'undefined') {
         new ResizeObserver(() => {
           if (!resizeGraphCanvas()) return;
@@ -8234,12 +9003,19 @@
           moved = true;
           grabOffset = null;
           graphState.draggingNode = null;
+          graphState.bhHoverPull = 0;
           return;
         }
         moved = false;
         const node = findNodeAtScreen(point.x, point.y);
-        const world = screenToWorld(point.x, point.y);
-        grabOffset = node ? { id: node.id, x: node.x - world.x, y: node.y - world.y } : null;
+        if (node && !graphState.cosmicAnims.has(node.id)) {
+          node.homeX = node.x;
+          node.homeY = node.y;
+          const world = screenToWorld(point.x, point.y);
+          grabOffset = { id: node.id, x: node.x - world.x, y: node.y - world.y };
+        } else {
+          grabOffset = null;
+        }
       });
 
       canvas.addEventListener('pointermove', event => {
@@ -8248,7 +9024,10 @@
         if (!pointer) {
           if (event.pointerType === 'touch' || pointers.size) return;
           const hit = findNodeAtScreen(point.x, point.y);
-          canvas.classList.toggle('pointer', Boolean(hit));
+          const rect = wrap.getBoundingClientRect();
+          const portals = getCosmicPortals(rect.width || 800, rect.height || 480);
+          const overBh = distance(point, portals.bh) <= portals.bh.horizonRadius + 16;
+          canvas.classList.toggle('pointer', Boolean(hit || overBh));
           if (graphState.hoveredId !== (hit?.id ?? null)) {
             graphState.hoveredId = hit?.id ?? null;
             requestGraphDraw();
@@ -8275,6 +9054,28 @@
             graphState.draggingNode = node;
             node.x = world.x + grabOffset.x;
             node.y = world.y + grabOffset.y;
+
+            const rect = wrap.getBoundingClientRect();
+            const w = rect.width || 800;
+            const h = rect.height || 480;
+            const portals = getCosmicPortals(w, h);
+            const nodeSc = worldToScreen(node.x, node.y, w, h);
+            const dBh = Math.min(distance(point, portals.bh), distance(nodeSc, portals.bh));
+            if (dBh <= portals.bh.horizonRadius + 16) {
+              // Auto-capture into Black Hole event horizon when dragged straight inside
+              pointers.delete(event.pointerId);
+              graphState.draggingNode = null;
+              grabOffset = null;
+              graphState.bhHoverPull = 0;
+              canvas.classList.remove('dragging');
+              startBlackHoleDevour(node, nodeSc);
+              return;
+            }
+            if (dBh <= portals.bh.captureRadius) {
+              graphState.bhHoverPull = Math.min(1, Math.max(0.18, 1 - (dBh - 32) / Math.max(20, portals.bh.captureRadius - 32)));
+            } else {
+              graphState.bhHoverPull = 0;
+            }
             reheatGraphPhysics(0.25);
           } else {
             moveGraphCamera(point.x - previous.x, point.y - previous.y);
@@ -8288,17 +9089,41 @@
         const dragged = graphState.draggingNode;
         graphState.draggingNode = null;
         grabOffset = null;
+        graphState.bhHoverPull = 0;
         canvas.classList.remove('dragging');
+
         if (dragged) {
+          const rect = wrap.getBoundingClientRect();
+          const w = rect.width || 800;
+          const h = rect.height || 480;
+          const portals = getCosmicPortals(w, h);
+          const point = localPoint(event);
+          const dragSc = worldToScreen(dragged.x, dragged.y, w, h);
+          const dBh = Math.min(distance(point, portals.bh), distance(dragSc, portals.bh));
+          if (dBh <= portals.bh.captureRadius) {
+            startBlackHoleDevour(dragged, dragSc);
+            return;
+          }
           dragged.anchorX = dragged.x;
           dragged.anchorY = dragged.y;
+          dragged.homeX = dragged.x;
+          dragged.homeY = dragged.y;
           reheatGraphPhysics(0.18);
         }
         if (!moved && event.type === 'pointerup') {
           const point = localPoint(event);
           const node = findNodeAtScreen(point.x, point.y);
-          if (node) selectGraphNode(node);
-          else closeGraphInspector();
+          if (node) {
+            selectGraphNode(node);
+          } else {
+            const rect = wrap.getBoundingClientRect();
+            const portals = getCosmicPortals(rect.width || 800, rect.height || 480);
+            if (distance(point, portals.bh) <= portals.bh.horizonRadius + 18) {
+              triggerDemoBlackHoleDevour();
+            } else {
+              closeGraphInspector();
+            }
+          }
         }
       }
 
@@ -8307,6 +9132,7 @@
       }
       canvas.addEventListener('pointerleave', () => {
         graphState.hoveredId = null;
+        graphState.bhHoverPull = 0;
         canvas.classList.remove('pointer');
         requestGraphDraw();
       });

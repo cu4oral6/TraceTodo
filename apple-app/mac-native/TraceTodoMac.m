@@ -140,7 +140,7 @@
     [appMenu addItemWithTitle:@"刷新看板" action:@selector(reloadPage:) keyEquivalent:@"r"];
     [appMenu addItemWithTitle:@"显示主窗口" action:@selector(showMainWindow:) keyEquivalent:@"1"];
     [appMenu addItem:[NSMenuItem separatorItem]];
-    [appMenu addItemWithTitle:@"退出 TraceTodo" action:@selector(terminate:) keyEquivalent:@"q"];
+    [appMenu addItemWithTitle:@"退出 有迹" action:@selector(terminate:) keyEquivalent:@"q"];
     [appMenuItem setSubmenu:appMenu];
 
     // Edit menu so Cmd+C / Cmd+V / Cmd+A work natively inside inputs
@@ -165,7 +165,7 @@
                                                   styleMask:style
                                                     backing:NSBackingStoreBuffered
                                                       defer:NO];
-    self.mainWindow.title = @"TraceTodo · 融合记忆与四象限待办中心";
+    self.mainWindow.title = @"有迹 · 融合记忆与四象限待办中心";
     [self.mainWindow center];
     self.mainWindow.releasedWhenClosed = NO;
 
@@ -214,7 +214,7 @@
     root.blendingMode = NSVisualEffectBlendingModeBehindWindow;
     root.state = NSVisualEffectStateActive;
 
-    self.popoverHeaderLabel = [NSTextField labelWithString:@"🧠 TraceTodo 四象限快捷台"];
+    self.popoverHeaderLabel = [NSTextField labelWithString:@"🧠 有迹 四象限快捷台"];
     self.popoverHeaderLabel.font = [NSFont boldSystemFontOfSize:13.5];
     self.popoverHeaderLabel.frame = NSMakeRect(16, 294, 328, 22);
     [root addSubview:self.popoverHeaderLabel];

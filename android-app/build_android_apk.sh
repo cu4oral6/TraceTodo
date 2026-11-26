@@ -12,12 +12,12 @@ fi
 if [ "$IS_TEST" = "1" ]; then
   APP_STEM="TraceTodo-Test"
   PKG_ID="com.tracememory.tracetodo.test"
-  APP_LABEL="TraceTodo 测试版"
+  APP_LABEL="有迹 测试版"
   DEFAULT_URL="http://43.228.79.133:18091"
 else
   APP_STEM="TraceTodo"
   PKG_ID="com.tracememory.tracetodo"
-  APP_LABEL="TraceTodo"
+  APP_LABEL="有迹"
   DEFAULT_URL="https://todo.531party.cn"
 fi
 

@@ -276,7 +276,7 @@ public class CalendarWidgetProvider extends AppWidgetProvider {
             rv.setTextViewText(R.id.cal_widget_right_title, rightTitleText);
 
             if (!parsedOk && (needsLogin || !hasToken)) {
-                rv.setTextViewText(R.id.cal_widget_row_1, "🔐 轻点打开 TraceTodo 登录同步日程");
+                rv.setTextViewText(R.id.cal_widget_row_1, "🔐 轻点打开 有迹 登录同步日程");
                 rv.setViewVisibility(R.id.cal_widget_row_2, View.GONE);
                 rv.setViewVisibility(R.id.cal_widget_row_3, View.GONE);
             } else if (rowCount == 0) {

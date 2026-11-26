@@ -41,8 +41,8 @@ PWA_ICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 
 PWA_MANIFEST_JSON = json.dumps(
     {
-        "name": "TraceTodo · 四象限记忆待办",
-        "short_name": "TraceTodo",
+        "name": "有迹 · 四象限记忆待办",
+        "short_name": "有迹",
         "description": "AI 记忆驱动的艾森豪威尔四象限待办与长期记忆中心",
         "start_url": "/",
         "display": "standalone",
@@ -57,7 +57,7 @@ PWA_MANIFEST_JSON = json.dumps(
     ensure_ascii=False,
 )
 
-PWA_SW_JS = """const CACHE_NAME = 'trace-todo-shell-v4';
+PWA_SW_JS = """const CACHE_NAME = 'trace-todo-shell-v5';
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(['/', '/home', '/manifest.webmanifest', '/icon.png?v=4', '/icon-maskable.png?v=4', '/icon.svg?v=4'])));
   self.skipWaiting();
@@ -1801,7 +1801,7 @@ class ApiDispatcher:
             self.container.memo_journal_service.save_memo(
                 space_id=space_id,
                 payload={
-                    "title": "TraceTodo 防臃肿设计备忘",
+                    "title": "有迹 防臃肿设计备忘",
                     "content": "坚持「一套可追溯记忆内核 + 5 栏收敛导航 + 可插拔开关 + 磁盘轻附件」。\n- 支持 **Markdown** 与置顶瀑布流\n- #架构灵感 #防臃肿",
                     "pinned": True,
                     "tags": ["架构灵感", "防臃肿"],

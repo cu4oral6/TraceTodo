@@ -347,7 +347,7 @@ struct TraceTodoWidgetEntryView: View {
         } else if entry.isOffline {
             Link(destination: URL(string: "tracetodo://refresh")!) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Label("轻点打开 TraceTodo 同步数据", systemImage: "arrow.triangle.2.circlepath")
+                    Label("轻点打开 有迹 同步数据", systemImage: "arrow.triangle.2.circlepath")
                         .font(.caption.bold())
                         .foregroundStyle(.orange)
                     Text("首次添加后打开主应用即可缓存最新待办")
@@ -415,7 +415,7 @@ struct TraceTodoWidgetEntryView: View {
             }
 
             HStack {
-                Text("TraceTodo")
+                Text("有迹")
                     .font(.system(size: 9.5, weight: .semibold))
                     .foregroundStyle(.tertiary)
                 Spacer()
@@ -523,7 +523,7 @@ struct TraceTodoWidgetEntryView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
                 VStack(alignment: .leading, spacing: 1) {
-                    Text("TraceTodo · 四象限工作台")
+                    Text("有迹 · 四象限工作台")
                         .font(.system(size: 14, weight: .bold))
                     Text("已完成 \(entry.totalDone) · 待办 \(entry.totalTodo)")
                         .font(.system(size: 10.5))
@@ -579,7 +579,7 @@ struct TraceTodoWidgetEntryView: View {
     private var accessoryRectView: some View {
         VStack(alignment: .leading, spacing: 2) {
             HStack {
-                Label("TraceTodo", systemImage: "checkmark.circle.fill")
+                Label("有迹", systemImage: "checkmark.circle.fill")
                     .font(.caption2.bold())
                 Spacer()
                 Text("Q1:\(entry.q1Count) 总:\(entry.totalTodo)")
@@ -719,7 +719,7 @@ struct TraceTodoWidget: Widget {
         ) { entry in
             TraceTodoWidgetContainer(entry: entry)
         }
-        .configurationDisplayName("TraceTodo 四象限待办")
+        .configurationDisplayName("有迹 四象限待办")
         .description("实时展示今日四象限待办，自动跟随主应用账号同步。")
         .supportedFamilies(families)
     }
@@ -1158,7 +1158,7 @@ struct TraceCountdownWidget: Widget {
         ) { entry in
             TraceCountdownWidgetContainer(entry: entry)
         }
-        .configurationDisplayName("TraceTodo 倒数纪念日")
+        .configurationDisplayName("有迹 倒数纪念日")
         .description("桌面与锁屏展示公农历倒数日与正数纪念日（春节、生日、周年纪念）。")
         .supportedFamilies(families)
     }
@@ -1422,7 +1422,7 @@ struct TraceMemoWidgetEntryView: View {
 
             if entry.needsLogin {
                 Spacer(minLength: 2)
-                Text("🔐 打开 TraceTodo 登录同步随记与置顶灵感")
+                Text("🔐 打开 有迹 登录同步随记与置顶灵感")
                     .font(.system(size: 11.5, weight: .semibold))
                     .foregroundStyle(.secondary)
                 Spacer(minLength: 2)
@@ -1556,7 +1556,7 @@ struct TraceMemoWidgetEntryView: View {
         VStack(alignment: .leading, spacing: 9) {
             HStack {
                 VStack(alignment: .leading, spacing: 1) {
-                    Text("📌 TraceTodo · 随记备忘录")
+                    Text("📌 有迹 · 随记备忘录")
                         .font(.system(size: 14, weight: .bold))
                     Text("共 \(entry.totalCount) 条备忘 · 已置顶 \(entry.pinnedCount) 条")
                         .font(.system(size: 10.5))
@@ -1579,7 +1579,7 @@ struct TraceMemoWidgetEntryView: View {
 
             if entry.memos.isEmpty {
                 Spacer()
-                Text(entry.needsLogin ? "🔐 打开 TraceTodo 登录后即可在桌面浏览置顶备忘" : "✨ 暂无备忘录，轻点右上角随时记录 Markdown 灵感或票据照片")
+                Text(entry.needsLogin ? "🔐 打开 有迹 登录后即可在桌面浏览置顶备忘" : "✨ 暂无备忘录，轻点右上角随时记录 Markdown 灵感或票据照片")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -1684,7 +1684,7 @@ struct TraceMemoWidget: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
             #endif
         }
-        .configurationDisplayName("TraceTodo 随记备忘录")
+        .configurationDisplayName("有迹 随记备忘录")
         .description("在桌面随时查看置顶灵感、读书清单与最新随记便签，一键打开速记。")
         .supportedFamilies(families)
     }
@@ -2245,7 +2245,7 @@ struct TraceCalendarWidgetEntryView: View {
 
                 if entry.needsLogin {
                     Spacer()
-                    Text("🔐 轻点打开 TraceTodo 登录同步日历日程")
+                    Text("🔐 轻点打开 有迹 登录同步日历日程")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Spacer()
@@ -2350,7 +2350,7 @@ struct TraceCalendarWidgetEntryView: View {
 
             if entry.todaySchedules.isEmpty {
                 Spacer()
-                Text(entry.needsLogin ? "🔐 打开 TraceTodo 登录后在桌面查看整周排期与时间块" : "🎉 今日暂无排期日程，轻点打开日历将待排期池任务拖入时间轴")
+                Text(entry.needsLogin ? "🔐 打开 有迹 登录后在桌面查看整周排期与时间块" : "🎉 今日暂无排期日程，轻点打开日历将待排期池任务拖入时间轴")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -2440,7 +2440,7 @@ struct TraceCalendarWidget: Widget {
                 .containerBackground(.fill.tertiary, for: .widget)
             #endif
         }
-        .configurationDisplayName("TraceTodo 今日日历日程")
+        .configurationDisplayName("有迹 今日日历日程")
         .description("展示本周迷你日历条、今日时间段排期与全天事项，一键直达周时间轴。")
         .supportedFamilies(families)
     }

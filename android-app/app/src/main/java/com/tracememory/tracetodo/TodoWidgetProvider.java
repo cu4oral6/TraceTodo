@@ -206,7 +206,7 @@ public class TodoWidgetProvider extends AppWidgetProvider {
             rv.setTextViewText(R.id.widget_q_summary, "Q1: " + q1 + " · Q2: " + q2);
 
             if (!parsedOk && (needsLogin || !hasToken)) {
-                rv.setTextViewText(R.id.widget_task_1, "🔐 轻点打开 TraceTodo 登录同步待办");
+                rv.setTextViewText(R.id.widget_task_1, "🔐 轻点打开 有迹 登录同步待办");
                 rv.setViewVisibility(R.id.widget_task_2, View.GONE);
                 rv.setViewVisibility(R.id.widget_task_3, View.GONE);
             } else if (topCount == 0) {

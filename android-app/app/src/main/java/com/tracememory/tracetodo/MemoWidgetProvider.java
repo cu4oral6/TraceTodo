@@ -212,7 +212,7 @@ public class MemoWidgetProvider extends AppWidgetProvider {
             rv.setTextViewText(R.id.memo_widget_pinned, "置顶: " + pinnedCount + " 条");
 
             if (!parsedOk && (needsLogin || !hasToken)) {
-                rv.setTextViewText(R.id.memo_widget_row_1, "🔐 轻点打开 TraceTodo 登录同步随记");
+                rv.setTextViewText(R.id.memo_widget_row_1, "🔐 轻点打开 有迹 登录同步随记");
                 rv.setViewVisibility(R.id.memo_widget_row_2, View.GONE);
                 rv.setViewVisibility(R.id.memo_widget_row_3, View.GONE);
             } else if (rowCount == 0) {

@@ -1735,15 +1735,15 @@
     .graph-stage {
       position: relative;
       width: 100%;
-      min-height: 420px;
+      min-height: 440px;
       border-radius: 16px;
       overflow: hidden;
       border: 1px solid #1e293b;
-      background: #111827;
+      background: radial-gradient(ellipse at 32% 38%, #101936 0%, #070b1a 68%, #040610 100%);
     }
     .graph-stage.light-canvas {
       border-color: #cbd5e1;
-      background: #f8fafc;
+      background: radial-gradient(ellipse at 32% 38%, #f8faff 0%, #edf2ff 100%);
     }
     #graphCanvas {
       position: absolute;
@@ -1757,6 +1757,13 @@
     #graphCanvas:focus-visible { outline: 2px solid #60a5fa; outline-offset: -3px; }
     #graphCanvas.dragging { cursor: grabbing; }
     #graphCanvas.pointer { cursor: pointer; }
+    .graph-gl-layer { position: absolute; display: block; pointer-events: none; }
+    .graph-gl-sky { left: 0; top: 0; width: 100%; height: 100%; }
+    .graph-gl-portal {
+      -webkit-mask-image: radial-gradient(closest-side, #000 60%, transparent 100%);
+      mask-image: radial-gradient(closest-side, #000 60%, transparent 100%);
+    }
+    .graph-gl-bloom { mix-blend-mode: screen; }
     .graph-hud-top {
       position: absolute;
       top: 12px;
@@ -1802,9 +1809,13 @@
       bottom: 14px;
       left: 14px;
       display: flex;
-      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 12px;
+      max-width: calc(100% - 28px);
       z-index: 5;
     }
+    .graph-control-group { display: flex; align-items: center; gap: 6px; }
     .graph-ctrl-btn {
       width: 34px;
       height: 34px;
@@ -1822,6 +1833,7 @@
     }
     .graph-ctrl-btn.graph-text-btn { width: auto; padding-inline: 10px; font-size: 12px; }
     .graph-ctrl-btn:disabled { cursor: default; }
+    #graphDensityBtn[aria-pressed="true"] { border-color: #60a5fa; }
     .graph-ctrl-btn:hover { background: rgba(30, 41, 59, 0.95); border-color: #60a5fa; }
     .graph-stage.light-canvas .graph-ctrl-btn {
       background: rgba(255, 255, 255, 0.92);
@@ -1880,7 +1892,7 @@
       .graph-relations .control-icon { display: none; }
       .graph-hud-top { top: 8px; left: 8px; max-width: calc(100% - 16px); }
       .graph-hud-pill { padding: 4px 8px; }
-      .graph-hud-controls { bottom: 8px; left: 8px; }
+      .graph-hud-controls { bottom: 8px; left: 8px; max-width: calc(100% - 16px); }
       .graph-inspector { top: auto; bottom: 50px; max-height: 50%; }
     }
     .graph-insp-head {
@@ -4065,7 +4077,7 @@
     <section id="panel-memories" class="panel">
       <div class="summary-header" style="flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div class="seg-pill-bar">
-          <button type="button" class="seg-pill-btn" data-tab="graph" onclick="switchTab('graph')">🕸️ 双链星图</button>
+          <button type="button" class="seg-pill-btn" data-tab="graph" onclick="switchTab('graph')">🌌 记忆星系</button>
           <button type="button" class="seg-pill-btn active" data-tab="memories" onclick="switchTab('memories')">🗂️ 记忆库</button>
           <button type="button" class="seg-pill-btn" data-tab="ask" onclick="switchTab('ask')">💬 证据问答</button>
         </div>
@@ -4097,11 +4109,11 @@
       </nav>
     </section>
 
-    <!-- TAB 5B: GRAPH CONTEXT (OBSIDIAN FORCE-DIRECTED CANVAS + LIST INSPECTOR) -->
+    <!-- TAB 5B: COSMIC MEMORY GALAXY (DREAM STARS + MINI-GALAXIES + BLACK HOLE / WORMHOLE DEMO) -->
     <section id="panel-graph" class="panel">
       <div class="summary-header" style="flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div class="seg-pill-bar">
-          <button type="button" class="seg-pill-btn active" data-tab="graph" onclick="switchTab('graph')">🕸️ 双链星图</button>
+          <button type="button" class="seg-pill-btn active" data-tab="graph" onclick="switchTab('graph')">🌌 记忆星系</button>
           <button type="button" class="seg-pill-btn" data-tab="memories" onclick="switchTab('memories')">🗂️ 记忆库</button>
           <button type="button" class="seg-pill-btn" data-tab="ask" onclick="switchTab('ask')">💬 证据问答</button>
         </div>
@@ -4163,32 +4175,39 @@
       </div>
 
       <div id="graphStageWrap" class="graph-stage">
-        <canvas id="graphCanvas" tabindex="0" aria-label="记忆图谱。拖动画布平移，滚轮或双指缩放，也可用方向键、加减键和 0 操作。"></canvas>
+        <canvas id="graphCanvas" tabindex="0" aria-label="记忆星系。Dream 归纳为恒星，其余记忆为小行星；拖拽节点进黑洞可演示吞噬与虫洞归位（仅动画，不删除数据）。"></canvas>
 
         <div class="graph-hud-top">
-          <div class="graph-hud-pill" id="graphStatsPill">加载图谱中...</div>
+          <div class="graph-hud-pill" id="graphStatsPill">观测深空星系中...</div>
           <div class="graph-hud-pill graph-legend">
-            <span><i class="graph-legend-dot" style="background:#3b82f6;"></i>任务</span>
-            <span><i class="graph-legend-dot" style="background:#8b5cf6;"></i>事实</span>
-            <span><i class="graph-legend-dot" style="background:#f59e0b;"></i>偏好</span>
-            <span><i class="graph-legend-dot" style="background:#14b8a6;"></i>情景</span>
-            <span><i class="graph-legend-dot" style="background:#ec4899;"></i>归纳</span>
-            <span style="opacity:0.8;">━━ 双链 · ┈┈ 语义</span>
+            <span><i class="graph-legend-dot" style="background:radial-gradient(circle,#fffbeb 0%,#fbbf24 55%,#f43f5e 100%);box-shadow:0 0 6px #fbbf24;"></i>☀ Dream恒星</span>
+            <span><i class="graph-legend-dot" style="background:#38bdf8;"></i>🌀 任务星系</span>
+            <span><i class="graph-legend-dot" style="background:#a78bfa;"></i>🌀 事实星系</span>
+            <span><i class="graph-legend-dot" style="background:#f59e0b;"></i>🌀 偏好星系</span>
+            <span><i class="graph-legend-dot" style="background:#14b8a6;"></i>🌀 情景星系</span>
+            <span style="opacity:0.88;">🕳️ 拖入黑洞吞噬 → 🌀 虫洞归位（仅演示不删数据）</span>
           </div>
         </div>
 
         <div class="graph-empty-hint" id="graphEmptyHint">
-          <div id="graphEmptyLabel">当前筛选条件下暂无记忆节点</div>
-          <div style="font-size:12px;opacity:0.8;">试试录入一条记忆，或调整图谱筛选条件。</div>
+          <div id="graphEmptyLabel">当前深空星域暂无记忆天体</div>
+          <div style="font-size:12px;opacity:0.8;">试试录入一条记忆、运行 Dream 归纳，或调整星系筛选条件。</div>
         </div>
 
         <div class="graph-hud-controls" role="group" aria-label="画布控制">
-          <button type="button" class="graph-ctrl-btn" id="graphZoomOutBtn" aria-label="缩小" title="缩小（-）" onclick="zoomGraphBy(0.8)">−</button>
-          <output class="graph-hud-pill" id="graphZoomValue" aria-label="当前缩放">100%</output>
-          <button type="button" class="graph-ctrl-btn" id="graphZoomInBtn" aria-label="放大" title="放大（+）" onclick="zoomGraphBy(1.25)">+</button>
-          <button type="button" class="graph-ctrl-btn graph-text-btn" title="适应全部节点（0）" onclick="fitGraphCamera()">适应</button>
-          <button type="button" class="graph-ctrl-btn graph-text-btn" title="重新排布节点" onclick="resetGraphLayout()">重排</button>
-          <button type="button" class="graph-ctrl-btn graph-text-btn" id="graphThemeBtn" onclick="toggleGraphCanvasTheme()">亮色</button>
+          <div class="graph-control-group" role="group" aria-label="缩放">
+            <button type="button" class="graph-ctrl-btn" id="graphZoomOutBtn" aria-label="缩小" title="缩小（-）" onclick="zoomGraphBy(0.8)">−</button>
+            <output class="graph-hud-pill" id="graphZoomValue" aria-label="当前缩放">100%</output>
+            <button type="button" class="graph-ctrl-btn" id="graphZoomInBtn" aria-label="放大" title="放大（+）" onclick="zoomGraphBy(1.25)">+</button>
+          </div>
+          <div class="graph-control-group" role="group" aria-label="视图布局">
+            <button type="button" class="graph-ctrl-btn graph-text-btn" id="graphDensityBtn" aria-label="展开星系" aria-pressed="false" title="当前：紧凑，点击展开" onclick="toggleGraphDensity()">紧凑</button>
+            <button type="button" class="graph-ctrl-btn graph-text-btn" title="重排星系轨道" onclick="resetGraphLayout()">重排</button>
+          </div>
+          <div class="graph-control-group" role="group" aria-label="外观与演示">
+            <button type="button" class="graph-ctrl-btn graph-text-btn" id="graphBlackHoleDemoBtn" title="演示黑洞吞噬与虫洞归位（仅动画演示，不动具体记忆数据）" onclick="triggerDemoBlackHoleDevour()">🕳️ 吞噬演示</button>
+            <button type="button" class="graph-ctrl-btn graph-text-btn" id="graphThemeBtn" onclick="toggleGraphCanvasTheme()">亮色</button>
+          </div>
         </div>
 
         <aside id="graphInspector" class="graph-inspector">
@@ -4209,7 +4228,7 @@
     <section id="panel-ask" class="panel">
       <div class="summary-header" style="flex-wrap:wrap;gap:10px;margin-bottom:14px;">
         <div class="seg-pill-bar">
-          <button type="button" class="seg-pill-btn" data-tab="graph" onclick="switchTab('graph')">🕸️ 双链星图</button>
+          <button type="button" class="seg-pill-btn" data-tab="graph" onclick="switchTab('graph')">🌌 记忆星系</button>
           <button type="button" class="seg-pill-btn" data-tab="memories" onclick="switchTab('memories')">🗂️ 记忆库</button>
           <button type="button" class="seg-pill-btn active" data-tab="ask" onclick="switchTab('ask')">💬 证据问答</button>
         </div>
@@ -5223,7 +5242,11 @@
       if (name === 'notes') loadNotesPanel().catch(handleErr);
       if (name === 'supervision') loadSupervisionBoard().catch(handleErr);
       if (name === 'memories') loadMemories().catch(handleErr);
-      if (name === 'graph' && !opts?.skipGraphLoad) loadGraph().catch(handleErr);
+      if (name === 'graph') {
+        resizeGraphCanvas();
+        requestGraphDraw();
+        if (!opts?.skipGraphLoad) loadGraph().catch(handleErr);
+      }
       if (name === 'ask') loadTraces().catch(handleErr);
       if (name === 'admin') loadAdminConsole().catch(handleErr);
     }
@@ -7386,7 +7409,890 @@
       `;
     }
 
-    /* Interactive graph */
+    /* GalaxyFX: realistic canvas-2D renderer for the Memory Galaxy.
+       Library part ported from docs/memory-galaxy-visual/reference-renderer.js (noise, star field, stars, rocks,
+       particles, meteors, gravitational lens, black hole); integration layer adds caching and the six star styles. */
+    const GalaxyFX = (function () {
+      function rng(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+      function noise(seed) {
+        var r = rng(seed), p = new Float32Array(1024), i;
+        for (i = 0; i < 1024; i++) p[i] = r();
+        function h(x, y) { var k = (x * 374761393 + y * 668265263) | 0; k = Math.imul(k ^ (k >>> 13), 1274126177); return p[(k >>> 0) & 1023]; }
+        function n(x, y) { var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf), a = h(xi, yi), b = h(xi + 1, yi), c = h(xi, yi + 1), d = h(xi + 1, yi + 1); return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v; }
+        function fbm(x, y, o) { var s = 0, a = 0.5, f = 1, t = 0; for (var i = 0; i < o; i++) { s += a * n(x * f, y * f); t += a; f *= 2.03; a *= 0.5; } return s / t; }
+        return { n: n, fbm: fbm };
+      }
+      function cv(w, h) { var c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; }
+      function rgba(c, a) { return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + (a < 0 ? 0 : a > 1 ? 1 : a) + ')'; }
+      function glow(x, cx, cy, r, col, a) { if (r <= 0) return; var g = x.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, rgba(col, a)); g.addColorStop(0.2, rgba(col, a * 0.38)); g.addColorStop(0.5, rgba(col, a * 0.1)); g.addColorStop(1, rgba(col, 0)); x.fillStyle = g; x.fillRect(cx - r, cy - r, 2 * r, 2 * r); }
+      function spikes(x, cx, cy, len, col, a, n, rot, w) {
+        x.save(); x.translate(cx, cy); x.rotate(rot || 0);
+        for (var i = 0; i < n; i++) { x.rotate(Math.PI * 2 / n); var g = x.createLinearGradient(0, 0, len, 0); g.addColorStop(0, rgba(col, a)); g.addColorStop(0.35, rgba(col, a * 0.35)); g.addColorStop(1, rgba(col, 0)); x.fillStyle = g; x.beginPath(); x.moveTo(0, -w); x.lineTo(len, 0); x.lineTo(0, w); x.closePath(); x.fill(); }
+        x.restore();
+      }
+      // tileable-ish star texture (wraps by drawing stars near edges twice)
+      function starTile(S, seed, neb) {
+        var c = cv(S, S), x = c.getContext('2d'), r = rng(seed), N = noise(seed + 5), i;
+        x.fillStyle = '#02040B'; x.fillRect(0, 0, S, S);
+        if (neb) {
+          var q = 4, s = cv(S / q, S / q), sx = s.getContext('2d'), im = sx.createImageData(S / q, S / q), d = im.data, w = S / q;
+          for (var j = 0; j < w; j++) for (i = 0; i < w; i++) {
+            var u = i / w * 6.2832, v = j / w * 6.2832;
+            var f = N.fbm(Math.cos(u) * 1.4 + Math.cos(v) * 0.7 + 9, Math.sin(u) * 1.4 + Math.sin(v) * 0.9 + 3, 5);
+            var g2 = N.fbm(Math.cos(u) * 2.6 + 30, Math.sin(v) * 2.6 + 30, 4);
+            var m = Math.max(0, f - 0.48) * neb, k = (j * w + i) * 4;
+            d[k] = 8 + m * (70 + 120 * g2); d[k + 1] = 10 + m * 60; d[k + 2] = 22 + m * (150 - 60 * g2); d[k + 3] = 255;
+          }
+          sx.putImageData(im, 0, 0); x.imageSmoothingEnabled = true; x.drawImage(s, 0, 0, S, S);
+        }
+        var cols = [[255, 244, 232], [255, 214, 170], [196, 214, 255], [255, 255, 255], [255, 190, 150], [168, 196, 255]];
+        var n = Math.floor(S * S / 700);
+        for (i = 0; i < n; i++) {
+          var px = r() * S, py = r() * S, m2 = Math.pow(r(), 7), c0 = cols[Math.floor(r() * cols.length)], rad = 0.3 + m2 * 1.5;
+          for (var ox = -1; ox <= 1; ox++) for (var oy = -1; oy <= 1; oy++) {
+            var X = px + ox * S, Y = py + oy * S; if (X < -12 || Y < -12 || X > S + 12 || Y > S + 12) continue;
+            x.fillStyle = rgba(c0, 0.22 + m2 * 0.78); x.beginPath(); x.arc(X, Y, rad, 0, 6.2832); x.fill();
+            if (m2 > 0.3) { glow(x, X, Y, rad * 6, c0, 0.4 * m2); }
+          }
+        }
+        return c;
+      }
+      function tileBg(w, h, tile) { var c = cv(w, h), x = c.getContext('2d'), S = tile.width; for (var X = 0; X < w; X += S) for (var Y = 0; Y < h; Y += S) x.drawImage(tile, X, Y); return c; }
+      function granTex(S, seed, c1, c2, scale) {
+        var c = cv(S, S), x = c.getContext('2d'), im = x.createImageData(S, S), d = im.data, N = noise(seed);
+        for (var j = 0; j < S; j++) for (var i = 0; i < S; i++) {
+          var v = N.fbm(i / scale, j / scale, 3), cell = 1 - Math.abs(N.n(i / (scale * 0.45), j / (scale * 0.45)) * 2 - 1);
+          v = 0.45 * v + 0.55 * Math.pow(cell, 0.7); v = Math.min(1, Math.max(0, (v - 0.25) * 1.5));
+          var k = (j * S + i) * 4; d[k] = c2[0] + (c1[0] - c2[0]) * v; d[k + 1] = c2[1] + (c1[1] - c2[1]) * v; d[k + 2] = c2[2] + (c1[2] - c2[2]) * v; d[k + 3] = 255;
+        }
+        x.putImageData(im, 0, 0); return c;
+      }
+      function diskStar(x, cx, cy, R, tex, col, limb, t, bright) {
+        var b = bright || 1;
+        x.globalCompositeOperation = 'lighter'; glow(x, cx, cy, R * 7, col, 0.16 * b); glow(x, cx, cy, R * 2.6, col, 0.32 * b);
+        x.globalCompositeOperation = 'source-over';
+        x.save(); x.beginPath(); x.arc(cx, cy, R, 0, 6.2832); x.clip();
+        var sc = (R * 2.6) / tex.width;
+        x.drawImage(tex, cx - R * 1.3 + Math.sin(t * 0.05) * R * 0.25, cy - R * 1.3 + Math.cos(t * 0.04) * R * 0.15, tex.width * sc, tex.height * sc);
+        var g = x.createRadialGradient(cx - R * 0.1, cy - R * 0.1, R * 0.05, cx, cy, R);
+        g.addColorStop(0, 'rgba(255,255,255,0.28)'); g.addColorStop(0.45, 'rgba(255,255,255,0)'); g.addColorStop(0.8, rgba(limb, 0.35)); g.addColorStop(1, rgba(limb, 0.85));
+        x.fillStyle = g; x.fillRect(cx - R, cy - R, 2 * R, 2 * R); x.restore();
+        x.globalCompositeOperation = 'lighter'; glow(x, cx, cy, R * 1.35, col, 0.3 * b); x.globalCompositeOperation = 'source-over';
+      }
+      function pointStar(x, cx, cy, R, col, b, spk, rot) {
+        x.globalCompositeOperation = 'lighter';
+        glow(x, cx, cy, R * 9, col, 0.14 * b); glow(x, cx, cy, R * 3.2, col, 0.45 * b);
+        if (spk) { spikes(x, cx, cy, spk * b, [255, 255, 255], 0.55 * b, 4, rot || 0, Math.max(0.6, R * 0.09)); spikes(x, cx, cy, spk * 0.5 * b, col, 0.4 * b, 4, (rot || 0) + Math.PI / 4, Math.max(0.5, R * 0.06)); }
+        var g = x.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.45, rgba([255, 255, 255], 0.95)); g.addColorStop(0.75, rgba(col, 0.8)); g.addColorStop(1, rgba(col, 0));
+        x.fillStyle = g; x.beginPath(); x.arc(cx, cy, R, 0, 6.2832); x.fill();
+        x.globalCompositeOperation = 'source-over';
+      }
+      // ---------- rocks ----------
+      function Rock(R, seed, o) {
+        var N = noise(seed), r = rng(seed + 11), i, j, k;
+        this.R = R; this.o = o;
+        var sh = new Float32Array(256), mx = 0;
+        for (i = 0; i < 256; i++) { var a = i / 256 * 6.2832; sh[i] = 0.62 + 0.6 * N.fbm(Math.cos(a) * (o.lumpy || 1.2) + 20, Math.sin(a) * (o.lumpy || 1.2) + 20, 4); if (sh[i] > mx) mx = sh[i]; }
+        for (i = 0; i < 256; i++) sh[i] /= mx;
+        this.sh = sh;
+        var GS = 96; this.GS = GS;
+        var H = new Float32Array(GS * GS), A = new Float32Array(GS * GS), C = new Float32Array(GS * GS), crs = [];
+        for (i = 0; i < (o.cr || 0); i++) crs.push([(r() - 0.5) * 1.5, (r() - 0.5) * 1.5, 0.08 + Math.pow(r(), 1.6) * 0.32]);
+        for (j = 0; j < GS; j++) for (i = 0; i < GS; i++) {
+          var u = i / (GS - 1) * 2.8 - 1.4, v = j / (GS - 1) * 2.8 - 1.4, h = N.fbm(u * 2.3 + 3, v * 2.3 + 7, 5) * (o.rough || 0.5);
+          for (k = 0; k < crs.length; k++) { var c = crs[k], du = (u - c[0]) / c[2], dv = (v - c[1]) / c[2], dd = Math.sqrt(du * du + dv * dv); if (dd < 1) h -= (1 - dd * dd) * c[2] * 0.6; else if (dd < 1.45) h += (1 - Math.abs(dd - 1.15) / 0.3) * c[2] * 0.14; }
+          H[j * GS + i] = h; A[j * GS + i] = 0.72 + 0.56 * N.fbm(u * 6 + 40, v * 6 + 40, 3);
+          C[j * GS + i] = Math.pow(1 - Math.abs(N.fbm(u * 3.5 + 70, v * 3.5 + 70, 4) * 2 - 1), 10);
+        }
+        this.H = H; this.A = A; this.C = C;
+        this.S = Math.ceil(R * 2) + 4; this.c = cv(this.S, this.S); this.x = this.c.getContext('2d'); this.img = this.x.createImageData(this.S, this.S);
+      }
+      Rock.prototype.render = function (rot, emit, ex, ey, sx, sy) {
+        var S = this.S, h = S / 2, R = this.R, d = this.img.data, sh = this.sh, H = this.H, A = this.A, C = this.C, GS = this.GS, o = this.o, cs = Math.cos(rot), sn = Math.sin(rot);
+        var Lx = -0.6, Ly = -0.45, Lz = 0.66, Hx = -0.33, Hy = -0.247, Hz = 0.912, sc = (GS - 1) / 2.8, bs = o.bump || 1.3, b0 = o.base, sp = o.spec || 0;
+        sx = sx || 1; sy = sy || 1;
+        for (var j = 0; j < S; j++) for (var i = 0; i < S; i++) {
+          var k = (j * S + i) * 4, dx = (i + 0.5 - h) / R / sx, dy = (j + 0.5 - h) / R / sy, dd = Math.sqrt(dx * dx + dy * dy);
+          var ang = Math.atan2(dy, dx) - rot, id = ((Math.floor(ang * 40.7437) % 256) + 256) % 256, rr = sh[id], ed = (rr - dd) * R;
+          if (ed <= 0) { d[k + 3] = 0; continue; }
+          var q = dd / rr; if (q > 0.999) q = 0.999;
+          var nz = Math.sqrt(1 - q * q), nx = 0, ny = 0; if (dd > 1e-4) { nx = dx / dd * q; ny = dy / dd * q; }
+          var ux = dx * cs + dy * sn, uy = -dx * sn + dy * cs, gi = Math.floor((ux + 1.4) * sc), gj = Math.floor((uy + 1.4) * sc);
+          if (gi < 1) gi = 1; if (gj < 1) gj = 1; if (gi > GS - 2) gi = GS - 2; if (gj > GS - 2) gj = GS - 2;
+          var p = gj * GS + gi, gx = (H[p + 1] - H[p - 1]) * sc * 0.5, gy = (H[p + GS] - H[p - GS]) * sc * 0.5, Gx = gx * cs - gy * sn, Gy = gx * sn + gy * cs;
+          nx -= Gx * bs * nz; ny -= Gy * bs * nz; var nl = Math.sqrt(nx * nx + ny * ny + nz * nz); nx /= nl; ny /= nl; var nn = nz / nl;
+          var df = nx * Lx + ny * Ly + nn * Lz; if (df < 0) df = 0;
+          var al = A[p], lum = 0.03 + df * 1.08, cr = b0[0] * al * lum, cg = b0[1] * al * lum, cb = b0[2] * al * lum;
+          if (sp) { var s = nx * Hx + ny * Hy + nn * Hz; if (s > 0) { s = Math.pow(s, 22) * sp * 255; cr += s; cg += s; cb += s * 1.05; } }
+          if (emit > 0) {
+            var e = emit * (0.12 + C[p] * 1.3);
+            if (ex || ey) { var f = nx * ex + ny * ey; e = emit * Math.max(0, f * 0.9 + 0.25) * (0.7 + C[p] * 0.8); }
+            cr += 255 * e; cg += (60 + 150 * e) * e; cb += 40 * e * e;
+          }
+          d[k] = cr > 255 ? 255 : cr; d[k + 1] = cg > 255 ? 255 : cg; d[k + 2] = cb > 255 ? 255 : cb; d[k + 3] = ed >= 1 ? 255 : ed * 255;
+        }
+        this.x.putImageData(this.img, 0, 0); return this.c;
+      };
+      // ---------- particles ----------
+      function Parts() { this.p = []; }
+      Parts.prototype.add = function (x, y, vx, vy, life, size, kind) { this.p.push({ x: x, y: y, vx: vx, vy: vy, a: 0, l: life, s: size, k: kind }); };
+      Parts.prototype.step = function (dt, ax, ay, pull) {
+        for (var i = this.p.length - 1; i >= 0; i--) {
+          var q = this.p[i]; q.a += dt; if (q.a >= q.l) { this.p.splice(i, 1); continue; }
+          if (pull) { var dx = pull.x - q.x, dy = pull.y - q.y, d2 = dx * dx + dy * dy + 400, f = pull.g / d2; q.vx += dx * f * dt; q.vy += dy * f * dt; }
+          var drag = q.k === 1 ? 0.6 : 1.6; q.vx *= 1 - drag * dt; q.vy *= 1 - drag * dt; q.x += q.vx * dt; q.y += q.vy * dt;
+        }
+      };
+      Parts.prototype.draw = function (x) {
+        var i, q, t;
+        for (i = 0; i < this.p.length; i++) { q = this.p[i]; if (q.k !== 1) continue; t = q.a / q.l; x.fillStyle = 'rgba(110,100,95,' + ((1 - t) * 0.18) + ')'; x.beginPath(); x.arc(q.x, q.y, q.s * (1 + t * 3), 0, 6.2832); x.fill(); }
+        x.globalCompositeOperation = 'lighter';
+        for (i = 0; i < this.p.length; i++) {
+          q = this.p[i]; if (q.k === 1) continue; t = q.a / q.l;
+          var col = t < 0.3 ? [255, 236 - t * 200, 200 - t * 500] : [255 - (t - 0.3) * 160, 176 - (t - 0.3) * 200, 40];
+          if (q.k === 2) col = [200 + 55 * (1 - t), 225, 255];
+          x.fillStyle = rgba(col, (1 - t) * 0.22); x.beginPath(); x.arc(q.x, q.y, q.s * 2.6, 0, 6.2832); x.fill();
+          x.fillStyle = rgba(col, (1 - t) * 0.9); x.beginPath(); x.arc(q.x, q.y, q.s * (1 - t * 0.5), 0, 6.2832); x.fill();
+        }
+        x.globalCompositeOperation = 'source-over';
+      };
+      function meteor(x, hx, hy, ux, uy, len, head, a, w) {
+        var tx = hx - ux * len, ty = hy - uy * len, g = x.createLinearGradient(tx, ty, hx, hy);
+        g.addColorStop(0, rgba([255, 120, 60], 0)); g.addColorStop(0.6, rgba([255, 190, 140], 0.22 * a)); g.addColorStop(0.92, rgba(head, 0.75 * a)); g.addColorStop(1, rgba([255, 255, 255], a));
+        x.globalCompositeOperation = 'lighter'; x.strokeStyle = g; x.lineCap = 'round'; x.lineWidth = w || 1.4; x.beginPath(); x.moveTo(tx, ty); x.lineTo(hx, hy); x.stroke();
+        glow(x, hx, hy, 10 * (w || 1.4), head, 0.55 * a); x.globalCompositeOperation = 'source-over';
+      }
+      // ---------- gravitational lens (point mass), writes into small canvas at scale q ----------
+      function Lens(Rl, q) { this.Rl = Rl; this.q = q; this.N = Math.ceil(2 * Rl / q); this.c = cv(this.N, this.N); this.x = this.c.getContext('2d'); this.img = this.x.createImageData(this.N, this.N); }
+      Lens.prototype.render = function (src, sw, sh, ox, oy, thE, Rs, inner) {
+        // src: Uint8ClampedArray of tile (sw x sh); ox,oy: source offset (world coords of lens center); inner: function(nx,ny,q,out) for b<Rs
+        var N = this.N, d = this.img.data, q = this.q, Rl = this.Rl, e2 = thE * thE, out = [0, 0, 0, 0];
+        for (var j = 0; j < N; j++) for (var i = 0; i < N; i++) {
+          var X = (i + 0.5) * q - Rl, Y = (j + 0.5) * q - Rl, b2 = X * X + Y * Y, b = Math.sqrt(b2), k = (j * N + i) * 4;
+          if (b > Rl) { d[k + 3] = 0; continue; }
+          if (b < Rs) {
+            if (inner) { inner(X / Rs, Y / Rs, b / Rs, out); d[k] = out[0]; d[k + 1] = out[1]; d[k + 2] = out[2]; d[k + 3] = 255; }
+            else { d[k] = 0; d[k + 1] = 0; d[k + 2] = 0; d[k + 3] = 255; }
+            continue;
+          }
+          var f = 1 - e2 / b2, sx = X * f + ox, sy = Y * f + oy;
+          var u = ((Math.floor(sx) % sw) + sw) % sw, v = ((Math.floor(sy) % sh) + sh) % sh, p = (v * sw + u) * 4;
+          var mag = 1 + 0.9 * e2 / (b2 + 1);
+          d[k] = Math.min(255, src[p] * mag); d[k + 1] = Math.min(255, src[p + 1] * mag); d[k + 2] = Math.min(255, src[p + 2] * mag);
+          var fade = (Rl - b) / (Rl * 0.25); d[k + 3] = fade >= 1 ? 255 : fade * 255;
+        }
+        this.x.putImageData(this.img, 0, 0); return this.c;
+      };
+      // ---------- black hole ----------
+      function diskTex(seed) {
+        var S = 600, c = cv(S, S), x = c.getContext('2d'), im = x.createImageData(S, S), d = im.data, N = noise(seed), h = S / 2;
+        for (var j = 0; j < S; j++) for (var i = 0; i < S; i++) {
+          var dx = (i - h) / h, dy = (j - h) / h, rn = Math.sqrt(dx * dx + dy * dy), k = (j * S + i) * 4;
+          if (rn < 0.34 || rn > 1) { d[k + 3] = 0; continue; }
+          var t = (rn - 0.34) / 0.66, a = Math.atan2(dy, dx), w = N.fbm(Math.cos(a) * 1.6 + 5, Math.sin(a) * 1.6 + 5, 3);
+          var band = N.fbm(rn * 34 + w * 4, 3.3, 3), clump = N.fbm(Math.cos(a) * 6 + rn * 9, Math.sin(a) * 6 + rn * 9, 3);
+          var I = (Math.pow(1 - t, 1.6) * 1.25 + 0.06) * (0.4 + 1.1 * band) * (0.75 + 0.5 * clump);
+          var ef = Math.min(1, (rn - 0.34) / 0.03) * Math.min(1, (1 - rn) / 0.25);
+          var cr = 255, cg = 120 + 130 * Math.pow(1 - t, 1.3), cb = 50 + 190 * Math.pow(1 - t, 3);
+          d[k] = cr; d[k + 1] = cg; d[k + 2] = cb; d[k + 3] = Math.min(255, I * ef * 255);
+        }
+        x.putImageData(im, 0, 0); return c;
+      }
+      function BlackHole(Rs, seed) {
+        this.Rs = Rs; this.tex = diskTexCached(seed || 3); var W = Math.ceil(Rs * 9); this.W = W;
+        this.layer = cv(W, W); this.lx = this.layer.getContext('2d');
+        this.halo = cv(W, W); this.hx = this.halo.getContext('2d');
+      }
+      BlackHole.prototype.draw = function (x, cx, cy, t, act, flash) {
+        var Rs = this.Rs * (1 + 0.06 * act), W = this.W, h = W / 2, L = this.lx, HX = this.hx, tex = this.tex, rot = t * (0.18 + 0.35 * act);
+        var br = 1 + 0.45 * act + 1.2 * flash, outer = Rs * 3.5, s = outer / 300;
+        // front disk layer
+        L.setTransform(1, 0, 0, 1, 0, 0); L.clearRect(0, 0, W, W); L.globalCompositeOperation = 'source-over';
+        L.save(); L.translate(h, h); L.scale(s, s * 0.15); L.rotate(rot); L.drawImage(tex, -300, -300); L.restore();
+        L.globalCompositeOperation = 'source-atop';
+        var g = L.createLinearGradient(h - outer, 0, h + outer, 0); g.addColorStop(0, 'rgba(255,250,240,0.45)'); g.addColorStop(0.5, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(40,10,0,0.55)');
+        L.fillStyle = g; L.fillRect(0, 0, W, W); L.globalCompositeOperation = 'source-over';
+        // lensed far side (halo)
+        HX.setTransform(1, 0, 0, 1, 0, 0); HX.clearRect(0, 0, W, W); HX.globalCompositeOperation = 'source-over';
+        var s2 = (Rs * 1.05) / 102;
+        HX.save(); HX.translate(h, h); HX.scale(s2, s2 * 0.94); HX.rotate(-rot * 0.8); HX.drawImage(tex, -300, -300); HX.restore();
+        HX.globalCompositeOperation = 'destination-in';
+        var rg = HX.createRadialGradient(h, h, Rs * 1.0, h, h, Rs * 1.75); rg.addColorStop(0, 'rgba(0,0,0,1)'); rg.addColorStop(0.5, 'rgba(0,0,0,0.6)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
+        HX.fillStyle = rg; HX.fillRect(0, 0, W, W);
+        var vg = HX.createLinearGradient(0, h - Rs * 1.8, 0, h + Rs * 1.8); vg.addColorStop(0, 'rgba(0,0,0,1)'); vg.addColorStop(0.5, 'rgba(0,0,0,0.75)'); vg.addColorStop(1, 'rgba(0,0,0,0.25)');
+        HX.fillStyle = vg; HX.fillRect(0, 0, W, W); HX.globalCompositeOperation = 'source-over';
+        x.save(); x.globalCompositeOperation = 'lighter'; glow(x, cx, cy, Rs * 5, [255, 150, 60], 0.12 * br);
+        x.globalAlpha = Math.min(1, 0.9 * br); x.drawImage(this.halo, cx - h, cy - h);
+        // far half of the disk (behind the shadow)
+        x.globalAlpha = Math.min(1, br); x.beginPath(); x.rect(cx - h, cy - h, W, h); x.clip(); x.drawImage(this.layer, cx - h, cy - h); x.restore();
+        // shadow
+        x.save(); var sg = x.createRadialGradient(cx, cy, Rs * 0.9, cx, cy, Rs * 1.02); sg.addColorStop(0, 'rgba(0,0,0,1)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+        x.fillStyle = '#000'; x.beginPath(); x.arc(cx, cy, Rs * 0.92, 0, 6.2832); x.fill(); x.fillStyle = sg; x.beginPath(); x.arc(cx, cy, Rs * 1.02, 0, 6.2832); x.fill();
+        // photon ring
+        x.globalCompositeOperation = 'lighter'; x.strokeStyle = rgba([255, 226, 190], 0.75 * Math.min(1.4, br)); x.lineWidth = Math.max(1, Rs * 0.022); x.beginPath(); x.arc(cx, cy, Rs * 1.04, 0, 6.2832); x.stroke();
+        // near half of disk (in front)
+        x.globalAlpha = Math.min(1, br); x.beginPath(); x.rect(cx - h, cy, W, h); x.clip(); x.drawImage(this.layer, cx - h, cy - h); x.restore();
+        if (flash > 0) { x.save(); x.globalCompositeOperation = 'lighter'; glow(x, cx, cy, Rs * 4 * (1 + flash), [255, 220, 170], 0.5 * flash); x.restore(); }
+      };
+      // ---------- integration layer (caches, star styles, rock cache) ----------
+      var diskTexByseed = new Map();
+      function diskTexCached(seed) { if (!diskTexByseed.has(seed)) diskTexByseed.set(seed, diskTex(seed)); return diskTexByseed.get(seed); }
+      var reducedMQ = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+      var PAGE_LOAD_MS = Date.now();
+      var ROCK_TYPES = {
+        C: { base: [92, 86, 80], rough: 0.7, cr: 7, bump: 1.6 },
+        S: { base: [178, 150, 118], rough: 0.55, cr: 10, bump: 1.4 },
+        M: { base: [168, 174, 184], rough: 0.25, cr: 3, bump: 0.9, spec: 0.8, lumpy: 0.9 },
+      };
+      var cache = {};
+      function lazy(key, make) { if (!cache[key]) cache[key] = make(); return cache[key]; }
+      function hexRgb(hex) {
+        var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(String(hex || ''));
+        return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [129, 140, 248];
+      }
+      function tile() { return lazy('tile', function () { return starTile(512, 63, 0.9); }); }
+      function tileData() { return lazy('tileData', function () { return tile().getContext('2d').getImageData(0, 0, 512, 512).data; }); }
+      function bgPattern(ctx) {
+        if (cache.patCtx !== ctx) { cache.pat = ctx.createPattern(tile(), 'repeat'); cache.patCtx = ctx; }
+        return cache.pat;
+      }
+      function tex(key) {
+        return lazy('tex_' + key, function () {
+          switch (key) {
+            case 'sun': return granTex(128, 4, [255, 246, 214], [214, 120, 30], 6);
+            case 'blue': return granTex(96, 7, [240, 246, 255], [120, 160, 255], 4);
+            case 'giant': return granTex(128, 9, [255, 180, 104], [140, 36, 8], 11);
+            case 'bin1': return granTex(64, 12, [236, 248, 255], [110, 170, 240], 4);
+            default: return granTex(64, 13, [255, 246, 200], [220, 150, 40], 4);
+          }
+        });
+      }
+      // corona streamers (built for a 44px sun, drawn scaled by R/44)
+      function corona() {
+        return lazy('corona', function () {
+          var cor = cv(400, 400), c2 = cor.getContext('2d'), rr = rng(5);
+          c2.translate(200, 200); c2.globalCompositeOperation = 'lighter';
+          for (var i = 0; i < 170; i++) {
+            var a = rr() * 6.2832, len = 44 * (0.3 + Math.pow(rr(), 2.2) * 2.4), w = 44 * (0.015 + rr() * 0.05);
+            c2.save(); c2.rotate(a);
+            var g = c2.createLinearGradient(40, 0, 44 + len, 0); g.addColorStop(0, 'rgba(255,236,190,0.16)'); g.addColorStop(1, 'rgba(255,220,160,0)');
+            c2.fillStyle = g; c2.beginPath(); c2.moveTo(40, -w);
+            c2.quadraticCurveTo(44 + len * 0.5, (rr() - 0.5) * w * 4, 44 + len, 0);
+            c2.quadraticCurveTo(44 + len * 0.5, (rr() - 0.5) * w * 4, 40, w); c2.fill(); c2.restore();
+          }
+          return cor;
+        });
+      }
+      // planetary nebula: inner blue-violet, outer magenta
+      function planetaryNebula() {
+        return lazy('pneb', function () {
+          var NS = 160, neb = cv(NS, NS), nx = neb.getContext('2d'), im = nx.createImageData(NS, NS), d = im.data, N = noise(31), hh = NS / 2;
+          for (var j = 0; j < NS; j++) for (var k = 0; k < NS; k++) {
+            var dx = (k - hh) / hh, dy = (j - hh) / hh, rad = Math.sqrt(dx * dx + dy * dy), p = (j * NS + k) * 4; if (rad > 1) continue;
+            var n1 = N.fbm(dx * 3 + 5, dy * 3 + 5, 5), n2 = N.fbm(dx * 8 + 2, dy * 8 + 9, 4), r0 = 0.5 + 0.1 * (n1 - 0.5);
+            var ring = Math.exp(-Math.pow((rad - r0) / 0.12, 2)) * (0.45 + 1.0 * n2), inner = Math.exp(-Math.pow(rad / 0.42, 2)) * 0.38 * (0.5 + 0.8 * n1), outer = Math.exp(-Math.pow((rad - 0.7) / 0.11, 2)) * 0.42 * n2 * n1 * 2;
+            d[p] = Math.min(255, inner * 90 + ring * 165 + outer * 255); d[p + 1] = Math.min(255, inner * 190 + ring * 105 + outer * 70); d[p + 2] = Math.min(255, inner * 255 + ring * 255 + outer * 130); d[p + 3] = Math.min(255, (inner + ring + outer) * 240);
+          }
+          nx.putImageData(im, 0, 0); return neb;
+        });
+      }
+      // young-star (nova) cloud
+      function youngCloud() {
+        return lazy('ycloud', function () {
+          var S = 150, c = cv(S, S), cl = c.getContext('2d'), im = cl.createImageData(S, S), d = im.data, N2 = noise(44), h = S / 2;
+          for (var j = 0; j < S; j++) for (var k = 0; k < S; k++) {
+            var dx = (k - h) / h, dy = (j - h) / h, rad = Math.sqrt(dx * dx + dy * dy), p = (j * S + k) * 4;
+            var f = N2.fbm(dx * 2.5 + 3, dy * 2.5 + 3, 5), m = Math.max(0, f - 0.42) * 2.2 * Math.max(0, 1 - rad);
+            d[p] = 255; d[p + 1] = 110 + 60 * f; d[p + 2] = 160; d[p + 3] = Math.min(255, m * 120);
+          }
+          cl.putImageData(im, 0, 0); return c;
+        });
+      }
+      // the universe on the other side of the wormhole (256x256 pixel data)
+      function otherUniverse() {
+        return lazy('other', function () {
+          var O = 256, other = cv(O, O), ox = other.getContext('2d'), N = noise(91), q4 = cv(64, 64), qx = q4.getContext('2d'), im = qx.createImageData(64, 64), d = im.data, i, j;
+          for (j = 0; j < 64; j++) for (i = 0; i < 64; i++) {
+            var u = i / 64, v = j / 64, f = N.fbm(u * 3, v * 3, 5), g2 = N.fbm(u * 2 + 9, v * 2 + 4, 4), k = (j * 64 + i) * 4, m = Math.max(0, f - 0.38) * 2.4;
+            d[k] = 20 + m * (230 * g2 + 40); d[k + 1] = 18 + m * (120 + 90 * (1 - g2)); d[k + 2] = 30 + m * (60 + 170 * (1 - g2)); d[k + 3] = 255;
+          }
+          qx.putImageData(im, 0, 0); ox.drawImage(q4, 0, 0, O, O);
+          var rr = rng(4);
+          for (i = 0; i < 300; i++) { ox.fillStyle = rgba([255, 240, 220], 0.3 + rr() * 0.7); ox.beginPath(); ox.arc(rr() * O, rr() * O, 0.4 + Math.pow(rr(), 5) * 1.4, 0, 6.2832); ox.fill(); }
+          return ox.getImageData(0, 0, O, O).data;
+        });
+      }
+
+      // Six star styles, drawn centred at (0,0) in the caller's coordinate space. R = disk radius.
+      var LIGHT_HALO = { dream: [255, 236, 190], task: [230, 240, 255], fact: [225, 220, 255], pref: [255, 210, 180], episode: [220, 240, 255] };
+      function drawStar(x, style, R, t, low, bright, light) {
+        var b = bright || 1;
+        if (light) { x.save(); x.globalCompositeOperation = 'source-over'; glow(x, 0, 0, R * 3.5, LIGHT_HALO[style] || LIGHT_HALO.dream, 0.55); x.restore(); }
+        if (style === 'task') {
+          var sc = 1 + 0.05 * Math.sin(t * 7.1) * Math.sin(t * 3.3);
+          diskStar(x, 0, 0, R * 0.72, tex('blue'), [160, 196, 255], [30, 50, 140], t, 1.2 * sc * b);
+          if (!low) { x.globalCompositeOperation = 'lighter'; spikes(x, 0, 0, R * 5 * sc, [235, 242, 255], 0.5 * b, 4, 0, Math.max(0.6, R * 0.05)); spikes(x, 0, 0, R * 2.3 * sc, [170, 200, 255], 0.35 * b, 4, Math.PI / 4, Math.max(0.5, R * 0.04)); x.globalCompositeOperation = 'source-over'; }
+        } else if (style === 'fact') {
+          var br = 1 + 0.015 * Math.sin(t * 0.8), D = R * 9 * br;
+          x.save(); x.globalCompositeOperation = 'lighter'; x.globalAlpha *= 0.9; x.rotate(t * 0.01); x.drawImage(planetaryNebula(), -D / 2, -D * 0.445, D, D * 0.89); x.restore();
+          pointStar(x, 0, 0, Math.max(1.4, R * 0.2), [210, 220, 255], (1 + 0.08 * Math.sin(t * 5)) * b, low ? 0 : R * 2.2, 0.3);
+        } else if (style === 'pref') {
+          var ph = t * 6.2832 / 6, pR = R * 1.15 * (1 + 0.035 * Math.sin(ph)), pb = (1 + 0.12 * Math.sin(ph - 0.6)) * b;
+          x.save(); x.globalCompositeOperation = 'lighter'; glow(x, 0, 0, R * 3.4, [255, 110, 50], 0.08 * pb); x.restore();
+          diskStar(x, 0, 0, pR, tex('giant'), [255, 140, 70], [60, 8, 0], t * 0.5, pb);
+        } else if (style === 'episode') {
+          var ba = t * 6.2832 / 7, ax = Math.cos(ba), ay = Math.sin(ba) * 0.32;
+          var p1x = -ax * R * 0.7, p1y = -ay * R * 0.7, p2x = ax * R * 1.3, p2y = ay * R * 1.3;
+          x.save(); x.globalCompositeOperation = 'lighter'; glow(x, 0, 0, R * 3.4, [80, 220, 190], 0.06 * b); x.restore();
+          var big = function () { diskStar(x, p1x, p1y, R * 0.62, tex('bin1'), [150, 210, 255], [20, 60, 120], t, 1.1 * b); };
+          var small = function () { diskStar(x, p2x, p2y, R * 0.36, tex('bin2'), [255, 214, 120], [120, 50, 0], t, b); };
+          if (Math.sin(ba) > 0) { small(); big(); } else { big(); small(); }
+        } else {
+          if (!low) { x.save(); x.globalCompositeOperation = 'lighter'; x.globalAlpha *= 0.85 + 0.1 * Math.sin(t * 0.9); x.rotate(t * 0.012); var k = R / 44; x.drawImage(corona(), -200 * k, -200 * k, 400 * k, 400 * k); x.restore(); }
+          diskStar(x, 0, 0, R, tex('sun'), [255, 214, 140], [120, 40, 0], t, (1 + 0.04 * Math.sin(t * 1.3)) * b);
+        }
+      }
+      // Nova outburst for a freshly formed Dream star. el = seconds since it appeared.
+      function drawNova(x, R, el, low) {
+        var rise = el < 0.25 ? el / 0.25 : Math.exp(-(el - 0.25) * 1.4), nb = 0.35 + 2.2 * rise, D = R * 10;
+        x.save(); x.globalCompositeOperation = 'lighter'; x.globalAlpha *= 0.55 + 0.35 * rise; x.drawImage(youngCloud(), -D / 2, -D / 2, D, D); x.restore();
+        if (el > 0.25) {
+          var sr = (el - 0.25) * R * 3.2, sa = Math.max(0, 1 - (el - 0.25) / 2.6);
+          if (sr > 1 && sa > 0) {
+            x.save(); x.globalCompositeOperation = 'lighter';
+            var sg = x.createRadialGradient(0, 0, sr * 0.8, 0, 0, sr); sg.addColorStop(0, 'rgba(255,150,200,0)'); sg.addColorStop(0.8, rgba([255, 170, 210], 0.25 * sa)); sg.addColorStop(1, 'rgba(255,150,200,0)');
+            x.fillStyle = sg; x.beginPath(); x.arc(0, 0, sr, 0, 6.2832); x.fill(); x.restore();
+          }
+        }
+        pointStar(x, 0, 0, Math.max(1.4, R * 0.18 * (1 + rise)), [255, 190, 225], nb, low ? 0 : R * (1.6 + 3.6 * rise), 0.15);
+      }
+
+      // Cache each rock by size and material. Refresh rotation on staggered animation frames.
+      var rocks = new Map(), rockBudget = 0, rockPending = false, frame = 0;
+      function beginFrame() { rockBudget = 6; rockPending = false; frame++; }
+      function rockFor(id, screenR, kind) {
+        var bucket = Math.max(4, Math.min(44, Math.round(screenR))), e = rocks.get(id);
+        var stale = !e || e.kind !== kind || Math.abs(e.bucket - bucket) > Math.max(2, e.bucket * 0.25);
+        if (stale) {
+          if (rockBudget <= 0) {
+            rockPending = true;
+            return e || null;
+          }
+          rockBudget--;
+          var seed = 1 + Math.floor(hashGraphId(id) * 1e6);
+          var rock = new Rock(bucket, seed, ROCK_TYPES[kind] || ROCK_TYPES.C);
+          var display = cv(rock.S, rock.S).getContext('2d');
+          // Reuse a drawing surface separate from the canvas written with putImageData.
+          display.globalCompositeOperation = 'copy';
+          e = { rock: rock, display: display, bucket: bucket, kind: kind, rot: null, slot: rocks.size % 4 };
+          rocks.set(id, e);
+        }
+        return e;
+      }
+      function rockImage(e, rot, emit, ex, ey) {
+        if (e.rot === null || emit > 0.01 || e.hot || (e.rot !== rot && (frame + e.slot) % 4 === 0)) {
+          e.display.drawImage(e.rock.render(rot, emit, ex, ey), 0, 0);
+          e.rot = rot;
+          e.hot = emit > 0.01;
+        }
+        return e.display.canvas;
+      }
+      function pruneRocks(liveIds) { rocks.forEach(function (_, id) { if (!liveIds.has(id)) rocks.delete(id); }); }
+      function hole(Rs) { if (!cache.hole || cache.holeRs !== Rs) { cache.hole = new BlackHole(Rs, 5); cache.holeRs = Rs; } return cache.hole; }
+      function lens(key, Rl) { var k = 'lens_' + key; if (!cache[k] || cache[k].Rl !== Rl) cache[k] = new Lens(Rl, 2); return cache[k]; }
+
+      return {
+        rng: rng, noise: noise, cv: cv, rgba: rgba, glow: glow, spikes: spikes, starTile: starTile, granTex: granTex,
+        diskStar: diskStar, pointStar: pointStar, Rock: Rock, Parts: Parts, meteor: meteor, Lens: Lens, BlackHole: BlackHole,
+        get reduced() { return Boolean(reducedMQ && reducedMQ.matches); },
+        get rockPending() { return rockPending; },
+        PAGE_LOAD_MS: PAGE_LOAD_MS, ROCK_TYPES: ROCK_TYPES, hexRgb: hexRgb,
+        tile: tile, tileData: tileData, bgPattern: bgPattern, otherUniverse: otherUniverse,
+        drawStar: drawStar, drawNova: drawNova,
+        beginFrame: beginFrame, rockFor: rockFor, rockImage: rockImage, pruneRocks: pruneRocks,
+        hole: hole, lens: lens, parts: new Parts(),
+      };
+    })();
+
+    /* GalaxyGL: real-time ray-traced black hole / wormhole and the WebGL sky background (SPEC §7).
+       Shaders come from docs/memory-galaxy-visual/shaders.glsl (each fragment shader = common + its section).
+       If WebGL or a shader is unavailable, ensure() returns null and the canvas-2D GalaxyFX portals are used instead. */
+    const GalaxyGL = (function () {
+      const SRC = {
+        common: `precision highp float;
+uniform vec2 uRes;
+uniform float uTime;
+uniform float uMode;   // 0 = night galaxy, 1 = daytime sky
+uniform float uAct;    // black hole: card approaching (0..1)
+uniform float uFlash;  // swallow / eject flash (0..1)
+uniform vec2 uC;       // object centre in device px
+uniform float uS;      // px per unit of tan(angle)
+uniform float uNoBodies; // 1 = hide sun & moon discs (portal canvases)
+
+float hash13(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
+vec3 hash33(vec3 p) { p = fract(p * vec3(0.1031, 0.1030, 0.0973)); p += dot(p, p.yxz + 33.33); return fract((p.xxy + p.yxx) * p.zyx); }
+float noise3(vec3 p) {
+  vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(mix(hash13(i), hash13(i + vec3(1, 0, 0)), f.x), mix(hash13(i + vec3(0, 1, 0)), hash13(i + vec3(1, 1, 0)), f.x), f.y),
+             mix(mix(hash13(i + vec3(0, 0, 1)), hash13(i + vec3(1, 0, 1)), f.x), mix(hash13(i + vec3(0, 1, 1)), hash13(i + vec3(1, 1, 1)), f.x), f.y), f.z);
+}
+float fbm3(vec3 p) { float s = 0.0, a = 0.5; for (int i = 0; i < 5; i++) { s += a * noise3(p); p = p * 2.03 + vec3(1.7, 9.2, 3.1); a *= 0.5; } return s; }
+float fbm2o(vec3 p) { float s = 0.0, a = 0.5; for (int i = 0; i < 3; i++) { s += a * noise3(p); p = p * 2.03 + vec3(1.7, 9.2, 3.1); a *= 0.5; } return s; }
+
+vec3 starLayer(vec3 d, float sc, float thr, float t) {
+  vec3 q = d * sc, c = floor(q);
+  float h = hash13(c);
+  if (h < thr) return vec3(0.0);
+  vec3 sp = c + 0.2 + 0.6 * hash33(c);
+  float dist = length(q - sp), b = (h - thr) / (1.0 - thr);
+  float tw = 0.78 + 0.22 * sin(t * (1.3 + h * 3.0) + h * 40.0);
+  vec3 tint = mix(vec3(1.0, 0.80, 0.62), vec3(0.68, 0.80, 1.0), hash13(c + 7.0));
+  tint = mix(tint, vec3(1.0), 0.45);
+  return tint * (0.35 + 0.65 * b) * tw * (smoothstep(0.16, 0.0, dist) * 1.6 + smoothstep(0.4, 0.0, dist) * 0.25);
+}
+
+vec3 skyNight(vec3 d, float t) {
+  vec3 n = normalize(vec3(0.62, 0.76, 0.18));
+  float b = dot(d, n), band = exp(-b * b * 11.0), thin = exp(-b * b * 55.0);
+  float f = fbm3(d * 3.2);
+  float dust = smoothstep(0.50, 0.66, fbm3(d * 9.0 + vec3(5.0))) * exp(-b * b * 45.0);
+  vec3 mw = mix(vec3(0.26, 0.29, 0.40), vec3(0.46, 0.43, 0.40), thin) * band * pow(f, 1.8) * 1.4;
+  vec3 coreDir = normalize(vec3(-0.62, 0.48, 0.62));
+  float core = pow(max(dot(d, coreDir), 0.0), 10.0) * band;
+  mw += vec3(0.60, 0.48, 0.34) * core * 0.5;
+  mw *= 1.0 - 0.88 * dust;
+  float neb1 = smoothstep(0.56, 0.86, fbm3(d * 2.1 + vec3(11.0)));
+  float neb2 = smoothstep(0.60, 0.90, fbm3(d * 2.7 + vec3(30.0)));
+  vec3 col = vec3(0.003, 0.004, 0.010) + mw * 0.6 + neb1 * vec3(0.22, 0.04, 0.08) * 0.38 + neb2 * vec3(0.03, 0.08, 0.20) * 0.42;
+  float dens = 0.6 + 3.0 * band;
+  col += starLayer(d, 110.0, 1.0 - 0.020 * dens, t) * 1.1;
+  col += starLayer(d, 210.0, 1.0 - 0.035 * dens, t) * 0.7;
+  col += starLayer(d, 420.0, 1.0 - 0.06 * dens, t) * 0.45 * (1.0 - dust);
+  col += starLayer(d, 55.0, 0.990, t) * 2.4;
+  return col;
+}
+
+vec3 moonDisc(vec3 d, vec3 mdir, float rad, vec3 sunDir, out float a) {
+  a = 0.0;
+  float c = dot(d, mdir);
+  float ang = acos(clamp(c, -1.0, 1.0));
+  if (ang > rad * 1.05) return vec3(0.0);
+  vec3 e1 = normalize(cross(mdir, vec3(0.0, 1.0, 0.0))), e2 = cross(e1, mdir);
+  vec2 p = vec2(dot(d, e1), dot(d, e2)) / sin(rad);
+  float rr = dot(p, p);
+  if (rr > 1.0) { a = 0.0; return vec3(0.0); }
+  vec3 nrm = vec3(p, sqrt(1.0 - rr));
+  vec3 L = normalize(vec3(-0.75, 0.35, 0.35));
+  float lit = smoothstep(-0.05, 0.25, dot(nrm, L));
+  float maria = smoothstep(0.45, 0.7, fbm2o(vec3(p * 3.0, 4.0)));
+  vec3 col = vec3(0.96, 0.97, 1.0) * (0.86 - 0.22 * maria);
+  a = lit * 0.82 * smoothstep(1.0, 0.94, rr);
+  return col;
+}
+
+vec3 skyDay(vec3 d, vec3 fwd, float t) {
+  float z = clamp(dot(d, fwd), 0.0, 1.0);
+  vec3 zen = vec3(0.13, 0.38, 0.84), hor = vec3(0.66, 0.82, 0.96);
+  vec3 col = mix(hor, zen, smoothstep(0.45, 1.0, z));
+  vec3 up = vec3(0.0, 1.0, 0.0), rt = normalize(cross(up, fwd)); up = cross(fwd, rt);
+  vec3 sun = normalize(fwd - rt * 0.62 + up * 0.46);
+  float sd = max(dot(d, sun), 0.0);
+  col = mix(col, vec3(0.93, 0.96, 1.0), pow(sd, 10.0) * 0.55);
+  col += vec3(1.0, 0.98, 0.92) * (pow(sd, 2500.0) * 8.0 + pow(sd, 120.0) * 0.45) * (1.0 - uNoBodies);
+  float ma; vec3 mdir = normalize(fwd + rt * 0.42 + up * 0.26);
+  vec3 mc = moonDisc(d, mdir, 0.045, sun, ma);
+  col = mix(col, mc, ma * (1.0 - uNoBodies));
+  vec3 cp = vec3(dot(d, rt) * 2.0 + t * 0.006, dot(d, up) * 7.0, dot(d, fwd) * 2.0);
+  float cl = smoothstep(0.52, 0.86, fbm3(cp)) * 0.75;
+  float cl2 = smoothstep(0.58, 0.9, fbm3(d * 4.0 + vec3(t * 0.004, 0.0, 3.0))) * 0.35;
+  col = mix(col, vec3(0.98, 0.99, 1.0), clamp(cl + cl2, 0.0, 0.85));
+  col += (starLayer(d, 150.0, 0.9915, t) + starLayer(d, 62.0, 0.9945, t) * 1.5) * 0.10 * (1.0 - cl);
+  return col;
+}
+
+vec3 sky(vec3 d, vec3 fwd, float t) { return uMode < 0.5 ? skyNight(d, t) : skyDay(d, fwd, t); }
+vec3 tone(vec3 c) { return vec3(1.0) - exp(-c * 1.25); }
+`,
+        bh: `// Gargantua-style Schwarzschild black hole (rs = 1). Rays integrated with a = -1.5 h^2 r / |r|^5.
+const float RIN = 2.6;
+const float ROUT = 15.0;
+
+vec4 disk(vec3 p, vec3 rd) {
+  float r = length(p.xz);
+  float phi = atan(p.z, p.x);
+  float a = phi + uTime * (0.55 + uAct * 0.9) * pow(r, -1.5) * 4.0;
+  vec3 q = vec3(r * 1.25, cos(a) * 1.4, sin(a) * 1.4);
+  float n = fbm3(q + vec3(0.0, 0.0, 3.0));
+  float fine = fbm2o(vec3(r * 7.0, cos(a) * 5.0, sin(a) * 5.0));
+  float bands = fbm2o(vec3(r * 4.5 + n * 2.5, cos(a) * 0.9, sin(a) * 0.9));
+  float x = (r - RIN) / (ROUT - RIN);
+  float I = pow(1.0 - x, 2.0) * (0.3 + 1.0 * n) * (0.45 + 1.0 * bands * bands) * (0.75 + 0.5 * fine);
+  I *= smoothstep(0.0, 0.035, x) * smoothstep(1.0, 0.55, x);
+  vec3 v = normalize(vec3(-p.z, 0.0, p.x));
+  float dop = 1.0 + 0.28 * dot(v, -rd);
+  I *= dop * dop * dop;
+  I *= sqrt(max(0.0, 1.0 - 1.0 / r));
+  vec3 c = mix(vec3(0.95, 0.32, 0.07), vec3(1.0, 0.66, 0.30), smoothstep(0.1, 0.8, 1.0 - x));
+  c = mix(c, vec3(1.0, 0.93, 0.82), pow(1.0 - x, 9.0));
+  I *= (1.0 + 0.7 * uAct + 1.5 * uFlash) * 4.2;
+  return vec4(c * I, clamp(I * 0.85, 0.0, 0.97));
+}
+
+void main() {
+  vec2 uv = (gl_FragCoord.xy - uC) / uS;
+  float D = 22.0, inc = 0.075;
+  vec3 cam = vec3(0.0, D * sin(inc), -D * cos(inc));
+  vec3 fwd = normalize(-cam), rt = normalize(cross(vec3(0.0, 1.0, 0.0), fwd)), up = cross(fwd, rt);
+  vec3 dir = normalize(fwd + uv.x * rt + uv.y * up);
+  vec3 col = vec3(0.0); float alpha = 0.0; bool hit = false;
+  vec3 pos = cam, vel = dir;
+  float th2 = dot(uv, uv);
+  if (th2 >= 1.3225) { vec2 us = uv * (1.0 - 2.0 / (D * th2)); vel = normalize(fwd + us.x * rt + us.y * up); }
+  if (th2 < 1.3225) {
+    vec3 hv = cross(pos, vel); float h2 = dot(hv, hv);
+    for (int i = 0; i < 170; i++) {
+      float r2 = dot(pos, pos), r = sqrt(r2);
+      float dt = clamp(0.085 * r, 0.015, 1.8);
+      vec3 prev = pos;
+      vel += -1.5 * h2 * pos / (r2 * r2 * r) * dt;
+      pos += vel * dt;
+      if (prev.y * pos.y < 0.0) {
+        float tt = prev.y / (prev.y - pos.y);
+        vec3 p = mix(prev, pos, tt);
+        float pr = length(p.xz);
+        if (pr > RIN && pr < ROUT) { vec4 dc = disk(p, normalize(vel)); col += (1.0 - alpha) * dc.rgb * dc.a; alpha += (1.0 - alpha) * dc.a; }
+      }
+      if (r2 < 1.0) { hit = true; break; }
+      if (r2 > 700.0 && dot(pos, vel) > 0.0) break;
+      if (alpha > 0.985) break;
+    }
+  }
+  vec3 bg = hit ? vec3(0.0) : sky(normalize(vel), fwd, uTime);
+  if (uMode < 0.5) bg = tone(bg * 1.1);
+  vec3 dcol = tone(col);
+  vec3 outc = dcol + (1.0 - alpha) * bg;
+  outc += vec3(1.0, 0.85, 0.65) * uFlash * 0.35 * exp(-length(uv) * 6.0);
+  gl_FragColor = vec4(outc, 1.0);
+}
+`,
+        wh: `// Interstellar-style spherical wormhole: lensing outside, another universe inside the throat.
+const float M = 0.6;    // lensing strength (rs units)
+const float RT = 1.1;   // throat radius
+
+vec3 otherSky(vec3 d, float t) {
+  float ca = cos(t * 0.02), sa = sin(t * 0.02);
+  d = vec3(ca * d.x + sa * d.z, d.y, -sa * d.x + ca * d.z);
+  vec3 col = vec3(0.012, 0.010, 0.02);
+  float neb = fbm3(d * 2.4 + vec3(7.0));
+  col += vec3(0.16, 0.06, 0.14) * smoothstep(0.42, 0.85, neb) + vec3(0.03, 0.10, 0.14) * smoothstep(0.48, 0.9, fbm3(d * 3.1 + vec3(2.0)));
+  vec3 gc = normalize(vec3(0.25, 0.30, -1.0));
+  vec3 e1 = normalize(cross(gc, vec3(0.0, 1.0, 0.0))), e2 = cross(e1, gc);
+  float fz = dot(d, gc);
+  if (fz > 0.0) {
+    vec2 p = vec2(dot(d, e1), dot(d, e2)) / fz;
+    float cr = cos(0.5), sr = sin(0.5);
+    p = vec2(cr * p.x - sr * p.y, sr * p.x + cr * p.y);
+    p.y /= 0.45; p *= 0.55;
+    float r = length(p), ang = atan(p.y, p.x);
+    float arms = pow(0.5 + 0.5 * cos(2.0 * (ang - log(r + 0.02) * 2.6 - t * 0.01)), 3.0);
+    float disc = exp(-r * 1.1);
+    float dust = smoothstep(0.5, 0.75, fbm3(vec3(p * 6.0, 1.0))) * arms;
+    float knots = smoothstep(0.72, 0.9, fbm3(vec3(p * 14.0, 5.0))) * arms * disc;
+    vec3 g = vec3(0.55, 0.68, 1.0) * arms * disc * 1.3 + vec3(1.0, 0.78, 0.48) * exp(-r * r * 9.0) * 2.6 + vec3(1.0, 0.35, 0.55) * knots * 1.4;
+    g *= 1.0 - 0.6 * dust;
+    col += g * smoothstep(0.0, 0.2, fz);
+  }
+  col += starLayer(d, 170.0, 0.986, t) * vec3(0.9, 0.95, 1.1) + starLayer(d, 70.0, 0.992, t) * 1.6;
+  return col;
+}
+
+void main() {
+  vec2 uv = (gl_FragCoord.xy - uC) / uS;
+  float D = 14.0;
+  vec3 cam = vec3(0.0, 0.6, -D);
+  vec3 fwd = normalize(-cam), rt = normalize(cross(vec3(0.0, 1.0, 0.0), fwd)), up = cross(fwd, rt);
+  vec3 dir = normalize(fwd + uv.x * rt + uv.y * up);
+  vec3 pos = cam, vel = dir;
+  bool inside = false; float rim = 0.0;
+  float th2 = dot(uv, uv);
+  if (th2 >= 0.81) { vec2 us = uv * (1.0 - 2.0 * M / (D * th2)); vel = normalize(fwd + us.x * rt + us.y * up); }
+  if (th2 < 0.81) {
+    vec3 hv = cross(pos, vel); float h2 = dot(hv, hv);
+    for (int i = 0; i < 150; i++) {
+      float r2 = dot(pos, pos), r = sqrt(r2);
+      float dt = clamp(0.08 * r, 0.01, 1.5);
+      vel += -1.5 * M * h2 * pos / (r2 * r2 * r) * dt;
+      pos += vel * dt;
+      if (dot(pos, pos) < RT * RT) { inside = true; rim = pow(1.0 - abs(dot(normalize(pos), normalize(vel))), 14.0); break; }
+      if (r2 > 500.0 && dot(pos, vel) > 0.0) break;
+    }
+  }
+  vec3 col;
+  if (inside) {
+    vec3 od = reflect(normalize(vel), normalize(pos));
+    col = otherSky(od, uTime) * (1.0 + 2.0 * uFlash);
+    col += vec3(0.85, 0.93, 1.0) * rim * (1.6 + uFlash);
+    col = tone(col * 2.2);
+    if (uMode > 0.5) col = mix(col, col * 0.85 + vec3(0.05, 0.08, 0.12), 0.3);
+  } else {
+    col = sky(normalize(vel), fwd, uTime);
+    if (uMode < 0.5) col = tone(col * 1.1);
+  }
+  gl_FragColor = vec4(col, 1.0);
+}
+`,
+        sky: `// Screen-space background for the memory galaxy map (night galaxy / daytime sky).
+uniform vec2 uPan;   // camera pan in px (parallax)
+void main() {
+  vec2 uv = (gl_FragCoord.xy - uC + uPan * 0.15) / uS;
+  float a = uTime * 0.003;
+  vec3 d = normalize(vec3(uv, 1.0));
+  vec3 fwd = vec3(0.0, 0.0, 1.0);
+  d = vec3(cos(a) * d.x + sin(a) * d.z, d.y, -sin(a) * d.x + cos(a) * d.z);
+  fwd = vec3(sin(a), 0.0, cos(a));
+  vec3 col = sky(d, fwd, uTime);
+  vec2 q = gl_FragCoord.xy / uRes - 0.5;
+  if (uMode < 0.5) { col = tone(col * 1.15); col *= 1.0 - 0.35 * dot(q, q) * 2.0; }
+  else {
+    // part of the Earth globe at the bottom: curved limb, atmosphere, oceans, land and clouds
+    vec2 sc = gl_FragCoord.xy / uRes;
+    float asp = uRes.x / uRes.y;
+    vec2 P = vec2(sc.x * asp, sc.y);
+    float R = 1.75;
+    vec2 ec = vec2(asp * 0.5 + uPan.x * 0.0003, 0.23 - R);
+    vec2 rp = (P - ec) / R;
+    float rl = length(rp);
+    float alt = (rl - 1.0) * R;                      // distance above the limb (screen units)
+    col = mix(col, vec3(0.80, 0.90, 1.0), exp(-max(alt, 0.0) / 0.10) * 0.55);
+    col += vec3(0.45, 0.68, 1.0) * exp(-max(alt, 0.0) / 0.018) * 0.35;
+    if (rl < 1.0) {
+      vec3 n = vec3(rp, sqrt(1.0 - rl * rl));
+      float ang = uTime * 0.004;
+      vec3 m = vec3(cos(ang) * n.x + sin(ang) * n.z, n.y, -sin(ang) * n.x + cos(ang) * n.z);
+      float land = smoothstep(0.47, 0.51, fbm3(m * 3.4 + vec3(4.0)));
+      float hum = fbm2o(m * 6.0 + vec3(9.0));
+      vec3 ground = mix(vec3(0.36, 0.30, 0.20), vec3(0.20, 0.36, 0.18), smoothstep(0.35, 0.6, hum));
+      vec3 sea = mix(vec3(0.03, 0.16, 0.36), vec3(0.06, 0.30, 0.52), smoothstep(0.3, 0.7, fbm2o(m * 5.0)));
+      vec3 surf = mix(sea, ground, land);
+      vec3 L = normalize(vec3(-0.55, 0.55, 0.62));
+      float dif = clamp(dot(n, L), 0.0, 1.0);
+      vec3 H = normalize(L + vec3(0.0, 0.0, 1.0));
+      float glint = pow(max(dot(n, H), 0.0), 60.0) * (1.0 - land) * 0.6;
+      float cl = smoothstep(0.50, 0.78, fbm3(m * 5.5 + vec3(uTime * 0.002, 0.0, 1.0)));
+      cl = max(cl, smoothstep(0.62, 0.85, fbm3(m * vec3(14.0, 3.0, 14.0) + vec3(2.0))) * 0.7);
+      vec3 e = surf * (0.25 + 0.95 * dif) + vec3(1.0, 0.97, 0.9) * glint;
+      e = mix(e, vec3(0.97, 0.98, 1.0) * (0.45 + 0.6 * dif), cl * 0.9);
+      float limb = pow(1.0 - n.z, 5.0);
+      e = mix(e, vec3(0.55, 0.76, 1.0), clamp(limb * 1.1, 0.0, 0.8));
+      float aa = smoothstep(1.0, 1.0 - 1.5 / (uRes.y * R), rl);
+      col = mix(col, e, aa);
+    }
+    col *= 1.0 - 0.06 * dot(q, q) * 2.0;
+  }
+  gl_FragColor = vec4(col, 1.0);
+}
+`,
+      };
+      const GLX = {
+        make(canvas, fsrc) {
+          const gl = canvas.getContext('webgl', { antialias: false, preserveDrawingBuffer: true, premultipliedAlpha: false });
+          if (!gl) return null;
+          const sh = (type, src) => {
+            const o = gl.createShader(type);
+            gl.shaderSource(o, src);
+            gl.compileShader(o);
+            if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) { console.warn('[GalaxyGL]', gl.getShaderInfoLog(o)); return null; }
+            return o;
+          };
+          const vs = sh(gl.VERTEX_SHADER, 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}');
+          const fs = sh(gl.FRAGMENT_SHADER, fsrc);
+          if (!vs || !fs) return null;
+          const pr = gl.createProgram();
+          gl.attachShader(pr, vs);
+          gl.attachShader(pr, fs);
+          gl.linkProgram(pr);
+          if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) { console.warn('[GalaxyGL]', gl.getProgramInfoLog(pr)); return null; }
+          gl.useProgram(pr);
+          const b = gl.createBuffer();
+          gl.bindBuffer(gl.ARRAY_BUFFER, b);
+          gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+          const loc = gl.getAttribLocation(pr, 'p');
+          gl.enableVertexAttribArray(loc);
+          gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+          const U = {};
+          const u = n => { if (!(n in U)) U[n] = gl.getUniformLocation(pr, n); return U[n]; };
+          return {
+            gl,
+            set(o) {
+              for (const k in o) {
+                const v = o[k];
+                const l = u(k);
+                if (l === null) continue;
+                if (typeof v === 'number') gl.uniform1f(l, v); else gl.uniform2f(l, v[0], v[1]);
+              }
+            },
+            draw() { gl.viewport(0, 0, canvas.width, canvas.height); gl.drawArrays(gl.TRIANGLES, 0, 3); },
+          };
+        },
+      };
+
+      let st = null;
+      let failed = false;
+
+      function layer(cls) {
+        const c = document.createElement('canvas');
+        c.className = 'graph-gl-layer ' + cls;
+        c.setAttribute('aria-hidden', 'true');
+        return c;
+      }
+
+      function disable() {
+        failed = true;
+        if (st) [st.skyC, st.bhC, st.bhF, st.whC, st.whF].forEach(c => c.remove());
+        st = null;
+        if (typeof requestGraphDraw === 'function') requestGraphDraw();
+      }
+
+      function ensure(stage) {
+        if (failed || !stage) return null;
+        if (st) return st;
+        const canvases = [];
+        try {
+          const before = stage.querySelector('#graphCanvas');
+          const skyC = layer('graph-gl-sky');
+          const bhC = layer('graph-gl-portal');
+          const bhF = layer('graph-gl-portal graph-gl-bloom');
+          const whC = layer('graph-gl-portal');
+          const whF = layer('graph-gl-portal graph-gl-bloom');
+          canvases.push(skyC, bhC, bhF, whC, whF);
+          canvases.forEach(c => stage.insertBefore(c, before));
+          const sky = GLX.make(skyC, SRC.common + SRC.sky);
+          const bh = sky && GLX.make(bhC, SRC.common + SRC.bh);
+          const wh = bh && GLX.make(whC, SRC.common + SRC.wh);
+          if (!sky || !bh || !wh) throw new Error('WebGL unavailable');
+          const bx = bhF.getContext('2d');
+          const wx = whF.getContext('2d');
+          // canvas filter blur is needed for the bloom layer; without it (older Safari) the bloom is skipped
+          const bloomOk = Boolean(bx && typeof bx.filter === 'string');
+          if (!bloomOk) { bhF.style.display = 'none'; whF.style.display = 'none'; }
+          [skyC, bhC, whC].forEach(c => c.addEventListener('webglcontextlost', e => { e.preventDefault(); disable(); }, false));
+          st = { skyC, bhC, bhF, whC, whF, sky, bh, wh, bx, wx, bloomOk, frame: 0, last: {} };
+          return st;
+        } catch (err) {
+          canvases.forEach(c => c.remove());
+          failed = true;
+          return null;
+        }
+      }
+
+      function place(c, x, y, w, h) {
+        const k = `${Math.round(x)},${Math.round(y)},${Math.round(w)},${Math.round(h)}`;
+        if (c._place === k) return;
+        c._place = k;
+        c.style.left = Math.round(x) + 'px';
+        c.style.top = Math.round(y) + 'px';
+        c.style.width = Math.round(w) + 'px';
+        c.style.height = Math.round(h) + 'px';
+      }
+      function size(c, pw, ph) {
+        pw = Math.max(1, Math.round(pw));
+        ph = Math.max(1, Math.round(ph));
+        if (c.width === pw && c.height === ph) return false;
+        c.width = pw;
+        c.height = ph;
+        return true;
+      }
+      function bloom(x, glc, a) {
+        const W = x.canvas.width;
+        const H = x.canvas.height;
+        x.setTransform(1, 0, 0, 1, 0, 0);
+        x.clearRect(0, 0, W, H);
+        x.globalCompositeOperation = 'source-over';
+        x.globalAlpha = a;
+        x.filter = 'blur(' + Math.max(1, Math.round(W / 70)) + 'px)';
+        x.drawImage(glc, 0, 0, W, H);
+        x.filter = 'blur(' + Math.max(1, Math.round(W / 22)) + 'px)';
+        x.globalAlpha = a * 0.6;
+        x.drawImage(glc, 0, 0, W, H);
+        x.filter = 'none';
+        x.globalAlpha = 1;
+      }
+
+      function render(o) {
+        const s = st;
+        if (!s) return false;
+        s.frame++;
+        const L = s.last;
+        const t = o.reduced ? 12 : o.time;
+        const animate = !o.reduced && o.animate;
+        const mode = o.light ? 1 : 0;
+        const modeChanged = L.mode !== mode || L.reduced !== o.reduced;
+
+        // Repaint the sky on pan or appearance changes, and every fourth active animation frame.
+        const base = Math.min(1, o.dpr);
+        const skyRs = base * Math.min(1, Math.sqrt(1.6e6 / Math.max(1, o.w * o.h * base * base)));
+        place(s.skyC, 0, 0, o.w, o.h);
+        const sw = Math.round(o.w * skyRs);
+        const shh = Math.round(o.h * skyRs);
+        const skyResized = size(s.skyC, sw, shh);
+        const panX = Math.round(-o.camX * skyRs);
+        const panY = Math.round(o.camY * skyRs);
+        if (skyResized || modeChanged || L.panX !== panX || L.panY !== panY || (animate && s.frame % 4 === 1)) {
+          s.sky.set({ uRes: [sw, shh], uTime: t, uMode: mode, uAct: 0, uFlash: 0, uNoBodies: 0, uC: [sw / 2, shh / 2], uS: 430 * skyRs, uPan: [panX, panY] });
+          s.sky.draw();
+          L.panX = panX;
+          L.panY = panY;
+        }
+
+        const rs = 0.8 * Math.min(1.5, o.dpr);
+        // Black hole: canvas 12 Rs x 7 Rs centred on the portal; shadow angular radius = 3√3/2 / D ≈ 0.118
+        const bh = o.portals.bh;
+        const BW = bh.Rs * 12;
+        const BHh = bh.Rs * 7;
+        place(s.bhC, bh.x - BW / 2, bh.y - BHh / 2, BW, BHh);
+        place(s.bhF, bh.x - BW / 2, bh.y - BHh / 2, BW, BHh);
+        const bpw = Math.round(BW * rs);
+        const bph = Math.round(BHh * rs);
+        const bResized = size(s.bhC, bpw, bph);
+        if (s.bloomOk) size(s.bhF, BW * o.dpr * 0.5, BHh * o.dpr * 0.5);
+        const bhBusy = o.act > 0.005 || o.bhFlash > 0;
+        if (bResized || modeChanged || L.act !== o.act || L.bf !== o.bhFlash || (animate && (bhBusy || s.frame % 2 === 0))) {
+          s.bh.set({ uRes: [bpw, bph], uTime: t, uMode: mode, uAct: o.act, uFlash: o.bhFlash, uNoBodies: 1, uC: [bpw / 2, bph / 2], uS: (bh.Rs / 0.118) * rs });
+          s.bh.draw();
+          if (s.bloomOk) bloom(s.bx, s.bhC, mode ? 0.28 : 0.55);
+          L.act = o.act;
+          L.bf = o.bhFlash;
+        }
+
+        // Wormhole: canvas 6 Rw square; throat apparent radius ≈ 0.113 tan units in the design (uS 900 → ~102px)
+        const wh = o.portals.wh;
+        const WW = wh.radius * 6;
+        place(s.whC, wh.x - WW / 2, wh.y - WW / 2, WW, WW);
+        place(s.whF, wh.x - WW / 2, wh.y - WW / 2, WW, WW);
+        const wpw = Math.round(WW * rs);
+        const wResized = size(s.whC, wpw, wpw);
+        if (s.bloomOk) size(s.whF, WW * o.dpr * 0.5, WW * o.dpr * 0.5);
+        if (wResized || modeChanged || L.wf !== o.whFlash || (animate && (o.whFlash > 0 || s.frame % 2 === 1))) {
+          s.wh.set({ uRes: [wpw, wpw], uTime: t, uMode: mode, uAct: 0, uFlash: o.whFlash, uNoBodies: 1, uC: [wpw / 2, wpw / 2], uS: (wh.radius / 0.113) * rs });
+          s.wh.draw();
+          if (s.bloomOk) bloom(s.wx, s.whC, mode ? 0.2 : 0.4);
+          L.wf = o.whFlash;
+        }
+        L.mode = mode;
+        L.reduced = o.reduced;
+        return true;
+      }
+
+      return {
+        ensure,
+        render,
+        disable,
+        get active() { return Boolean(st); },
+        get failed() { return failed; },
+      };
+    })();
+
+    /* Interactive Cosmic Memory Galaxy (Dream Stars + Mini-Galaxies + Black Hole / Wormhole) */
     const graphState = {
       query: '',
       seed: '',
@@ -7394,6 +8300,7 @@
       layoutKey: '',
       autoFit: true,
       fitOnSettle: false,
+      expanded: false,
       lightCanvas: false,
       typeFilter: '',
       rawNodes: [],
@@ -7411,27 +8318,178 @@
       selectedId: null,
       draggingNode: null,
       eventsBound: false,
+      cosmicTime: 0,
+      bgStars: [],
+      stellarOrbits: [],
+      galaxyClusters: [],
+      cosmicAnims: new Map(),
+      cosmicParticles: [],
+      bhShockwaves: [],
+      bhHoverPull: 0,
+      whFlare: 0,
+      // GalaxyFX realistic renderer state (visual only)
+      fxAct: 0,
+      fxBhFlash: 0,
+      fxWhFlash: 0,
+      fxWhRippleMs: -1e9,
+      fxCool: new Map(),
+      fxArrivals: new Map(),
+      fxNova: new Map(),
+      fxStarStyle: new Map(),
+      fxSeenIds: null,
+      fxLastMs: 0,
+      fxFrame: 0,
+      fxDragPrev: null,
+      fxGLOn: false,
     };
 
+    function isDreamStarNode(n) {
+      return Boolean(n && (n.assertion_kind === 'inferred' || n.memory_type === 'dream'));
+    }
+
+    // Asteroid material for a regular card: 'M' metal = important, 'S' stony = recently used, 'C' carbon = default.
+    function classifyAsteroidType(n) {
+      // TODO(human): tune how cards map to C / S / M asteroids (see SPEC §1 小行星样式).
+      const quadrant = String(n.quadrant || '');
+      const important = Boolean(n.user_locked)
+        || quadrant.startsWith('Q1') || quadrant.startsWith('Q2')
+        || Number(n.evidence_count || 0) >= 3
+        || Number(n.explicit_degree || 0) >= 4;
+      if (important) return 'M';
+      const updated = Date.parse(n.updated_at || '');
+      if (Number.isFinite(updated) && Date.now() - updated < 7 * 24 * 3600 * 1000) return 'S';
+      return 'C';
+    }
+
+    function hashGraphId(str) {
+      let h = 2166136261;
+      const s = String(str || '');
+      for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return (h >>> 0) / 4294967296;
+    }
+
+    function enrichCelestialNode(n) {
+      const h1 = hashGraphId(n.id || n.title);
+      const h2 = hashGraphId((n.id || '') + ':tilt');
+      const h3 = hashGraphId((n.id || '') + ':spin');
+      n.isDreamStar = isDreamStarNode(n);
+      n.seedPhase = h1 * Math.PI * 2;
+      n.tiltAngle = (h2 - 0.5) * 0.72;
+      n.spinSpeed = (h3 > 0.5 ? 1 : -1) * (n.isDreamStar ? 0.18 : 0.24 + h3 * 0.34);
+      n.armCount = h1 > 0.45 ? 3 : 2;
+      n.fxSpin = (h3 > 0.5 ? 1 : -1) * (0.1 + h2 * 0.2);
+      n.fxDrift = 2 + h1 * 3;
+    }
+
     function graphNodeColor(n) {
-      if (n.assertion_kind === 'inferred') return '#ec4899';
-      if (n.memory_type === 'task') return n.task_status === 'done' ? '#10b981' : '#3b82f6';
-      if (n.memory_type === 'semantic') return '#8b5cf6';
+      if (isDreamStarNode(n)) return '#fbbf24';
+      if (n.memory_type === 'task') return n.task_status === 'done' ? '#34d399' : '#38bdf8';
+      if (n.memory_type === 'semantic') return '#a78bfa';
       if (n.memory_type === 'preference') return '#f59e0b';
-      if (n.memory_type === 'episodic') return '#14b8a6';
-      return '#6366f1';
+      if (n.memory_type === 'episodic') return '#2dd4bf';
+      return '#818cf8';
     }
 
     function graphNodeRadius(n) {
       const deg = Number(n.degree || 0);
-      const base = n.hop === 0 && graphState.seed ? 9.5 : 7.0;
-      return Math.min(22, base + Math.sqrt(deg) * 3.1);
+      if (isDreamStarNode(n)) {
+        return Math.min(26, 15.0 + Math.sqrt(deg) * 3.3);
+      }
+      const base = n.hop === 0 && graphState.seed ? 11.0 : 9.0;
+      return Math.min(20, base + Math.sqrt(deg) * 2.5);
+    }
+
+    function ensureBgStars() {
+      if (graphState.bgStars.length) return;
+      const palette = ['#ffffff', '#bae6fd', '#fde68a', '#e9d5ff', '#fbcfe8'];
+      for (let i = 0; i < 145; i++) {
+        const s1 = hashGraphId(`star_x_${i}`);
+        const s2 = hashGraphId(`star_y_${i}`);
+        const s3 = hashGraphId(`star_z_${i}`);
+        graphState.bgStars.push({
+          nx: s1,
+          ny: s2,
+          r: 0.55 + s3 * 1.45,
+          speed: 0.7 + s1 * 1.8,
+          phase: s2 * Math.PI * 2,
+          color: palette[i % palette.length],
+        });
+      }
+    }
+
+    // Top edge (stage coordinates) of any fixed floating button overlapping the stage right of minX; cached for 500ms.
+    const stageFabCache = { at: 0, key: '', top: Infinity };
+    function getStageFabTop(wrap, minX, h) {
+      const now = performance.now();
+      const key = `${Math.round(minX)}:${Math.round(h)}`;
+      if (now - stageFabCache.at < 500 && stageFabCache.key === key) return stageFabCache.top;
+      let top = Infinity;
+      if (wrap) {
+        const stage = wrap.getBoundingClientRect();
+        for (const fab of document.querySelectorAll('#askFabBtn, .ask-fab-btn')) {
+          if (fab.offsetParent === null && getComputedStyle(fab).position !== 'fixed') continue;
+          const r = fab.getBoundingClientRect();
+          if (!r.width || !r.height) continue;
+          const overlaps = r.right - stage.left > minX && r.left < stage.right && r.bottom > stage.top && r.top < stage.bottom;
+          if (overlaps) top = Math.min(top, r.top - stage.top);
+        }
+      }
+      stageFabCache.at = now;
+      stageFabCache.key = key;
+      stageFabCache.top = top;
+      return top;
+    }
+
+    // Screen-space portals: black hole bottom-right, wormhole top-right. They avoid the top-left legend pills,
+    // the bottom-left control group and an open inspector, and shrink to 0.7x on narrow screens.
+    function getCosmicPortals(w, h) {
+      const wrap = document.getElementById('graphStageWrap');
+      const inspOpen = document.getElementById('graphInspector')?.classList.contains('open');
+      const rightInset = (inspOpen && w > 760) ? 364 : 0;
+      const k = w < 420 ? 0.5 : (w < 640 ? 0.7 : 1);
+      const Rs = Math.round(34 * k);
+      const Rw = Math.round(42 * k);
+      const hudTop = wrap?.querySelector('.graph-hud-top');
+      const hudCtl = wrap?.querySelector('.graph-hud-controls');
+      const topRight = hudTop ? hudTop.offsetLeft + hudTop.offsetWidth : 0;
+      const topBottom = hudTop ? hudTop.offsetTop + hudTop.offsetHeight : 0;
+      const ctlRight = hudCtl ? hudCtl.offsetLeft + hudCtl.offsetWidth : 0;
+      const ctlTop = hudCtl ? hudCtl.offsetTop : h;
+
+      const bhX = Math.max(Rs * 5.2, w - rightInset - Rs * 5 - 6);
+      const whX = Math.max(Rw * 1.8, w - rightInset - Rw * 1.6 - 18);
+      let whY = 18 + Rw;
+      if (topRight > whX - Rw * 1.5) whY = Math.max(whY, topBottom + 14 + Rw);
+      const bhLabelRoom = Rs * 1.9 + 6 + 26;
+      let bhY = h - bhLabelRoom - 8;
+      if (ctlRight > bhX - Rs * 3.5) bhY = Math.min(bhY, ctlTop - bhLabelRoom - 6);
+      // page-level floating buttons (e.g. the「问记忆」FAB) that sit over the stage's bottom-right corner
+      const fabTop = getStageFabTop(wrap, bhX - Rs * 3.5, h);
+      if (fabTop < h) bhY = Math.min(bhY, fabTop - bhLabelRoom - 6);
+      // keep the two portals apart; on very short stages the black hole stays just above the bottom edge
+      bhY = Math.max(bhY, Math.min(h - Rs * 1.4, whY + Rw + 30 + Rs * 2));
+
+      return {
+        bh: { x: bhX, y: bhY, Rs, k, captureRadius: Rs * 2.4, horizonRadius: Rs * 0.92 },
+        wh: { x: whX, y: whY, radius: Rw, k },
+      };
+    }
+
+    function worldToScreen(wx, wy, w, h) {
+      return {
+        x: w * 0.5 + graphState.camX + wx * graphState.scale,
+        y: h * 0.5 + graphState.camY + wy * graphState.scale,
+      };
     }
 
     function toggleGraphCanvasTheme() {
       graphState.lightCanvas = !graphState.lightCanvas;
       document.getElementById('graphStageWrap').classList.toggle('light-canvas', graphState.lightCanvas);
       document.getElementById('graphThemeBtn').textContent = graphState.lightCanvas ? '暗色' : '亮色';
+      if (graphState.autoFit) fitGraphCamera();
       requestGraphDraw();
     }
 
@@ -7474,7 +8532,11 @@
       const showDerived = document.getElementById('gLayerDerived').checked;
       const showSemantic = document.getElementById('gLayerSemantic').checked;
 
-      const nodes = graphState.rawNodes.map(raw => ({ ...raw, degree: 0 }));
+      const nodes = graphState.rawNodes.map(raw => {
+        const clone = { ...raw, degree: 0 };
+        enrichCelestialNode(clone);
+        return clone;
+      });
       const nodeById = new Map(nodes.map(node => [node.id, node]));
       const adjById = new Map(nodes.map(node => [node.id, new Set()]));
       const edges = [];
@@ -7498,12 +8560,14 @@
       ]);
       document.getElementById('graphEmptyHint').style.display = nodes.length ? 'none' : 'flex';
       document.getElementById('graphEmptyLabel').textContent =
-        graphState.seed ? '没有找到匹配的卡片' : '当前筛选下没有卡片';
+        graphState.seed ? '没有找到匹配的星系天体' : '当前筛选星域暂无记忆节点';
       if (graphState.layoutKey === layoutKey) {
         for (const node of nodes) {
           const rendered = graphState.nodeById.get(node.id);
-          rendered.summary = node.summary;
-          rendered.version = node.version;
+          if (rendered) {
+            rendered.summary = node.summary;
+            rendered.version = node.version;
+          }
         }
         requestGraphDraw();
         return;
@@ -7516,89 +8580,211 @@
       graphState.adjById = adjById;
       graphState.draggingNode = null;
       graphState.hoveredId = null;
+      graphState.cosmicAnims.clear();
+      graphState.cosmicParticles = [];
+      graphState.bhHoverPull = 0;
+      graphState.fxCool.clear();
+      galaxyOnNodesLoaded(nodes, edges);
       if (graphState.selectedId) {
         const selected = nodeById.get(graphState.selectedId);
         if (selected) selectGraphNode(selected);
         else closeGraphInspector();
       }
 
-      const unlinked = nodes.filter(node => node.degree === 0).length;
-      const mode = graphState.seed ? '搜索结果' : '全局图谱';
+      const starsCount = nodes.filter(node => node.isDreamStar).length;
+      const galaxyCount = Math.max(0, nodes.length - starsCount);
+      const mode = graphState.seed ? '局域星域' : '记忆星系';
       document.getElementById('graphStatsPill').textContent =
-        `${mode} · ${nodes.length} 张卡片 · ${edges.length} 条连线${unlinked ? ` · ${unlinked} 张未连接` : ''}`;
+        `${mode} · ☀ ${starsCount} 颗Dream恒星 · ☄ ${galaxyCount} 颗小行星 · ${edges.length} 条引力航道`;
       resetGraphLayout();
     }
 
+    function placeGalaxyGroups(groups, aspect) {
+      if (!groups.length) return;
+      const meanSize = Math.sqrt(groups.reduce((sum, g) => sum + g.width * g.height, 0) / groups.length);
+      const stretch = Math.sqrt(aspect);
+      groups.sort((a, b) => b.width - a.width);
+
+      // A golden-angle spiral breaks the alignment of rows while keeping the largest groups near the center.
+      groups.forEach((group, index) => {
+        const angle = index * Math.PI * (3 - Math.sqrt(5));
+        const distance = Math.sqrt(index) * meanSize * 0.56;
+        group.x = Math.cos(angle) * distance * stretch;
+        group.y = Math.sin(angle) * distance / stretch;
+      });
+
+      const gap = 32;
+      for (let pass = 0; pass < 36; pass++) {
+        let moved = false;
+        for (let i = 0; i < groups.length; i++) {
+          const a = groups[i];
+          for (let j = i + 1; j < groups.length; j++) {
+            const b = groups[j];
+            const dx = b.x - a.x;
+            const dy = b.y - a.y;
+            const distance = Math.hypot(dx, dy);
+            const overlap = (a.width + b.width) / 2 + gap - distance;
+            if (overlap <= 0.25 || !distance) continue;
+            moved = true;
+            const share = b.width / (a.width + b.width);
+            const pullX = dx * overlap / distance;
+            const pullY = dy * overlap / distance;
+            a.x -= pullX * share;
+            a.y -= pullY * share;
+            b.x += pullX * (1 - share);
+            b.y += pullY * (1 - share);
+          }
+        }
+        if (!moved) break;
+      }
+    }
+
     function resetGraphLayout() {
-      const { nodes, adjById, nodeById } = graphState;
-      const remaining = new Set(nodes.filter(node => node.degree).map(node => node.id));
+      const { nodes, edges, nodeById } = graphState;
+      // Theme similarity links remain visible. Only explicit relationships determine overview groups.
+      const layoutNeighbors = new Map(nodes.map(node => [node.id, []]));
+      for (const edge of edges) {
+        if (edge.edge_kind === 'semantic' && !graphState.seed) continue;
+        layoutNeighbors.get(edge.source).push(edge.target);
+        layoutNeighbors.get(edge.target).push(edge.source);
+      }
+      const remaining = new Set(nodes.filter(node => layoutNeighbors.get(node.id).length).map(node => node.id));
       const components = [];
       while (remaining.size) {
         const id = remaining.values().next().value;
         remaining.delete(id);
         const component = [nodeById.get(id)];
         for (const node of component) {
-          for (const neighbor of adjById.get(node.id)) {
+          for (const neighbor of layoutNeighbors.get(node.id)) {
             if (remaining.delete(neighbor)) component.push(nodeById.get(neighbor));
           }
         }
-        component.sort((a, b) => a.hop - b.hop || b.degree - a.degree);
+        component.sort((a, b) => (b.isDreamStar ? 1 : 0) - (a.isDreamStar ? 1 : 0) || a.hop - b.hop || b.degree - a.degree);
         components.push(component);
       }
       components.sort((a, b) => b.length - a.length);
 
-      // Pack connected groups into separate regions. Real cards without edges get their own grid.
-      const groups = components.map(members => {
-        const extent = 100 + Math.ceil(Math.sqrt(members.length) * 84);
-        return { members, width: extent, height: extent, columns: 0 };
-      });
-      const isolated = nodes.filter(node => !node.degree);
+      // Group unlinked isolated nodes by celestial category into mini spiral constellations
+      const isolated = nodes.filter(node => !layoutNeighbors.get(node.id).length);
+      const isolatedClusters = [];
       if (isolated.length) {
-        const columns = Math.ceil(Math.sqrt(isolated.length));
-        groups.push({
-          members: isolated, columns,
-          width: 40 + columns * 90,
-          height: 40 + Math.ceil(isolated.length / columns) * 64,
-        });
-      }
-      const area = groups.reduce((sum, group) => sum + group.width * group.height, 0);
-      const rowLimit = Math.max(Math.sqrt(area) * 1.35, ...groups.map(group => group.width));
-      let left = 0;
-      let top = 0;
-      let rowHeight = 0;
-      for (const group of groups) {
-        if (left && left + group.width > rowLimit) {
-          top += rowHeight + 20;
-          left = 0;
-          rowHeight = 0;
+        const buckets = new Map();
+        for (const n of isolated) {
+          const key = n.isDreamStar ? 'dream_star' : (n.memory_type || 'other');
+          if (!buckets.has(key)) buckets.set(key, []);
+          buckets.get(key).push(n);
         }
-        const centerX = left + group.width / 2;
-        const centerY = top + group.height / 2;
-        group.members.forEach((node, index) => {
-          node.radius = graphNodeRadius(node);
-          node.color = graphNodeColor(node);
-          if (group.columns) {
-            node.x = left + 65 + (index % group.columns) * 90;
-            node.y = top + 52 + Math.floor(index / group.columns) * 64;
+        for (const members of buckets.values()) {
+          isolatedClusters.push({ members, isIsolatedGroup: true });
+        }
+      }
+
+      const allClusters = [
+        ...components.map(members => ({ members, isIsolatedGroup: false })),
+        ...isolatedClusters,
+      ];
+      const groups = allClusters.map(({ members, isIsolatedGroup }) => {
+        const hasStar = members.some(m => m.isDreamStar);
+        const extent = isIsolatedGroup
+          ? Math.max(165, 110 + Math.ceil(Math.sqrt(members.length) * 68))
+          : Math.max(210, 130 + Math.ceil(Math.sqrt(members.length) * (hasStar ? 96 : 86)));
+        return { members, isIsolatedGroup, hasStar, width: extent, height: extent };
+      });
+
+      const { width, height } = graphFitArea();
+      const aspect = Math.max(0.65, Math.min(3.2, width / height));
+      graphState.layoutAspect = aspect;
+      placeGalaxyGroups(groups, aspect);
+
+      const stellarOrbits = [];
+      const galaxyClusters = [];
+      for (const [layoutGroup, group] of groups.entries()) {
+        const centerX = group.x;
+        const centerY = group.y;
+        const rotation = hashGraphId(group.members[0].id) * Math.PI * 2;
+        for (const node of group.members) node.layoutGroup = layoutGroup;
+
+        if (group.hasStar) {
+          const stars = group.members.filter(m => m.isDreamStar);
+          const satellites = group.members.filter(m => !m.isDreamStar);
+          const primary = stars[0];
+          primary.radius = graphNodeRadius(primary);
+          primary.color = graphNodeColor(primary);
+          primary.x = centerX;
+          primary.y = centerY;
+          primary.anchorX = centerX;
+          primary.anchorY = centerY;
+          primary.homeX = centerX;
+          primary.homeY = centerY;
+          primary.vx = 0;
+          primary.vy = 0;
+
+          const orbitRadii = [];
+          const otherBodies = [...stars.slice(1), ...satellites];
+          if (otherBodies.length) {
+            for (let start = 0, rIdx = 0; start < otherBodies.length; rIdx++) {
+              const orbitR = 92 + rIdx * 64;
+              const perRing = Math.max(6, Math.floor(2 * Math.PI * orbitR / 92));
+              orbitRadii.push(orbitR);
+              const slice = otherBodies.slice(start, start + perRing);
+              start += slice.length;
+              slice.forEach((node, sIdx) => {
+                const angle = rotation + (sIdx / slice.length) * Math.PI * 2 + rIdx * 0.55;
+                node.radius = graphNodeRadius(node);
+                node.color = graphNodeColor(node);
+                node.x = centerX + Math.cos(angle) * orbitR;
+                node.y = centerY + Math.sin(angle) * orbitR;
+                node.anchorX = node.x;
+                node.anchorY = node.y;
+                node.homeX = node.x;
+                node.homeY = node.y;
+                node.vx = 0;
+                node.vy = 0;
+              });
+            }
+          }
+          stellarOrbits.push({ x: centerX, y: centerY, radii: orbitRadii, color: primary.color });
+        } else {
+          // Non-Dream clusters: arrange along a 2-arm logarithmic spiral mini-galaxy
+          group.members.forEach((node, index) => {
+            node.radius = graphNodeRadius(node);
+            node.color = graphNodeColor(node);
+            if (group.members.length === 1) {
+              node.x = centerX;
+              node.y = centerY;
+            } else {
+              const arm = index % 2;
+              const k = Math.floor(index / 2);
+              const theta = rotation + arm * Math.PI + k * 0.92;
+              const dist = 34 + Math.sqrt(k + 0.4) * 38;
+              node.x = centerX + Math.cos(theta) * dist;
+              node.y = centerY + Math.sin(theta) * dist * 0.84;
+            }
             node.anchorX = node.x;
             node.anchorY = node.y;
-          } else {
-            const angle = index * 2.39996323;
-            const distance = 38 * Math.sqrt(index);
-            node.x = centerX + Math.cos(angle) * distance;
-            node.y = centerY + Math.sin(angle) * distance;
-            node.anchorX = centerX;
-            node.anchorY = centerY;
-          }
-          node.vx = 0;
-          node.vy = 0;
-        });
-        left += group.width + 20;
-        rowHeight = Math.max(rowHeight, group.height);
+            node.homeX = node.x;
+            node.homeY = node.y;
+            node.vx = 0;
+            node.vy = 0;
+          });
+          const leadColor = group.members[0] ? graphNodeColor(group.members[0]) : '#6366f1';
+          galaxyClusters.push({
+            x: centerX,
+            y: centerY,
+            radius: group.width * 0.44,
+            color: leadColor,
+            isBelt: group.isIsolatedGroup,
+          });
+        }
       }
+
+      graphState.stellarOrbits = stellarOrbits;
+      graphState.galaxyClusters = galaxyClusters;
+      graphState.cosmicAnims.clear();
+      graphState.cosmicParticles = [];
       fitGraphCamera();
       graphState.fitOnSettle = true;
-      reheatGraphPhysics(0.8);
+      reheatGraphPhysics(0.75);
     }
 
     async function loadGraph(seed = graphState.query) {
@@ -7680,6 +8866,8 @@
       const hitPad = 4 / Math.max(0.4, graphState.scale);
       for (let i = graphState.nodes.length - 1; i >= 0; i--) {
         const n = graphState.nodes[i];
+        const anim = graphState.cosmicAnims.get(n.id);
+        if (anim && anim.alpha <= 0.08) continue;
         const r = n.radius + hitPad;
         const dx = p.x - n.x;
         const dy = p.y - n.y;
@@ -7701,12 +8889,14 @@
       // Repel nearby nodes and keep each group near its assigned region.
       for (let i = 0; i < nLen; i++) {
         const a = nodes[i];
-        if (a !== graphState.draggingNode) {
+        const aBusy = a === graphState.draggingNode || graphState.cosmicAnims.has(a.id);
+        if (!aBusy) {
           a.vx += (a.anchorX - a.x) * 0.012 * alpha;
           a.vy += (a.anchorY - a.y) * 0.012 * alpha;
         }
         for (let j = i + 1; j < nLen; j++) {
           const b = nodes[j];
+          const bBusy = b === graphState.draggingNode || graphState.cosmicAnims.has(b.id);
           let dx = b.x - a.x;
           let dy = b.y - a.y;
           let d2 = dx * dx + dy * dy;
@@ -7725,15 +8915,18 @@
             fx += (dx / dist) * push;
             fy += (dy / dist) * push;
           }
-          if (a !== graphState.draggingNode) { a.vx -= fx; a.vy -= fy; }
-          if (b !== graphState.draggingNode) { b.vx += fx; b.vy += fy; }
+          if (!aBusy) { a.vx -= fx; a.vy -= fy; }
+          if (!bBusy) { b.vx += fx; b.vy += fy; }
         }
       }
 
-      // 2. Hooke spring attraction along edges
+      // 2. Hooke spring attraction along edges. Cross-group similarity is visual only.
       for (const e of edges) {
         const s = e.sourceNode;
         const t = e.targetNode;
+        if (s.layoutGroup !== t.layoutGroup) continue;
+        const sBusy = s === graphState.draggingNode || graphState.cosmicAnims.has(s.id);
+        const tBusy = t === graphState.draggingNode || graphState.cosmicAnims.has(t.id);
         const dx = t.x - s.x;
         const dy = t.y - s.y;
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
@@ -7742,13 +8935,13 @@
         const force = (dist - restLen) * k;
         const fx = (dx / dist) * force;
         const fy = (dy / dist) * force;
-        if (s !== graphState.draggingNode) { s.vx += fx; s.vy += fy; }
-        if (t !== graphState.draggingNode) { t.vx -= fx; t.vy -= fy; }
+        if (!sBusy) { s.vx += fx; s.vy += fy; }
+        if (!tBusy) { t.vx -= fx; t.vy -= fy; }
       }
 
       // 3. Integrate velocity with viscous damping
       for (const n of nodes) {
-        if (n === graphState.draggingNode) {
+        if (n === graphState.draggingNode || graphState.cosmicAnims.has(n.id)) {
           n.vx = 0;
           n.vy = 0;
           continue;
@@ -7770,6 +8963,547 @@
       return true;
     }
 
+    function startBlackHoleDevour(node, originScreenPt = null) {
+      if (!node || graphState.cosmicAnims.has(node.id)) return;
+      // Pure visual demo animation: zero network calls, zero mutations to rawNodes or backend memory records.
+      const wrap = document.getElementById('graphStageWrap');
+      const rect = wrap ? wrap.getBoundingClientRect() : { width: 800, height: 480 };
+      const w = Math.max(200, rect.width || 800);
+      const h = Math.max(200, rect.height || 480);
+      const portals = getCosmicPortals(w, h);
+      const startSc = originScreenPt || worldToScreen(node.x, node.y, w, h);
+      const homeX = typeof node.homeX === 'number' ? node.homeX : node.x;
+      const homeY = typeof node.homeY === 'number' ? node.homeY : node.y;
+      const dx = startSc.x - portals.bh.x;
+      const dy = startSc.y - portals.bh.y;
+      node.homeX = homeX;
+      node.homeY = homeY;
+      graphState.fxArrivals.delete(node.id);
+      graphState.fxCool.delete(node.id);
+
+      graphState.cosmicAnims.set(node.id, {
+        node,
+        startMs: performance.now(),
+        phase: 'infall',
+        homeX,
+        homeY,
+        startSc: { x: startSc.x, y: startSc.y },
+        // spiral parameters measured in the (squashed) accretion-disk plane
+        a0: Math.atan2(dy / 0.6, dx),
+        r0: Math.max(Math.hypot(dx, dy), portals.bh.Rs * 1.2),
+        sx: startSc.x,
+        sy: startSc.y,
+        radial: 0,
+        stretch: 1,
+        flat: 1,
+        scale: 1,
+        emit: 0,
+        ux: 0,
+        uy: 0,
+        alpha: 1,
+        flashed: false,
+        ejected: false,
+      });
+      requestGraphDraw();
+    }
+
+    function devourNodeById(nodeId) {
+      const node = graphState.nodeById.get(nodeId);
+      if (!node) return;
+      if (graphState.cosmicAnims.has(node.id)) {
+        showToast('⏳ 该天体正在穿越虫洞，请稍候归位...');
+        return;
+      }
+      startBlackHoleDevour(node);
+    }
+
+    function triggerDemoBlackHoleDevour() {
+      if (!graphState.nodes.length) {
+        showToast('当前星系中暂无可吞噬演示的记忆节点，请先录入一条记忆或切换筛选条件');
+        return;
+      }
+      const selected = graphState.selectedId ? graphState.nodeById.get(graphState.selectedId) : null;
+      const candidate = (selected && !graphState.cosmicAnims.has(selected.id))
+        ? selected
+        : (graphState.nodes.find(n => !graphState.cosmicAnims.has(n.id) && !isDreamStarNode(n))
+          || graphState.nodes.find(n => !graphState.cosmicAnims.has(n.id)));
+      if (!candidate) {
+        showToast('🌌 当前已有节点正在穿越虫洞中...');
+        return;
+      }
+      startBlackHoleDevour(candidate);
+    }
+
+    // Cooling meteorite after a drag ends away from the black hole: dust puff + ~2.6s afterglow.
+    function galaxyStartCooling(node, screenPt) {
+      if (!node || isDreamStarNode(node)) return;
+      graphState.fxCool.set(node.id, performance.now());
+      if (GalaxyFX.reduced || !screenPt) return;
+      const parts = GalaxyFX.parts;
+      for (let i = 0; i < 40; i++) {
+        const an = Math.random() * 6.2832;
+        const s2 = 40 + Math.random() * 70;
+        parts.add(screenPt.x + Math.cos(an) * 12, screenPt.y + 10 + Math.sin(an) * 4, Math.cos(an) * s2, Math.sin(an) * s2 * 0.3 - 10, 1.2 + Math.random() * 1.2, 3 + Math.random() * 4, 1);
+      }
+      for (let i = 0; i < 18; i++) {
+        const an = Math.random() * 6.2832;
+        const s2 = 60 + Math.random() * 90;
+        parts.add(screenPt.x, screenPt.y, Math.cos(an) * s2, Math.sin(an) * s2 - 30, 0.4 + Math.random() * 0.5, 1 + Math.random() * 1.2, 0);
+      }
+    }
+
+    // Called whenever a new layout is built: pick each Dream star's style, queue meteors for brand-new cards and novae for new Dreams.
+    function galaxyOnNodesLoaded(nodes, edges) {
+      const styleOf = { task: 'task', semantic: 'fact', preference: 'pref', episodic: 'episode' };
+      const counts = new Map();
+      for (const e of edges) {
+        if (e.edge_kind !== 'derived_from') continue;
+        for (const [star, other] of [[e.sourceNode, e.targetNode], [e.targetNode, e.sourceNode]]) {
+          if (!isDreamStarNode(star) || isDreamStarNode(other)) continue;
+          if (!counts.has(star.id)) counts.set(star.id, {});
+          const c = counts.get(star.id);
+          c[other.memory_type] = (c[other.memory_type] || 0) + 1;
+        }
+      }
+      graphState.fxStarStyle.clear();
+      for (const n of nodes) {
+        if (!isDreamStarNode(n)) continue;
+        const c = counts.get(n.id);
+        let style = 'dream';
+        if (c) {
+          let best = 0;
+          for (const [type, num] of Object.entries(c)) {
+            if (styleOf[type] && num > best) { best = num; style = styleOf[type]; }
+          }
+        } else if (styleOf[n.memory_type]) {
+          style = styleOf[n.memory_type];
+        }
+        graphState.fxStarStyle.set(n.id, style);
+      }
+
+      GalaxyFX.pruneRocks(new Set(nodes.map(n => n.id)));
+      const firstLoad = !graphState.fxSeenIds;
+      if (firstLoad) graphState.fxSeenIds = new Set();
+      const fresh = [];
+      for (const n of nodes) {
+        if (graphState.fxSeenIds.has(n.id)) continue;
+        graphState.fxSeenIds.add(n.id);
+        if (firstLoad || GalaxyFX.reduced) continue;
+        // Only cards created / updated during this page session count as "new arrivals" (filter changes don't).
+        const ts = Date.parse(n.updated_at || '');
+        if (Number.isFinite(ts) && ts >= GalaxyFX.PAGE_LOAD_MS - 120000) fresh.push(n);
+      }
+      if (!fresh.length) return;
+      const nowMs = performance.now();
+      const shower = fresh.filter(n => !isDreamStarNode(n)).length > 1;
+      let delay = 0;
+      fresh.slice(0, 24).forEach(n => {
+        if (isDreamStarNode(n)) {
+          graphState.fxNova.set(n.id, nowMs + delay * 1000);
+          return;
+        }
+        graphState.fxArrivals.set(n.id, {
+          startMs: nowMs + delay * 1000,
+          dur: 0.5 + Math.random() * 0.25,
+          shower,
+          jitter: Math.random(),
+        });
+        delay += shower ? 0.2 + Math.random() * 0.5 : 0;
+      });
+    }
+
+    function stepCosmicAnimations(nowMs, w, h) {
+      const portals = getCosmicPortals(w, h);
+      const reduced = GalaxyFX.reduced;
+      const dt = Math.min(0.05, Math.max(0, (nowMs - (graphState.fxLastMs || nowMs)) / 1000));
+      graphState.fxLastMs = nowMs;
+      const parts = GalaxyFX.parts;
+      const bh = portals.bh;
+      const wh = portals.wh;
+      const completed = [];
+
+      for (const [id, anim] of graphState.cosmicAnims.entries()) {
+        const n = anim.node;
+        const el = (nowMs - anim.startMs) / 1000;
+
+        if (reduced) {
+          // Reduced motion: no spiral, just fade out where it is and fade back in at home.
+          if (el < 0.45) {
+            anim.phase = 'infall';
+            anim.alpha = 1 - el / 0.45;
+            anim.sx = anim.startSc.x;
+            anim.sy = anim.startSc.y;
+          } else if (el < 0.9) {
+            anim.phase = 'return';
+            n.x = anim.homeX;
+            n.y = anim.homeY;
+            const sc = worldToScreen(n.x, n.y, w, h);
+            anim.sx = sc.x;
+            anim.sy = sc.y;
+            anim.alpha = (el - 0.45) / 0.45;
+          } else {
+            completed.push(id);
+          }
+          anim.stretch = 1; anim.flat = 1; anim.scale = 1; anim.emit = 0;
+          continue;
+        }
+
+        if (el < 1.5) {
+          // Spiral infall along the accretion-disk plane
+          anim.phase = 'infall';
+          const e = el / 1.5;
+          const r = anim.r0 * Math.pow(1 - e, 1.5);
+          const ang = anim.a0 + 9 * e * e + 1.5 * e;
+          const squash = 0.6 - 0.45 * e;
+          anim.sx = bh.x + Math.cos(ang) * r;
+          anim.sy = bh.y + Math.sin(ang) * r * squash;
+          anim.radial = Math.atan2(anim.sy - bh.y, anim.sx - bh.x);
+          anim.stretch = 1 + 2.4 * e;
+          anim.flat = 1 - 0.6 * e;
+          anim.alpha = 1 - Math.pow(e, 3);
+          anim.emit = 0.6 + 0.4 * e;
+          anim.scale = 1;
+          if (Math.random() < 0.8) parts.add(anim.sx, anim.sy, -Math.sin(ang) * 120, Math.cos(ang) * 50, 0.3 + Math.random() * 0.4, 1 + Math.random() * 1.5, 0);
+        } else if (el < 2.2) {
+          // Inside the event horizon: flash once, wait 0.7s
+          anim.phase = 'void';
+          anim.alpha = 0;
+          anim.sx = bh.x;
+          anim.sy = bh.y;
+          if (!anim.flashed) { anim.flashed = true; graphState.fxBhFlash = 1; }
+        } else if (el < 3.9) {
+          // Ejected from the wormhole as a meteor, flying back home along a bezier
+          anim.phase = 'return';
+          if (!anim.ejected) {
+            anim.ejected = true;
+            graphState.fxWhFlash = 1;
+            graphState.fxWhRippleMs = nowMs;
+          }
+          const e3 = (el - 2.2) / 1.7;
+          const e4 = 1 - Math.pow(1 - e3, 3);
+          const home = worldToScreen(anim.homeX, anim.homeY, w, h);
+          const mx = (wh.x + home.x) / 2 - 60;
+          const my = (wh.y + home.y) / 2 - 140;
+          const px = (1 - e4) * (1 - e4) * wh.x + 2 * (1 - e4) * e4 * mx + e4 * e4 * home.x;
+          const py = (1 - e4) * (1 - e4) * wh.y + 2 * (1 - e4) * e4 * my + e4 * e4 * home.y;
+          const vx = px - anim.sx;
+          const vy = py - anim.sy;
+          const vl = Math.hypot(vx, vy) || 1;
+          anim.ux = vx / vl;
+          anim.uy = vy / vl;
+          anim.sx = px;
+          anim.sy = py;
+          anim.e = e3;
+          anim.radial = 0;
+          anim.stretch = 1;
+          anim.flat = 1;
+          anim.alpha = 1;
+          anim.scale = Math.min(1, (el - 2.2) / 0.3);
+          anim.emit = 0.5 * (1 - e3);
+        } else {
+          completed.push(id);
+        }
+        if (anim.phase !== 'void') {
+          const wp = screenToWorld(anim.sx, anim.sy);
+          n.x = wp.x;
+          n.y = wp.y;
+        }
+      }
+
+      for (const id of completed) {
+        const anim = graphState.cosmicAnims.get(id);
+        graphState.cosmicAnims.delete(id);
+        if (!anim?.node) continue;
+        const n = anim.node;
+        n.x = anim.homeX;
+        n.y = anim.homeY;
+        n.anchorX = anim.homeX;
+        n.anchorY = anim.homeY;
+        n.vx = 0;
+        n.vy = 0;
+        if (!reduced) {
+          const sc = worldToScreen(n.x, n.y, w, h);
+          for (let k = 0; k < 24; k++) {
+            const an = Math.random() * 6.2832;
+            const s2 = 30 + Math.random() * 50;
+            parts.add(sc.x, sc.y + 6, Math.cos(an) * s2, Math.sin(an) * s2 * 0.4, 1 + Math.random(), 2 + Math.random() * 3, 1);
+          }
+          if (!isDreamStarNode(n)) graphState.fxCool.set(n.id, nowMs);
+        }
+        showToast(`🌌 「${n.title}」被黑洞吞噬后经虫洞重返星轨（仅动画演示，记忆数据未改动）`);
+      }
+
+      // Black-hole activity: rises while a dragged card is within ~6 Rs, max during infall
+      let near = 0;
+      const dragged = graphState.draggingNode;
+      if (dragged) {
+        const sc = worldToScreen(dragged.x, dragged.y, w, h);
+        const d = Math.hypot(sc.x - bh.x, sc.y - bh.y);
+        near = Math.min(1, Math.max(0, 1 - (d - bh.Rs * 2.6) / (bh.Rs * 3.4)));
+      }
+      for (const anim of graphState.cosmicAnims.values()) if (anim.phase === 'infall') near = 1;
+      graphState.fxAct += (near - graphState.fxAct) * Math.min(1, dt * 4);
+      if (!near && graphState.fxAct < 0.005) graphState.fxAct = 0;
+      graphState.fxBhFlash = Math.max(0, graphState.fxBhFlash - dt * 1.6);
+      graphState.fxWhFlash = Math.max(0, graphState.fxWhFlash - dt * 1.4);
+      graphState.whFlare = graphState.fxWhFlash;
+
+      // Burning meteorite: a dragged (non-Dream) card sheds sparks and smoke opposite to its motion
+      if (dragged && !isDreamStarNode(dragged) && !reduced) {
+        const sc = worldToScreen(dragged.x, dragged.y, w, h);
+        const prev = graphState.fxDragPrev;
+        let vx = 0;
+        let vy = 0;
+        if (prev && prev.id === dragged.id && dt > 0) {
+          vx = prev.vx * 0.6 + ((sc.x - prev.x) / dt) * 0.4;
+          vy = prev.vy * 0.6 + ((sc.y - prev.y) / dt) * 0.4;
+        }
+        graphState.fxDragPrev = { id: dragged.id, x: sc.x, y: sc.y, vx, vy };
+        const sp = Math.hypot(vx, vy);
+        const heat = Math.min(1, 0.35 + sp / 600);
+        const ux = sp > 1 ? vx / sp : 0;
+        const uy = sp > 1 ? vy / sp : 0;
+        dragged._fxBurn = { ux, uy, heat };
+        const nE = Math.round(2 + heat * 5);
+        for (let k = 0; k < nE; k++) {
+          parts.add(sc.x - ux * 8 + (Math.random() - 0.5) * 5, sc.y - uy * 8 + (Math.random() - 0.5) * 5, -vx * 0.2 + (Math.random() - 0.5) * 40, -vy * 0.2 + (Math.random() - 0.5) * 40, 0.2 + Math.random() * 0.45 * heat, 1 + Math.random() * 1.8, 0);
+        }
+        if (Math.random() < 0.5) parts.add(sc.x - ux * 12, sc.y - uy * 12, -vx * 0.1, -vy * 0.1, 1 + Math.random(), 2.5 + Math.random() * 2, 1);
+      } else {
+        graphState.fxDragPrev = null;
+        if (dragged) dragged._fxBurn = null;
+      }
+
+      for (const [id, start] of graphState.fxCool.entries()) if (nowMs - start > 2600) graphState.fxCool.delete(id);
+      for (const [id, arr] of graphState.fxArrivals.entries()) {
+        if (!graphState.nodeById.has(id) || (nowMs - arr.startMs) / 1000 > arr.dur) graphState.fxArrivals.delete(id);
+      }
+      for (const [id, start] of graphState.fxNova.entries()) if ((nowMs - start) / 1000 > 3.3) graphState.fxNova.delete(id);
+
+      parts.step(dt, 0, 0, graphState.fxAct > 0.05 ? { x: bh.x, y: bh.y, g: 60000 * graphState.fxAct } : null);
+      graphState.cosmicParticles = [];
+      graphState.bhShockwaves = graphState.bhShockwaves.filter(sw => (nowMs - sw.birth) < sw.life);
+      return Boolean(graphState.draggingNode || graphState.cosmicAnims.size ||
+        graphState.fxCool.size || graphState.fxArrivals.size || graphState.fxNova.size ||
+        parts.p.length || graphState.bhShockwaves.length || graphState.fxAct ||
+        graphState.fxBhFlash || graphState.fxWhFlash || nowMs - graphState.fxWhRippleMs < 1200);
+    }
+
+    // Draws a Dream node as one of six realistic star styles (or a nova if it just formed).
+    function drawDreamStar(ctx, n, t, isLight, isFocus, isSelected, screenScale = null) {
+      const R = n.radius;
+      const low = graphState.scale < 0.6;
+      const style = graphState.fxStarStyle.get(n.id) || 'dream';
+      const novaStart = graphState.fxNova.get(n.id);
+      const el = novaStart != null ? (performance.now() - novaStart) / 1000 : -1;
+      if (novaStart != null && el < 0) return; // queued nova: not visible yet
+      if (el >= 0 && el < 3.3) {
+        GalaxyFX.drawNova(ctx, R, el, low);
+        if (el > 2.7) {
+          ctx.save();
+          ctx.globalAlpha *= (el - 2.7) / 0.6;
+          GalaxyFX.drawStar(ctx, style, R, t, low || isLight, isLight ? 0.35 : 1, isLight);
+          ctx.restore();
+        }
+      } else {
+        GalaxyFX.drawStar(ctx, style, R, t, low || isLight, isLight ? 0.35 : 1, isLight);
+      }
+      if (isSelected || isFocus) {
+        const s = screenScale || graphState.scale;
+        ctx.beginPath();
+        ctx.arc(0, 0, R * 1.55, 0, Math.PI * 2);
+        ctx.lineWidth = (isSelected ? 1.8 : 1.2) / s;
+        ctx.strokeStyle = isLight ? 'rgba(217,119,6,0.85)' : 'rgba(254,240,138,0.7)';
+        ctx.stroke();
+      }
+    }
+
+    // Draws a regular memory card as a per-pixel-lit asteroid (C / S / M type), a belt rock, or a burning / cooling meteorite.
+    function drawMiniGalaxy(ctx, n, t, isLight, isFocus, isSelected, screenScale = null, emitOverride = null) {
+      const scale = screenScale || graphState.scale;
+      const nowMs = performance.now();
+      const isBelt = !n.degree && !graphState.seed;
+      const dragging = graphState.draggingNode === n;
+      let R = n.radius * (1.0 + 0.2 * hashGraphId(n.id + ':size'));
+      let ox = 0;
+      let oy = 0;
+      let sz = 1;
+      let emit = 0;
+      let ex = 0;
+      let ey = 0;
+      if (isBelt && !dragging && !emitOverride) {
+        // Unclassified cards: small belt rocks with a slow pseudo-orbit (near = larger & brighter)
+        const a = n.seedPhase + t * 0.05;
+        R = (6 + hashGraphId(n.id + ':belt') * 8) / scale;
+        sz = 0.75 + 0.25 * (Math.sin(a) + 1) / 2;
+        ctx.globalAlpha *= 0.65 + 0.35 * (Math.sin(a) + 1) / 2;
+        ox = Math.cos(a) * 4 / scale;
+        oy = Math.sin(a) * 1.5 / scale;
+      } else if (!emitOverride) {
+        const drift = (n.fxDrift || 3) / scale;
+        ox = Math.sin(t * 0.4 + n.seedPhase) * drift;
+        oy = Math.cos(t * 0.35 + n.seedPhase) * drift * 0.8;
+      }
+      const glowCol = GalaxyFX.hexRgb(n.color);
+      if (emitOverride) {
+        emit = emitOverride.emit;
+        ex = emitOverride.ex || 0;
+        ey = emitOverride.ey || 0;
+      } else if (dragging && n._fxBurn) {
+        const b = n._fxBurn;
+        emit = 0.85 * b.heat;
+        ex = b.ux;
+        ey = b.uy;
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        GalaxyFX.glow(ctx, 0, 0, R * 3.4 * b.heat, [255, 150, 60], 0.4 * b.heat);
+        ctx.restore();
+      } else if (graphState.fxCool.has(n.id)) {
+        const ce = Math.min(1, (nowMs - graphState.fxCool.get(n.id)) / 2600);
+        emit = 0.7 * (1 - ce) * (1 - ce);
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        GalaxyFX.glow(ctx, 0, 0, R * 3, [255, 120, 50], 0.3 * (1 - ce));
+        ctx.restore();
+      } else if (!isLight) {
+        // legend colour only tints the faint halo, never the rock itself
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        GalaxyFX.glow(ctx, ox, oy, R * 2.6 * sz, glowCol, 0.11);
+        ctx.restore();
+      }
+
+      if (isLight) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(10,30,70,0.18)';
+        ctx.beginPath();
+        ctx.ellipse(ox + 2 / scale, oy + 3 / scale, R * sz * 0.9, R * sz * 0.8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      const screenR = R * sz * scale;
+      const kind = classifyAsteroidType(n);
+      const base = GalaxyFX.ROCK_TYPES[kind].base;
+      const entry = screenR >= 4.5 ? GalaxyFX.rockFor(n.id, screenR, kind) : null;
+      if (!entry) {
+        // Tiny zoom (or rock not built yet): cheap lit sphere
+        const rr = Math.max(0.8 / scale, R * sz * 0.9);
+        const g = ctx.createRadialGradient(ox - rr * 0.35, oy - rr * 0.35, rr * 0.1, ox, oy, rr);
+        g.addColorStop(0, GalaxyFX.rgba(base.map(c => Math.min(255, c * 1.25)), 1));
+        g.addColorStop(1, GalaxyFX.rgba(base.map(c => c * 0.25), 1));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(ox, oy, rr, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        const rot = n.seedPhase + t * (n.fxSpin || 0.2);
+        const img = GalaxyFX.rockImage(entry, rot, emit, ex, ey);
+        const S = entry.rock.S * (screenR / entry.bucket) / scale;
+        ctx.drawImage(img, ox - S / 2, oy - S / 2, S, S);
+      }
+      if (isFocus || isSelected) {
+        ctx.beginPath();
+        ctx.arc(ox, oy, R * sz * 1.55, 0, Math.PI * 2);
+        ctx.lineWidth = (isSelected ? 1.8 : 1.2) / scale;
+        ctx.strokeStyle = isSelected ? (isLight ? 'rgba(15,23,42,0.75)' : 'rgba(255,255,255,0.8)') : GalaxyFX.rgba(glowCol, 0.8);
+        ctx.stroke();
+      }
+    }
+
+    function drawGalaxyPill(ctx, cx, y, text, color, k) {
+      ctx.save();
+      ctx.font = `600 ${Math.round(12 * Math.max(0.85, k))}px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif`;
+      const pw = ctx.measureText(text).width + 22;
+      const ph = Math.round(24 * Math.max(0.85, k));
+      ctx.fillStyle = 'rgba(10,14,30,0.75)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(cx - pw / 2, y, pw, ph, ph / 2);
+      else ctx.rect(cx - pw / 2, y, pw, ph);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, cx, y + ph / 2 + 0.5);
+      ctx.restore();
+    }
+
+    // Gravitational-lens fields behind both portals (half-resolution, sampled from the same star tile as the background).
+    function drawCosmicLensFields(ctx, portals, t, isLight, bgOffX, bgOffY) {
+      const src = GalaxyFX.tileData();
+      const { bh, wh } = portals;
+      const act = graphState.fxAct;
+      const lb = GalaxyFX.lens('bh', Math.round(bh.Rs * 4));
+      if (!lb.img0 || graphState.fxFrame % 2 === 0 || act > 0.02) {
+        lb.render(src, 512, 512, bh.x - bgOffX, bh.y - bgOffY, bh.Rs * (1.7 + 0.4 * act), bh.Rs * 0.95, null);
+        lb.img0 = true;
+      }
+      ctx.save();
+      ctx.globalAlpha = isLight ? 0.55 : 1;
+      ctx.drawImage(lb.c, bh.x - lb.Rl, bh.y - lb.Rl, lb.Rl * 2, lb.Rl * 2);
+      ctx.restore();
+
+      const od = GalaxyFX.otherUniverse();
+      const Rw = wh.radius;
+      const whFlash = graphState.fxWhFlash;
+      const inner = (nx, ny, q, out) => {
+        const ang = Math.atan2(ny, nx) + t * 0.06;
+        const s = Math.tan(q * 1.32) / Math.tan(1.32) * 118;
+        let uu = Math.floor(128 + Math.cos(ang) * s);
+        let vv = Math.floor(128 + Math.sin(ang) * s);
+        uu = uu < 0 ? 0 : uu > 255 ? 255 : uu;
+        vv = vv < 0 ? 0 : vv > 255 ? 255 : vv;
+        const p = (vv * 256 + uu) * 4;
+        const fr = 1 + 2.4 * Math.pow(q, 16) + whFlash * 1.8;
+        out[0] = Math.min(255, od[p] * fr);
+        out[1] = Math.min(255, od[p + 1] * fr);
+        out[2] = Math.min(255, od[p + 2] * fr);
+      };
+      const lw = GalaxyFX.lens('wh', Math.round(Rw * 2.6));
+      if (!lw.img0 || graphState.fxFrame % 2 === 1 || whFlash > 0.02) {
+        lw.render(src, 512, 512, wh.x - bgOffX, wh.y - bgOffY, Rw * 0.95, Rw, inner);
+        lw.img0 = true;
+      }
+      ctx.drawImage(lw.c, wh.x - lw.Rl, wh.y - lw.Rl, lw.Rl * 2, lw.Rl * 2);
+    }
+
+    function drawBlackHole(ctx, bh, t, isLight) {
+      const act = graphState.fxAct || 0;
+      if (!graphState.fxGLOn) GalaxyFX.hole(bh.Rs).draw(ctx, bh.x, bh.y, t, act, graphState.fxBhFlash || 0);
+      const pull = graphState.bhHoverPull || 0;
+      const label = pull > 0.2 ? '松手吞噬（仅演示）' : '黑洞（拖入吞噬）';
+      drawGalaxyPill(ctx, bh.x, bh.y + bh.Rs * 1.9 + 6, label, '#FFC98A', bh.k);
+    }
+
+    function drawWormhole(ctx, wh, t, isLight) {
+      const Rw = wh.radius;
+      const flash = graphState.fxWhFlash || 0;
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      if (!graphState.fxGLOn) {
+        ctx.strokeStyle = 'rgba(200,225,255,0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(wh.x, wh.y, Rw * 1.01, 0, Math.PI * 2);
+        ctx.stroke();
+        GalaxyFX.glow(ctx, wh.x, wh.y, Rw * 1.6, [160, 190, 255], 0.06);
+      }
+      const rp = (performance.now() - (graphState.fxWhRippleMs || -1e9)) / 1200;
+      if (rp >= 0 && rp < 1) {
+        ctx.strokeStyle = GalaxyFX.rgba([190, 230, 255], 0.6 * (1 - rp));
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(wh.x, wh.y, Rw * (1 + rp * 1.4), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      if (flash > 0 && !graphState.fxGLOn) GalaxyFX.glow(ctx, wh.x, wh.y, Rw * 2.4, [200, 230, 255], 0.35 * flash);
+      ctx.restore();
+      const label = flash > 0.25 ? '虫洞吐出归位' : '虫洞出口';
+      drawGalaxyPill(ctx, wh.x, wh.y + Rw + 12, label, '#BFF5D6', wh.k);
+    }
+
     function drawGraphFrame() {
       const canvas = document.getElementById('graphCanvas');
       const wrap = document.getElementById('graphStageWrap');
@@ -7778,67 +9512,148 @@
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const w = canvas.width / dpr;
       const h = canvas.height / dpr;
+      const reduced = GalaxyFX.reduced;
+      // prefers-reduced-motion: freeze time so nothing rotates, twinkles or drifts
+      const t = reduced ? 0 : graphState.cosmicTime;
+      const isLight = graphState.lightCanvas;
+      graphState.fxFrame = (graphState.fxFrame || 0) + 1;
+      GalaxyFX.beginFrame();
 
       ctx.save();
       ctx.scale(dpr, dpr);
       ctx.clearRect(0, 0, w, h);
 
-      const isLight = graphState.lightCanvas;
-      // Subtle panning dot-grid backdrop
-      const gridStep = 32 * graphState.scale;
-      if (gridStep >= 14) {
-        ctx.fillStyle = isLight ? 'rgba(100,116,139,0.16)' : 'rgba(148,163,184,0.12)';
-        const ox = ((w * 0.5 + graphState.camX) % gridStep + gridStep) % gridStep;
-        const oy = ((h * 0.5 + graphState.camY) % gridStep + gridStep) % gridStep;
-        for (let gx = ox; gx < w; gx += gridStep) {
-          for (let gy = oy; gy < h; gy += gridStep) {
-            ctx.fillRect(gx, gy, 1.3, 1.3);
-          }
+      // 0. WebGL sky + ray-traced portals (SPEC §7); canvas-2D background below is the no-WebGL fallback
+      const portals = getCosmicPortals(w, h);
+      const glOn = Boolean(GalaxyGL.ensure(wrap)) && GalaxyGL.render({
+        w, h, dpr, portals, camX: graphState.camX, camY: graphState.camY, light: isLight,
+        time: t, animate: Boolean(graphState.draggingNode || graphState.cosmicAnims.size),
+        act: graphState.fxAct || 0, bhFlash: graphState.fxBhFlash || 0, whFlash: graphState.fxWhFlash || 0, reduced,
+      });
+      graphState.fxGLOn = glOn;
+      // Background: tiled realistic star field (dark) / existing soft dots (light)
+      const bgOffX = graphState.camX * 0.05 + t * 3;
+      const bgOffY = graphState.camY * 0.05;
+      if (glOn) {
+        // the WebGL sky canvas underneath already shows the background
+      } else if (!isLight) {
+        const ox = ((bgOffX % 512) + 512) % 512;
+        const oy = ((bgOffY % 512) + 512) % 512;
+        ctx.save();
+        ctx.translate(ox - 512, oy - 512);
+        ctx.fillStyle = GalaxyFX.bgPattern(ctx);
+        ctx.fillRect(0, 0, w + 1024, h + 1024);
+        ctx.restore();
+      } else {
+        ensureBgStars();
+        for (const s of graphState.bgStars) {
+          const px = ((s.nx * w + graphState.camX * (0.04 + s.r * 0.03)) % w + w) % w;
+          const py = ((s.ny * h + graphState.camY * (0.04 + s.r * 0.03)) % h + h) % h;
+          const tw = 0.25 + 0.65 * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+          ctx.fillStyle = 'rgba(99, 102, 241, 0.28)';
+          ctx.globalAlpha = tw * 0.45;
+          ctx.beginPath();
+          ctx.arc(px, py, s.r, 0, Math.PI * 2);
+          ctx.fill();
         }
+        ctx.globalAlpha = 1.0;
       }
 
+      // 0.2 Lens fields of the screen-space portals (drawn under the nodes so labels stay readable)
+      if (!glOn) drawCosmicLensFields(ctx, portals, t, isLight, isLight ? 0 : (((bgOffX % 512) + 512) % 512) - 512, isLight ? 0 : (((bgOffY % 512) + 512) % 512) - 512);
+
+      ctx.save();
       ctx.translate(w * 0.5 + graphState.camX, h * 0.5 + graphState.camY);
       ctx.scale(graphState.scale, graphState.scale);
 
+      // 0.5 Faint cluster nebulae, asteroid-belt dust bands & Dream orbital tracks
+      for (const cl of graphState.galaxyClusters || []) {
+        if (cl.isBelt) {
+          ctx.save();
+          ctx.translate(cl.x, cl.y);
+          ctx.scale(1, 0.32);
+          ctx.strokeStyle = isLight ? 'rgba(100,116,139,0.08)' : 'rgba(170,150,130,0.06)';
+          ctx.lineWidth = cl.radius * 0.45;
+          ctx.beginPath();
+          ctx.arc(0, 0, cl.radius * 0.8, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+          continue;
+        }
+        const neb = ctx.createRadialGradient(cl.x, cl.y, 6, cl.x, cl.y, cl.radius * 1.15);
+        neb.addColorStop(0, cl.color + (isLight ? '14' : '18'));
+        neb.addColorStop(0.55, cl.color + '08');
+        neb.addColorStop(1, cl.color + '00');
+        ctx.fillStyle = neb;
+        ctx.beginPath();
+        ctx.arc(cl.x, cl.y, cl.radius * 1.15, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      for (const orb of graphState.stellarOrbits || []) {
+        ctx.save();
+        ctx.setLineDash([4, 7]);
+        ctx.lineWidth = 1 / Math.sqrt(graphState.scale);
+        ctx.strokeStyle = isLight ? 'rgba(217, 119, 6, 0.16)' : 'rgba(160, 190, 255, 0.10)';
+        for (const r of orb.radii || []) {
+          ctx.beginPath();
+          ctx.arc(orb.x, orb.y, r, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
       const focusId = graphState.hoveredId || graphState.selectedId;
       const focusNeighbors = focusId ? (graphState.adjById.get(focusId) || new Set()) : null;
+      const nowMs = performance.now();
+      const pendingArrival = n => {
+        const arr = graphState.fxArrivals.get(n.id);
+        return arr && nowMs - arr.startMs < arr.dur * 1000;
+      };
 
-      // 1. Draw Edges
+      // 1. Gravitational lanes (edges); lanes of a card in transit fade out until it lands
       for (const e of graphState.edges) {
         const s = e.sourceNode;
-        const t = e.targetNode;
-        const isHighlighted = focusId && (s.id === focusId || t.id === focusId);
+        const tNode = e.targetNode;
+        const sHidden = graphState.cosmicAnims.has(s.id) || pendingArrival(s);
+        const tHidden = graphState.cosmicAnims.has(tNode.id) || pendingArrival(tNode);
+        const isHighlighted = focusId && (s.id === focusId || tNode.id === focusId);
         const isDimmed = focusId && !isHighlighted;
 
         ctx.save();
         if (e.dashed) {
           ctx.setLineDash([5, 5]);
         }
-        let stroke = isLight ? 'rgba(100,116,139,0.45)' : 'rgba(148,163,184,0.42)';
-        if (e.edge_kind === 'derived_from') stroke = isHighlighted ? '#f472b6' : 'rgba(236,72,153,0.55)';
-        else if (e.edge_kind === 'wikilink') stroke = isHighlighted ? '#60a5fa' : (isLight ? 'rgba(59,130,246,0.55)' : 'rgba(96,165,250,0.52)');
-        else if (e.edge_kind === 'co_evidence') stroke = isHighlighted ? '#2dd4bf' : 'rgba(20,184,166,0.45)';
-        else if (e.edge_kind === 'semantic') stroke = isHighlighted ? '#a78bfa' : (isLight ? 'rgba(139,92,246,0.30)' : 'rgba(167,139,250,0.28)');
+        let stroke = isLight ? 'rgba(100,116,139,0.45)' : 'rgba(148,163,184,0.30)';
+        if (e.edge_kind === 'derived_from') stroke = isHighlighted ? '#fbbf24' : 'rgba(251,191,36,0.42)';
+        else if (e.edge_kind === 'wikilink') stroke = isHighlighted ? '#60a5fa' : (isLight ? 'rgba(59,130,246,0.55)' : 'rgba(96,165,250,0.40)');
+        else if (e.edge_kind === 'co_evidence') stroke = isHighlighted ? '#2dd4bf' : 'rgba(20,184,166,0.36)';
+        else if (e.edge_kind === 'semantic') stroke = isHighlighted ? '#a78bfa' : (isLight ? 'rgba(139,92,246,0.30)' : 'rgba(167,139,250,0.22)');
+        if (isLight && !isHighlighted) {
+          stroke = 'rgba(20,45,100,0.28)';
+          ctx.setLineDash([3, 5]);
+        }
 
-        ctx.globalAlpha = isDimmed ? 0.11 : (isHighlighted ? 0.98 : 0.78);
+        let edgeAlpha = isDimmed ? 0.11 : (isHighlighted ? 0.98 : 0.72);
+        if (!isHighlighted && s.layoutGroup !== tNode.layoutGroup) edgeAlpha *= 0.55;
+        if (sHidden || tHidden) edgeAlpha *= 0.08;
+        ctx.globalAlpha = edgeAlpha;
         ctx.strokeStyle = stroke;
-        ctx.lineWidth = isHighlighted ? 2.1 / Math.sqrt(graphState.scale) : 1.25 / Math.sqrt(graphState.scale);
+        ctx.lineWidth = isHighlighted ? 2.1 / Math.sqrt(graphState.scale) : 1.1 / Math.sqrt(graphState.scale);
 
         ctx.beginPath();
         ctx.moveTo(s.x, s.y);
-        ctx.lineTo(t.x, t.y);
+        ctx.lineTo(tNode.x, tNode.y);
         ctx.stroke();
 
-        // Directional arrowhead for explicit / Dream edges
-        if (e.directed) {
-          const dx = t.x - s.x;
-          const dy = t.y - s.y;
+        if (e.directed && !sHidden && !tHidden) {
+          const dx = tNode.x - s.x;
+          const dy = tNode.y - s.y;
           const len = Math.hypot(dx, dy);
-          if (len > s.radius + t.radius + 8) {
+          if (len > s.radius + tNode.radius + 8) {
             const ux = dx / len;
             const uy = dy / len;
-            const tipX = t.x - ux * (t.radius + 3);
-            const tipY = t.y - uy * (t.radius + 3);
+            const tipX = tNode.x - ux * (tNode.radius + 3);
+            const tipY = tNode.y - uy * (tNode.radius + 3);
             const aSize = 5.5;
             ctx.setLineDash([]);
             ctx.fillStyle = stroke;
@@ -7851,10 +9666,9 @@
           }
         }
 
-        // Edge relation pill label when spotlighted
-        if (isHighlighted && e.label) {
-          const mx = (s.x + t.x) * 0.5;
-          const my = (s.y + t.y) * 0.5;
+        if (isHighlighted && e.label && !sHidden && !tHidden) {
+          const mx = (s.x + tNode.x) * 0.5;
+          const my = (s.y + tNode.y) * 0.5;
           ctx.setLineDash([]);
           ctx.font = '600 10px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif';
           const tw = ctx.measureText(e.label).width;
@@ -7868,9 +9682,17 @@
         ctx.restore();
       }
 
-      // 2. Draw Nodes & Titles
+      // 2. Stars (Dream) & asteroids (regular cards) in world space; cards in transit are drawn in screen space below
       const seedVal = graphState.seed;
+      const viewL = (-w * 0.5 - graphState.camX) / graphState.scale;
+      const viewT = (-h * 0.5 - graphState.camY) / graphState.scale;
+      const viewR = viewL + w / graphState.scale;
+      const viewB = viewT + h / graphState.scale;
       for (const n of graphState.nodes) {
+        if (graphState.cosmicAnims.has(n.id) || pendingArrival(n)) continue;
+        const pad = n.radius * (isDreamStarNode(n) ? 7 : 3);
+        if (n.x + pad < viewL || n.x - pad > viewR || n.y + pad < viewT || n.y - pad > viewB) continue;
+
         const isFocus = n.id === focusId;
         const isNb = focusId ? focusNeighbors.has(n.id) : false;
         const isSelected = n.id === graphState.selectedId;
@@ -7878,36 +9700,83 @@
 
         ctx.save();
         ctx.globalAlpha = isDimmed ? 0.16 : 1.0;
+        ctx.translate(n.x, n.y);
 
-        // Outer spotlight / seed halo
-        if (isFocus || isSelected || (seedVal && n.hop === 0)) {
+        if (seedVal && n.hop === 0) {
           ctx.beginPath();
-          ctx.arc(n.x, n.y, n.radius + 5.5, 0, Math.PI * 2);
-          ctx.fillStyle = n.color + '33';
-          ctx.fill();
+          ctx.arc(0, 0, n.radius * 1.9, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(250, 204, 21, 0.55)';
+          ctx.lineWidth = 1.6 / graphState.scale;
+          ctx.stroke();
         }
 
-        ctx.beginPath();
-        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
-        ctx.fillStyle = n.color;
-        ctx.fill();
-        ctx.lineWidth = isSelected ? 2.6 : 1.4;
-        ctx.strokeStyle = isSelected || isLight ? '#ffffff' : '#111827';
-        ctx.stroke();
-
-        // Dream star glyph inside inferred insight nodes
-        if (n.assertion_kind === 'inferred') {
-          ctx.fillStyle = '#ffffff';
-          ctx.font = `700 ${Math.max(9, Math.round(n.radius * 0.95))}px sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('✦', n.x, n.y + 0.5);
+        if (isDreamStarNode(n)) {
+          drawDreamStar(ctx, n, t, isLight, isFocus, isSelected);
+        } else {
+          drawMiniGalaxy(ctx, n, t, isLight, isFocus, isSelected);
         }
-
         ctx.restore();
       }
-      drawGraphLabels(ctx, w, h, focusId, focusNeighbors, isLight);
-      ctx.restore();
+
+      drawGraphLabels(ctx, w, h, focusId, focusNeighbors, isLight, portals);
+      ctx.restore(); // end world transform
+
+      // 3. Screen-space portals, sparks / dust, cards in transit and meteors
+      drawWormhole(ctx, portals.wh, t, isLight);
+      drawBlackHole(ctx, portals.bh, t, isLight);
+      GalaxyFX.parts.draw(ctx);
+
+      for (const anim of graphState.cosmicAnims.values()) {
+        if (anim.alpha <= 0.01 || anim.phase === 'void') continue;
+        const n = anim.node;
+        const s = graphState.scale;
+        if (anim.phase === 'return' && !reduced && anim.e < 0.95) {
+          GalaxyFX.meteor(ctx, anim.sx, anim.sy, anim.ux, anim.uy, 30 + 120 * (1 - anim.e), [200, 255, 220], 1 - anim.e * 0.6, 1.8);
+        }
+        ctx.save();
+        ctx.globalAlpha = anim.alpha;
+        ctx.translate(anim.sx, anim.sy);
+        ctx.rotate(anim.radial || 0);
+        ctx.scale((anim.stretch || 1) * (anim.scale || 1), (anim.flat || 1) * (anim.scale || 1));
+        ctx.rotate(-(anim.radial || 0));
+        ctx.scale(s, s);
+        if (isDreamStarNode(n)) {
+          drawDreamStar(ctx, n, t, isLight, false, false, s);
+        } else {
+          drawMiniGalaxy(ctx, n, t, isLight, false, false, s, { emit: anim.emit || 0 });
+        }
+        ctx.restore();
+      }
+
+      // New cards arrive as meteors (a shower radiates from one point when several arrive together)
+      for (const [id, arr] of graphState.fxArrivals.entries()) {
+        const n = graphState.nodeById.get(id);
+        if (!n) continue;
+        const e = (nowMs - arr.startMs) / (arr.dur * 1000);
+        if (e < 0 || e >= 1) continue;
+        const to = worldToScreen(n.x, n.y, w, h);
+        const fromX = arr.shower ? w * 0.86 + (arr.jitter - 0.5) * 80 : to.x - 260 - arr.jitter * 120;
+        const fromY = arr.shower ? -30 : to.y - 220 - arr.jitter * 60;
+        const ee = 1 - Math.pow(1 - e, 2);
+        const hx = fromX + (to.x - fromX) * ee;
+        const hy = fromY + (to.y - fromY) * ee;
+        const dl = Math.hypot(to.x - fromX, to.y - fromY) || 1;
+        GalaxyFX.meteor(ctx, hx, hy, (to.x - fromX) / dl, (to.y - fromY) / dl, Math.min(90, dl * ee), [200, 255, 220], e < 0.15 ? e / 0.15 : 1, 1.6);
+      }
+
+      for (const sw of graphState.bhShockwaves) {
+        const p = Math.min(1, (nowMs - sw.birth) / sw.life);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, Math.max(4, p * sw.maxR), 0, Math.PI * 2);
+        ctx.strokeStyle = sw.color || '#fde047';
+        ctx.globalAlpha = (1 - p) * 0.78;
+        ctx.lineWidth = 2.6 * (1 - p * 0.65);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      ctx.restore(); // end DPR scale
     }
 
     function wrapGraphText(ctx, text, maxWidth, maxLines = 0) {
@@ -7937,16 +9806,25 @@
       return lines;
     }
 
-    function drawGraphLabels(ctx, width, height, focusId, neighbors, isLight) {
+    function drawGraphLabels(ctx, width, height, focusId, neighbors, isLight, portals) {
       const { nodes, scale, seed, selectedId, camX, camY } = graphState;
+      const zones = graphPortalExclusions(portals);
+      const overlapsPortal = (left, top, right, bottom) => zones.some(zone => {
+        const dx = Math.max(left - zone.x, zone.x - right, 0) / zone.rx;
+        const dy = Math.max(top - zone.y, zone.y - bottom, 0) / zone.ry;
+        return dx * dx + dy * dy < 1;
+      });
       const labelRank = node => {
         if (node.id === focusId || node.id === selectedId) return 3;
         if (seed && node.hop === 0) return 2;
+        if (isDreamStarNode(node)) return 1.5;
         return neighbors?.has(node.id) ? 1 : 0;
       };
       // Normal labels (2-line wrapped, zero overlap); active/hovered node gets full untruncated pill on top.
-      const candidates = nodes.filter(node => !focusId || labelRank(node))
-        .sort((a, b) => labelRank(b) - labelRank(a) || b.degree - a.degree);
+      const candidates = nodes.filter(node => {
+        if (graphState.cosmicAnims.has(node.id)) return false;
+        return !focusId || labelRank(node);
+      }).sort((a, b) => labelRank(b) - labelRank(a) || b.degree - a.degree);
       const labelLimit = Math.max(6, Math.floor(width * height / (scale < 0.8 ? 9500 : 6500)));
       const placed = [];
       const fontSize = Math.max(11, Math.min(14, 12 * scale));
@@ -7958,8 +9836,8 @@
       ctx.save();
       ctx.textAlign = 'center';
       ctx.textBaseline = 'top';
-      ctx.fillStyle = isLight ? '#0f172a' : '#f1f5f9';
-      ctx.strokeStyle = isLight ? '#f8fafc' : '#111827';
+      ctx.fillStyle = isLight ? '#132447' : '#f1f5f9';
+      ctx.strokeStyle = isLight ? 'rgba(255,255,255,0.85)' : '#090d1a';
       ctx.lineWidth = 3 / scale;
 
       for (const node of candidates) {
@@ -7971,16 +9849,17 @@
         const rank = labelRank(node);
         const titleStr = String(node.title || '').trim();
         if (!titleStr) continue;
-        ctx.font = `${rank >= 2 ? 600 : 500} ${worldFontSize}px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif`;
+        ctx.font = `${rank >= 1.5 ? 600 : 500} ${worldFontSize}px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif`;
         const lines = wrapGraphText(ctx, titleStr, maxNormalW, 2);
         if (!lines.length) continue;
-        const textY = node.y + node.radius + 4 / scale;
+        const textY = node.y + node.radius + 5 / scale;
         const x = node.x * scale + width / 2 + camX;
         const y = textY * scale + height / 2 + camY;
         const maxLineScreenW = Math.max(...lines.map(l => ctx.measureText(l).width)) * scale;
         const halfWidth = maxLineScreenW / 2 + 4;
         const box = { left: x - halfWidth, right: x + halfWidth, top: y, bottom: y + lines.length * (fontSize * 1.28) + 4 };
         if (box.left < 0 || box.right > width || box.top < 0 || box.bottom > height) continue;
+        if (overlapsPortal(box.left, box.top, box.right, box.bottom)) continue;
         if (placed.some(other => box.left < other.right && box.right > other.left &&
           box.top < other.bottom && box.bottom > other.top)) continue;
         placed.push(box);
@@ -8005,7 +9884,11 @@
         const boxW = textW + padX * 2;
         const boxH = lines.length * lineStep + padY * 2;
         const boxX = node.x - boxW / 2;
-        const boxY = node.y + node.radius + 6 / scale;
+        let boxY = node.y + node.radius + 6 / scale;
+        const screen = worldToScreen(boxX, boxY, width, height);
+        if (overlapsPortal(screen.x, screen.y, screen.x + boxW * scale, screen.y + boxH * scale)) {
+          boxY = node.y - node.radius - 6 / scale - boxH;
+        }
         const r = Math.min(8 / scale, boxH / 2);
 
         ctx.beginPath();
@@ -8036,15 +9919,31 @@
 
     function requestGraphDraw() {
       if (graphState.rafId) return;
-      const tick = () => {
-        graphState.rafId = 0;
+      const tick = (ts) => {
         const panel = document.getElementById('panel-graph');
-        if (!panel.classList.contains('active')) return;
+        if (!panel?.classList.contains('active') || document.hidden) {
+          graphState.rafId = 0;
+          graphState.fxLastMs = 0;
+          return;
+        }
+        const nowMs = ts || performance.now();
+        const previousMs = graphState.fxLastMs;
+        const canvas = document.getElementById('graphCanvas');
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = canvas ? (canvas.width / dpr) : 800;
+        const h = canvas ? (canvas.height / dpr) : 480;
         const moving = stepGraphPhysics();
         if (!moving && graphState.fitOnSettle) fitGraphCamera();
+        const animating = stepCosmicAnimations(nowMs, w, h);
+        if ((moving || animating) && previousMs) {
+          graphState.cosmicTime += Math.min(50, Math.max(0, nowMs - previousMs)) * 0.001;
+        }
         drawGraphFrame();
-        if (moving || graphState.draggingNode) {
+        if (moving || animating || GalaxyFX.rockPending) {
           graphState.rafId = requestAnimationFrame(tick);
+        } else {
+          graphState.rafId = 0;
+          graphState.fxLastMs = 0;
         }
       };
       graphState.rafId = requestAnimationFrame(tick);
@@ -8087,6 +9986,101 @@
       );
     }
 
+    function graphFitArea() {
+      const wrap = document.getElementById('graphStageWrap');
+      const { width, height } = wrap.getBoundingClientRect();
+      const hud = wrap.querySelector('.graph-hud-top');
+      const controls = wrap.querySelector('.graph-hud-controls');
+      const inspector = document.getElementById('graphInspector');
+      const left = 24;
+      const top = hud.offsetTop + hud.offsetHeight + 18;
+      const right = Math.min(width * 0.42, (width > 760 ? 150 : 56) +
+        (width > 768 && inspector.classList.contains('open') ? inspector.offsetWidth + 12 : 0));
+      const bottom = Math.max(height - controls.offsetTop + 34,
+        graphState.lightCanvas && !GalaxyGL.failed ? height * 0.18 : 0);
+      return {
+        width: Math.max(80, width - left - right),
+        height: Math.max(80, height - top - bottom),
+        x: (left - right) / 2,
+        y: (top - bottom) / 2,
+      };
+    }
+
+    function toggleGraphDensity() {
+      graphState.expanded = !graphState.expanded;
+      const button = document.getElementById('graphDensityBtn');
+      button.textContent = graphState.expanded ? '展开' : '紧凑';
+      button.title = graphState.expanded ? '当前：展开，点击紧凑' : '当前：紧凑，点击展开';
+      button.setAttribute('aria-pressed', String(graphState.expanded));
+      resetGraphLayout();
+    }
+
+    function graphPortalExclusions({ bh, wh }) {
+      return [
+        { x: bh.x, y: bh.y + bh.Rs * 0.28, rx: bh.Rs * 4.2, ry: bh.Rs * 2.42 },
+        { x: wh.x, y: wh.y + wh.radius * 0.2, rx: wh.radius * 1.33, ry: wh.radius * 1.56 },
+        { x: bh.x, y: bh.y + bh.Rs * 1.9 + 18, rx: 84, ry: 17 },
+        { x: wh.x, y: wh.y + wh.radius + 24, rx: 66, ry: 17 },
+      ];
+    }
+
+    function keepGraphClearOfPortals(width, height) {
+      const zones = graphPortalExclusions(getCosmicPortals(width, height));
+      const overflow = graphState.expanded ? 0.2 : 0;
+      const positions = graphState.nodes.map(node => {
+        const p = worldToScreen(node.x, node.y, width, height);
+        return { node, ...p, radius: node.radius * graphState.scale + 7 };
+      });
+      const clearance = (x, y, radius, zone) =>
+        ((x - zone.x) / (zone.rx + radius)) ** 2 + ((y - zone.y) / (zone.ry + radius)) ** 2;
+      for (const p of positions) {
+        const n = p.node;
+        if (n === graphState.draggingNode || graphState.cosmicAnims.has(n.id)) continue;
+        const zone = zones.find(z => clearance(p.x, p.y, p.radius, z) < 1);
+        if (!zone) continue;
+        const rx = zone.rx + p.radius;
+        const ry = zone.ry + p.radius;
+        const start = Math.atan2((p.y - zone.y) / ry, (p.x - zone.x) / rx);
+        let best = null;
+        for (let i = 0; i < 24; i++) {
+          const angle = start + i * Math.PI / 12;
+          const x = zone.x + Math.cos(angle) * rx * 1.06;
+          const y = zone.y + Math.sin(angle) * ry * 1.06;
+          if (x - p.radius < -width * overflow || x + p.radius > width * (1 + overflow) ||
+              y - p.radius < -height * overflow || y + p.radius > height * (1 + overflow) ||
+              zones.some(z => clearance(x, y, p.radius, z) < 1)) continue;
+          let score = (x - p.x) ** 2 + (y - p.y) ** 2;
+          for (const other of positions) {
+            if (other === p) continue;
+            const overlap = p.radius + other.radius - Math.hypot(x - other.x, y - other.y);
+            if (overlap > 0) score += overlap ** 2 * 6;
+          }
+          if (!best || score < best.score) best = { x, y, score };
+        }
+        if (!best) continue;
+        const dx = (best.x - p.x) / graphState.scale;
+        const dy = (best.y - p.y) / graphState.scale;
+        n.x += dx;
+        n.y += dy;
+        n.anchorX += dx;
+        n.anchorY += dy;
+        n.homeX += dx;
+        n.homeY += dy;
+        p.x = best.x;
+        p.y = best.y;
+      }
+    }
+
+    function fitGraphOverview() {
+      const { width, height } = graphFitArea();
+      const aspect = Math.max(0.65, Math.min(3.2, width / height));
+      if (graphState.nodes.length > 1 && Math.abs(aspect - graphState.layoutAspect) > 0.4) {
+        resetGraphLayout();
+      } else {
+        fitGraphCamera();
+      }
+    }
+
     function fitGraphCamera() {
       const { nodes } = graphState;
       graphState.autoFit = true;
@@ -8105,13 +10099,18 @@
       const maxX = Math.max(...nodes.map(node => node.x + node.radius));
       const minY = Math.min(...nodes.map(node => node.y - node.radius));
       const maxY = Math.max(...nodes.map(node => node.y + node.radius));
-      const topInset = wrap.querySelector('.graph-hud-top').offsetHeight + 24;
-      const bottomInset = wrap.querySelector('.graph-hud-controls').offsetHeight + 24;
-      const width = Math.max(80, rect.width - 32);
-      const height = Math.max(80, rect.height - topInset - bottomInset);
-      setGraphScale(Math.min(1.5, width / (maxX - minX + 48), height / (maxY - minY + 48)));
-      graphState.camX = -(minX + maxX) / 2 * graphState.scale;
-      graphState.camY = (topInset - bottomInset) / 2 - (minY + maxY) / 2 * graphState.scale;
+      const area = graphFitArea();
+      const spanX = maxX - minX + 22;
+      const spanY = maxY - minY + 22;
+      const compactScale = Math.min(1.65, area.width / spanX, area.height / spanY);
+      const { width, height } = rect;
+      const scale = graphState.expanded
+        ? Math.min(compactScale * 1.65, width * 1.4 / spanX, height * 1.4 / spanY)
+        : compactScale;
+      setGraphScale(scale);
+      graphState.camX = (graphState.expanded ? 0 : area.x) - ((minX + maxX) / 2) * graphState.scale;
+      graphState.camY = (graphState.expanded ? 0 : area.y) - ((minY + maxY) / 2) * graphState.scale;
+      keepGraphClearOfPortals(width, height);
       requestGraphDraw();
     }
 
@@ -8150,9 +10149,10 @@
           }).join('')
         : '<span style="opacity:0.68;">暂无直接连线邻居</span>';
 
+      const isStar = isDreamStarNode(node);
       badgesEl.innerHTML = `
         <span class="tag" style="background:${node.color}28;color:${node.color};border:1px solid ${node.color}66;">${esc(node.memory_type)}</span>
-        <span class="tag">${node.assertion_kind === 'inferred' ? '归纳' : '原话陈述'}</span>
+        <span class="tag">${isStar ? '☀ Dream恒星归纳' : '☄ 小行星 · 原话陈述'}</span>
         <span class="tag">v${node.version}</span>
       `;
 
@@ -8161,6 +10161,7 @@
         <div class="graph-insp-card">${esc(node.summary)}</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
           <button type="button" class="ghost-dark" onclick="focusNodeInGraph('${esc(node.memory_id)}')">查看关联</button>
+          <button type="button" class="ghost-dark" onclick="devourNodeById('${esc(node.id)}')" title="仅动画演示：黑洞吞噬后经虫洞回归，不改动任何数据">🕳️ 投入黑洞演示</button>
           <button type="button" class="ghost-dark" onclick="openDetail('${esc(node.memory_id)}', 'form')">✏️ 编辑</button>
           <button type="button" class="ghost-dark" onclick="openDetail('${esc(node.memory_id)}', 'markdown')">📝 Markdown</button>
           <button type="button" class="ghost-dark" onclick="openDetail('${esc(node.memory_id)}', 'provenance')">查看原话</button>
@@ -8206,6 +10207,12 @@
       graphState.eventsBound = true;
       const canvas = document.getElementById('graphCanvas');
       const wrap = document.getElementById('graphStageWrap');
+      window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', requestGraphDraw);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && document.getElementById('panel-graph')?.classList.contains('active')) {
+          requestGraphDraw();
+        }
+      });
       if (typeof ResizeObserver !== 'undefined') {
         new ResizeObserver(() => {
           if (!resizeGraphCanvas()) return;
@@ -8234,12 +10241,19 @@
           moved = true;
           grabOffset = null;
           graphState.draggingNode = null;
+          graphState.bhHoverPull = 0;
           return;
         }
         moved = false;
         const node = findNodeAtScreen(point.x, point.y);
-        const world = screenToWorld(point.x, point.y);
-        grabOffset = node ? { id: node.id, x: node.x - world.x, y: node.y - world.y } : null;
+        if (node && !graphState.cosmicAnims.has(node.id)) {
+          node.homeX = node.x;
+          node.homeY = node.y;
+          const world = screenToWorld(point.x, point.y);
+          grabOffset = { id: node.id, x: node.x - world.x, y: node.y - world.y };
+        } else {
+          grabOffset = null;
+        }
       });
 
       canvas.addEventListener('pointermove', event => {
@@ -8248,7 +10262,10 @@
         if (!pointer) {
           if (event.pointerType === 'touch' || pointers.size) return;
           const hit = findNodeAtScreen(point.x, point.y);
-          canvas.classList.toggle('pointer', Boolean(hit));
+          const rect = wrap.getBoundingClientRect();
+          const portals = getCosmicPortals(rect.width || 800, rect.height || 480);
+          const overBh = distance(point, portals.bh) <= portals.bh.horizonRadius + 16;
+          canvas.classList.toggle('pointer', Boolean(hit || overBh));
           if (graphState.hoveredId !== (hit?.id ?? null)) {
             graphState.hoveredId = hit?.id ?? null;
             requestGraphDraw();
@@ -8275,6 +10292,28 @@
             graphState.draggingNode = node;
             node.x = world.x + grabOffset.x;
             node.y = world.y + grabOffset.y;
+
+            const rect = wrap.getBoundingClientRect();
+            const w = rect.width || 800;
+            const h = rect.height || 480;
+            const portals = getCosmicPortals(w, h);
+            const nodeSc = worldToScreen(node.x, node.y, w, h);
+            const dBh = Math.min(distance(point, portals.bh), distance(nodeSc, portals.bh));
+            if (dBh <= portals.bh.horizonRadius + 16) {
+              // Auto-capture into Black Hole event horizon when dragged straight inside
+              pointers.delete(event.pointerId);
+              graphState.draggingNode = null;
+              grabOffset = null;
+              graphState.bhHoverPull = 0;
+              canvas.classList.remove('dragging');
+              startBlackHoleDevour(node, nodeSc);
+              return;
+            }
+            if (dBh <= portals.bh.captureRadius) {
+              graphState.bhHoverPull = Math.min(1, Math.max(0.18, 1 - (dBh - 32) / Math.max(20, portals.bh.captureRadius - 32)));
+            } else {
+              graphState.bhHoverPull = 0;
+            }
             reheatGraphPhysics(0.25);
           } else {
             moveGraphCamera(point.x - previous.x, point.y - previous.y);
@@ -8288,17 +10327,42 @@
         const dragged = graphState.draggingNode;
         graphState.draggingNode = null;
         grabOffset = null;
+        graphState.bhHoverPull = 0;
         canvas.classList.remove('dragging');
+
         if (dragged) {
+          const rect = wrap.getBoundingClientRect();
+          const w = rect.width || 800;
+          const h = rect.height || 480;
+          const portals = getCosmicPortals(w, h);
+          const point = localPoint(event);
+          const dragSc = worldToScreen(dragged.x, dragged.y, w, h);
+          const dBh = Math.min(distance(point, portals.bh), distance(dragSc, portals.bh));
+          if (dBh <= portals.bh.captureRadius) {
+            startBlackHoleDevour(dragged, dragSc);
+            return;
+          }
           dragged.anchorX = dragged.x;
           dragged.anchorY = dragged.y;
+          dragged.homeX = dragged.x;
+          dragged.homeY = dragged.y;
+          galaxyStartCooling(dragged, dragSc);
           reheatGraphPhysics(0.18);
         }
         if (!moved && event.type === 'pointerup') {
           const point = localPoint(event);
           const node = findNodeAtScreen(point.x, point.y);
-          if (node) selectGraphNode(node);
-          else closeGraphInspector();
+          if (node) {
+            selectGraphNode(node);
+          } else {
+            const rect = wrap.getBoundingClientRect();
+            const portals = getCosmicPortals(rect.width || 800, rect.height || 480);
+            if (distance(point, portals.bh) <= portals.bh.horizonRadius + 18) {
+              triggerDemoBlackHoleDevour();
+            } else {
+              closeGraphInspector();
+            }
+          }
         }
       }
 
@@ -8307,6 +10371,7 @@
       }
       canvas.addEventListener('pointerleave', () => {
         graphState.hoveredId = null;
+        graphState.bhHoverPull = 0;
         canvas.classList.remove('pointer');
         requestGraphDraw();
       });
@@ -8323,7 +10388,7 @@
           case '+':
           case '=': zoomGraphBy(1.25); break;
           case '-': zoomGraphBy(0.8); break;
-          case '0': fitGraphCamera(); break;
+          case '0': fitGraphOverview(); break;
           case 'ArrowLeft': moveGraphCamera(40, 0); break;
           case 'ArrowRight': moveGraphCamera(-40, 0); break;
           case 'ArrowUp': moveGraphCamera(0, 40); break;

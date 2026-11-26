@@ -659,7 +659,7 @@ class MemoAndJournalService:
                 prompt_facts["mood"] = f"{mood_meta['icon']} {mood_meta['label']}"
                 prompt_facts["mood_group"] = mood_meta.get("group", "neutral")
             sys_content = (
-                "你是 TraceTodo 的温和复盘助手。请严格依据提供的当日真实完成待办、番茄专注时长与随记片段，"
+                "你是「有迹」的温和复盘助手。请严格依据提供的当日真实完成待办、番茄专注时长与随记片段，"
                 "用第一人称生成一段简洁清爽的 Markdown「✨ AI 今日小结」（120~240字，禁止编造未发生的事实）。"
             )
             if is_negative_mood:

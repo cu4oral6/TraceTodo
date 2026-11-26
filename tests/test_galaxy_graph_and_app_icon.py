@@ -106,6 +106,8 @@ class AppIconAssetsAndEndpointsTest(unittest.TestCase):
                 res_manifest = client.get("/manifest.webmanifest")
                 self.assertEqual(res_manifest.status_code, 200)
                 manifest = json.loads(res_manifest.text)
+                self.assertEqual(manifest["short_name"], "有迹")
+                self.assertIn("有迹", manifest["name"])
                 srcs = [item["src"] for item in manifest["icons"]]
                 self.assertIn("/icon.png?v=4", srcs)
                 self.assertIn("/icon-maskable.png?v=4", srcs)
@@ -145,10 +147,14 @@ class CosmicMemoryGalaxyUiTest(unittest.TestCase):
         self.assertNotIn("DELETE", bh_block)
         self.assertNotIn("apiPost", bh_block)
 
+        self.assertIn("<title>有迹", html)
+        self.assertIn("<h1>有迹</h1>", html)
+
         landing = (API_DIR / "landing.html").read_text(encoding="utf-8")
         self.assertIn("/icon.png?v=4", landing)
         self.assertIn("/apple-touch-icon.png?v=4", landing)
         self.assertIn("border-radius: 22.4%", landing)
+        self.assertIn('<span class="nav-wordmark">有迹</span>', landing)
 
 
 if __name__ == "__main__":

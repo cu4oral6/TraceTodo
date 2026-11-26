@@ -135,7 +135,7 @@ public class MainActivity extends Activity {
         box.setPadding(dp(24), dp(48), dp(24), dp(32));
 
         TextView title = new TextView(this);
-        title.setText("TraceTodo 启动兼容提示");
+        title.setText("有迹 启动兼容提示");
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setTextColor(Color.parseColor("#0F172A"));
@@ -153,7 +153,7 @@ public class MainActivity extends Activity {
         box.addView(sub, subLp);
 
         Button openBrowserBtn = new Button(this);
-        openBrowserBtn.setText("🌐 使用系统浏览器打开 TraceTodo");
+        openBrowserBtn.setText("🌐 使用系统浏览器打开 有迹");
         openBrowserBtn.setAllCaps(false);
         openBrowserBtn.setTextColor(Color.WHITE);
         GradientDrawable btnBg = new GradientDrawable();
@@ -269,7 +269,7 @@ public class MainActivity extends Activity {
         box.addView(icon);
 
         TextView title = new TextView(this);
-        title.setText("无法连接到 TraceTodo 云服务");
+        title.setText("无法连接到 有迹 云服务");
         title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         title.setTypeface(Typeface.DEFAULT_BOLD);
         title.setTextColor(Color.parseColor("#0F172A"));
@@ -810,7 +810,7 @@ public class MainActivity extends Activity {
         };
 
         new AlertDialog.Builder(this)
-                .setTitle("切换 TraceTodo 服务端环境")
+                .setTitle("切换 有迹 服务端环境")
                 .setItems(presets, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -1016,7 +1016,7 @@ public class MainActivity extends Activity {
                     finish();
                 } else {
                     lastBackPressMs = now;
-                    Toast.makeText(MainActivity.this, "再按一次返回退出 TraceTodo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "再按一次返回退出 有迹", Toast.LENGTH_SHORT).show();
                 }
             }
         });

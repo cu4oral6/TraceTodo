@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="TraceTodo" />
+  <meta name="apple-mobile-web-app-title" content="有迹" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="icon" type="image/png" href="/icon.png" />
-  <link rel="apple-touch-icon" href="/icon.png" />
-  <title>TraceTodo · 融合记忆与四象限待办中心</title>
+  <link rel="icon" type="image/png" href="/icon.png?v=4" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
+  <title>有迹 · 融合记忆与四象限待办中心</title>
   <script>
     (function () {
       try {
@@ -369,13 +369,14 @@
     header > *:not(.header-theme-art) { position: relative; z-index: 1; }
     .brand { grid-area: brand; display: flex; align-items: center; gap: 9px; min-width: 0; }
     .brand-logo {
-      width: 34px; height: 34px;
-      border-radius: 10px;
+      width: 36px; height: 36px;
+      border-radius: 22.4%;
       overflow: hidden;
+      background: transparent;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px rgba(59,130,246,0.22);
+      filter: drop-shadow(0 3px 8px rgba(15, 45, 55, 0.24));
     }
-    .brand-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .brand-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 22.4%; display: block; }
     .brand h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.2px; color: var(--heading); }
     .pill {
       font-size: 11.5px;
@@ -1588,10 +1589,12 @@
       padding-top: 2px;
     }
     .auth-hero img {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      box-shadow: 0 10px 24px rgba(79, 70, 229, 0.24);
+      width: 66px;
+      height: 66px;
+      border-radius: 22.4%;
+      background: transparent;
+      display: block;
+      filter: drop-shadow(0 10px 22px rgba(15, 45, 55, 0.26));
     }
     .auth-hero h2 {
       margin: 2px 0 0;
@@ -3665,8 +3668,8 @@
   <header>
     <div class="header-theme-art" id="headerThemeArt" aria-hidden="true"></div>
     <div class="brand">
-      <div class="brand-logo"><img src="/icon.png" alt="" /></div>
-      <h1>TraceTodo</h1>
+      <div class="brand-logo"><img src="/icon.png?v=4" alt="" /></div>
+      <h1>有迹</h1>
     </div>
 
     <div class="header-composer">
@@ -4631,8 +4634,8 @@
 
       <div id="authGuestPane" style="display:grid;gap:14px;">
         <div class="auth-hero">
-          <img src="/icon.png" alt="TraceTodo" />
-          <h2 id="authModalTitle">欢迎回到 TraceTodo</h2>
+          <img src="/icon.png?v=4" alt="有迹" />
+          <h2 id="authModalTitle">欢迎回到 有迹</h2>
           <p>AI 长期记忆驱动的四象限待办与执行中心</p>
         </div>
 
@@ -6964,14 +6967,14 @@
             refreshNotifButtonUI();
             if (perm === 'granted') {
               playBellChime();
-              fireBrowserNotification('🔔 TraceTodo 通知已开启', '后续任务到期或跨端同步新任务将及时提醒你');
+              fireBrowserNotification('🔔 有迹 通知已开启', '后续任务到期或跨端同步新任务将及时提醒你');
               showToast('✅ 已开启系统消息通知，已发送测试通知');
               return;
             }
           } catch (e) {}
         } else if (Notification.permission === 'granted') {
           playBellChime();
-          fireBrowserNotification('🔔 TraceTodo 测试通知', '任务消息通知工作正常！');
+          fireBrowserNotification('🔔 有迹 测试通知', '任务消息通知工作正常！');
           showToast('🔔 已发送测试通知（系统通知 + 提示音正常）');
           refreshNotifButtonUI();
           return;
@@ -6996,7 +6999,7 @@
       if (!isWebNotifEnabled()) return;
       if ('Notification' in window && window.isSecureContext && Notification.permission === 'granted') {
         try {
-          new Notification(title, { body, icon: '/icon.png' });
+          new Notification(title, { body, icon: '/icon.png?v=4' });
         } catch (e) {}
       }
     }
@@ -7025,7 +7028,7 @@
           sent[key] = 1;
           localStorage.setItem('tm_sent_reminders', JSON.stringify(sent));
           playBellChime();
-          fireBrowserNotification('🔔 TraceTodo 待办提醒', `${t.title}`);
+          fireBrowserNotification('🔔 有迹 待办提醒', `${t.title}`);
           showToast(`🔔 待办提醒：${t.title}`);
         }
       });
@@ -11114,8 +11117,8 @@ void main() {
         refreshAuthCaptcha();
       }
       document.getElementById('authModalTitle').textContent = !hasUsersFlag
-        ? '初始化 TraceTodo 管理员'
-        : (mode === 'register' ? '创建你的 TraceTodo 账号' : '欢迎回到 TraceTodo');
+        ? '初始化 有迹 管理员'
+        : (mode === 'register' ? '创建你的 有迹 账号' : '欢迎回到 有迹');
       document.getElementById('authSubmitBtn').textContent = mode === 'register' ? '注册并进入空间' : '立即登录';
       document.getElementById('authErrBox').style.display = 'none';
     }
@@ -11186,7 +11189,7 @@ void main() {
         };
         document.getElementById('profMcpConfigBox').value = JSON.stringify(mcpSnippet, null, 2);
       } else {
-        document.getElementById('authModalTitle').textContent = hasUsersFlag ? '🔐 登录或注册 TraceTodo' : '🌱 初始化管理员账号';
+        document.getElementById('authModalTitle').textContent = hasUsersFlag ? '🔐 登录或注册 有迹' : '🌱 初始化管理员账号';
         document.getElementById('authGuestPane').style.display = 'grid';
         document.getElementById('authProfilePane').style.display = 'none';
         document.getElementById('bootstrapAdminBanner').style.display = hasUsersFlag ? 'none' : 'block';

@@ -22,16 +22,16 @@ if [ "$IS_TEST" = "1" ]; then
     APP_STEM="TraceTodo-Test"
     MAC_BUNDLE_ID="com.tracememory.tracetodo.test"
     IOS_BUNDLE_ID="com.tracememory.tracetodo.test.ios"
-    MAC_DISPLAY_NAME="TraceTodo 测试版"
-    IOS_DISPLAY_NAME="TraceTodo 测试版"
+    MAC_DISPLAY_NAME="有迹 测试版"
+    IOS_DISPLAY_NAME="有迹 测试版"
     SWIFT_EXTRA_FLAGS=(-D TRACETODO_TEST_BUILD)
     XCODE_EXTRA_SWIFT_FLAGS="-DTRACETODO_TEST_BUILD"
 else
     APP_STEM="TraceTodo"
     MAC_BUNDLE_ID="com.tracememory.tracetodo"
     IOS_BUNDLE_ID="com.tracememory.tracetodo.ios"
-    MAC_DISPLAY_NAME="TraceTodo 四象限待办"
-    IOS_DISPLAY_NAME="TraceTodo"
+    MAC_DISPLAY_NAME="有迹 四象限待办"
+    IOS_DISPLAY_NAME="有迹"
     SWIFT_EXTRA_FLAGS=()
     XCODE_EXTRA_SWIFT_FLAGS=""
 fi

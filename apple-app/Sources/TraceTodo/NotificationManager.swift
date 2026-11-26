@@ -164,10 +164,10 @@ final class NotificationManager: NSObject, ObservableObject {
         }
         self.authorizationStatus = settings.authorizationStatus
         guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else {
-            return "系统通知权限未开启，请点击「前往系统设置」允许 TraceTodo 通知"
+            return "系统通知权限未开启，请点击「前往系统设置」允许 有迹 通知"
         }
         let content = UNMutableNotificationContent()
-        content.title = "🔔 TraceTodo 测试通知"
+        content.title = "🔔 有迹 测试通知"
         content.body = "通知权限与前台弹窗配置正常！后续任务到期与跨端新任务都会及时提醒你。"
         content.sound = .default
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3, repeats: false)
@@ -279,7 +279,7 @@ final class NotificationManager: NSObject, ObservableObject {
                 candidates.sort { $0.fireDate < $1.fireDate }
                 for item in candidates.prefix(50) {
                     let content = UNMutableNotificationContent()
-                    content.title = "⏰ TraceTodo 待办提醒"
+                    content.title = "⏰ 有迹 待办提醒"
                     let prefixTag = item.offsetMin > 0 ? "提前\(item.offsetMin)分钟 · " : "已到截止时间 · "
                     content.body = "\(prefixTag)[\(item.task.payload.quadrantKind.shortCode)] \(item.task.title)"
                     content.sound = .default
@@ -302,7 +302,7 @@ final class NotificationManager: NSObject, ObservableObject {
                     let q1Cnt = activeTodos.filter { $0.payload.quadrant == "Q1_do_first" }.count
                     let overdueCnt = activeTodos.filter { $0.payload.isOverdue == true }.count
                     let digestContent = UNMutableNotificationContent()
-                    digestContent.title = "☀️ TraceTodo 今日待办巡检"
+                    digestContent.title = "☀️ 有迹 今日待办巡检"
                     digestContent.body = "当前共有 \(activeTodos.count) 项待办（Q1 紧急 \(q1Cnt) 项，已逾期 \(overdueCnt) 项），轻点查看今日规划。"
                     digestContent.sound = .default
 

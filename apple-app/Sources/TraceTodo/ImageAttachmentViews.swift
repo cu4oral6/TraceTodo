@@ -284,7 +284,7 @@ struct ImageAttachPickerButton: View {
                 }
             }
         default:
-            store.showBanner("⚠️ 相机权限已关闭，请前往系统「设置 > TraceTodo」开启相机权限")
+            store.showBanner("⚠️ 相机权限已关闭，请前往系统「设置 > 有迹」开启相机权限")
         }
     }
     #endif

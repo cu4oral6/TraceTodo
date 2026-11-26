@@ -12,12 +12,12 @@ fi
 if [ "$IS_TEST" = "1" ]; then
   APP_STEM="TraceTodo-Test"
   PKG_ID="com.tracememory.tracetodo.test"
-  APP_LABEL="TraceTodo 测试版"
+  APP_LABEL="有迹 测试版"
   DEFAULT_URL="http://43.228.79.133:18091"
 else
   APP_STEM="TraceTodo"
   PKG_ID="com.tracememory.tracetodo"
-  APP_LABEL="TraceTodo"
+  APP_LABEL="有迹"
   DEFAULT_URL="https://todo.531party.cn"
 fi
 
@@ -93,7 +93,7 @@ cat > "$WORK_DIR/res_stage/values/strings.xml" <<STRXML
     <string name="memo_widget_desc">在手机桌面展示置顶灵感与最新随记便签，一键打开速记</string>
     <string name="calendar_widget_label">${APP_LABEL} 今日日历日程</string>
     <string name="calendar_widget_desc">在手机桌面展示今日日期、时间段排期与全天事项，一键直达周时间轴</string>
-    <color name="ic_launcher_background">#0F172A</color>
+    <color name="ic_launcher_background">#154050</color>
 </resources>
 STRXML
 

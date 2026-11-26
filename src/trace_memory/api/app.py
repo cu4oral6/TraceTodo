@@ -36,34 +36,30 @@ except ImportError:  # pragma: no cover
 
 
 PWA_ICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#0f172a"/>
-  <rect x="64" y="64" width="176" height="176" rx="36" fill="#ef4444"/>
-  <rect x="272" y="64" width="176" height="176" rx="36" fill="#3b82f6"/>
-  <rect x="64" y="272" width="176" height="176" rx="36" fill="#f59e0b"/>
-  <rect x="272" y="272" width="176" height="176" rx="36" fill="#475569"/>
-  <path d="M116 154l26 26 54-56" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <image href="/icon.png?v=4" width="512" height="512"/>
 </svg>"""
 
 PWA_MANIFEST_JSON = json.dumps(
     {
-        "name": "TraceTodo · 四象限记忆待办",
-        "short_name": "TraceTodo",
+        "name": "有迹 · 四象限记忆待办",
+        "short_name": "有迹",
         "description": "AI 记忆驱动的艾森豪威尔四象限待办与长期记忆中心",
         "start_url": "/",
         "display": "standalone",
-        "background_color": "#0f172a",
-        "theme_color": "#0f172a",
+        "background_color": "#0f2d37",
+        "theme_color": "#143c4a",
         "icons": [
-            {"src": "/icon.png", "sizes": "256x256", "type": "image/png", "purpose": "any maskable"},
-            {"src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
+            {"src": "/icon.png?v=4", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+            {"src": "/icon-maskable.png?v=4", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+            {"src": "/icon.svg?v=4", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
         ],
     },
     ensure_ascii=False,
 )
 
-PWA_SW_JS = """const CACHE_NAME = 'trace-todo-shell-v3';
+PWA_SW_JS = """const CACHE_NAME = 'trace-todo-shell-v5';
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(['/', '/home', '/manifest.webmanifest', '/icon.png', '/icon.svg'])));
+  e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(['/', '/home', '/manifest.webmanifest', '/icon.png?v=4', '/icon-maskable.png?v=4', '/icon.svg?v=4'])));
   self.skipWaiting();
 });
 self.addEventListener('activate', (e) => {
@@ -76,7 +72,7 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
-  if (url.pathname === '/' || url.pathname === '/home' || url.pathname === '/welcome' || url.pathname === '/official' || url.pathname === '/manifest.webmanifest' || url.pathname === '/icon.png' || url.pathname === '/icon.svg') {
+  if (url.pathname === '/' || url.pathname === '/home' || url.pathname === '/welcome' || url.pathname === '/official' || url.pathname === '/manifest.webmanifest' || url.pathname === '/icon.png' || url.pathname === '/icon-maskable.png' || url.pathname === '/apple-touch-icon.png' || url.pathname === '/icon.svg') {
     e.respondWith(fetch(e.request).then((res) => {
       const clone = res.clone();
       caches.open(CACHE_NAME).then((c) => c.put(e.request, clone));
@@ -108,6 +104,7 @@ from trace_memory.services.auth_service import UserAccount
 DASHBOARD_HTML_PATH = Path(__file__).with_name("dashboard.html")
 LANDING_HTML_PATH = Path(__file__).with_name("landing.html")
 APP_ICON_PNG_PATH = Path(__file__).with_name("app_icon.png")
+APP_ICON_MASKABLE_PNG_PATH = Path(__file__).with_name("app_icon_maskable.png")
 SCENES_DIR = Path(__file__).with_name("scenes")
 def _scene_file(filename: str) -> Path | None:
     """Resolve a scene image against the on-disk directory at request time.
@@ -138,7 +135,7 @@ _LANDING_CACHE: dict[str, Any] = {
 }
 
 _GZIP_SKIP_PREFIXES = ("/api/sync/stream", "/api/media/file", "/scenes/")
-_GZIP_SKIP_EXACT = frozenset({"/icon.png", "/apple-touch-icon.png", "/favicon.ico"})
+_GZIP_SKIP_EXACT = frozenset({"/icon.png", "/icon-maskable.png", "/apple-touch-icon.png", "/favicon.ico"})
 
 
 def _load_html_cached(html_path: Path, cache: dict[str, Any]) -> tuple[bytes, str]:
@@ -1804,7 +1801,7 @@ class ApiDispatcher:
             self.container.memo_journal_service.save_memo(
                 space_id=space_id,
                 payload={
-                    "title": "TraceTodo 防臃肿设计备忘",
+                    "title": "有迹 防臃肿设计备忘",
                     "content": "坚持「一套可追溯记忆内核 + 5 栏收敛导航 + 可插拔开关 + 磁盘轻附件」。\n- 支持 **Markdown** 与置顶瀑布流\n- #架构灵感 #防臃肿",
                     "pinned": True,
                     "tags": ["架构灵感", "防臃肿"],
@@ -1978,11 +1975,18 @@ def create_fastapi_app(container: AppContainer) -> Any:
         return Response(content=PWA_MANIFEST_JSON, media_type="application/manifest+json")
 
     @app.get("/icon.png")
-    @app.get("/apple-touch-icon.png")
     @app.get("/favicon.ico")
     async def icon_png() -> Response:
         if APP_ICON_PNG_PATH.is_file():
-            return Response(content=APP_ICON_PNG_PATH.read_bytes(), media_type="image/png")
+            return Response(content=APP_ICON_PNG_PATH.read_bytes(), media_type="image/png", headers={"Cache-Control": "no-cache"})
+        return Response(content=PWA_ICON_SVG, media_type="image/svg+xml")
+
+    @app.get("/apple-touch-icon.png")
+    @app.get("/icon-maskable.png")
+    async def icon_maskable_png() -> Response:
+        target = APP_ICON_MASKABLE_PNG_PATH if APP_ICON_MASKABLE_PNG_PATH.is_file() else APP_ICON_PNG_PATH
+        if target.is_file():
+            return Response(content=target.read_bytes(), media_type="image/png", headers={"Cache-Control": "no-cache"})
         return Response(content=PWA_ICON_SVG, media_type="image/svg+xml")
 
     @app.get("/icon.svg")
@@ -2205,9 +2209,16 @@ def run_web_server(container: AppContainer, host: str = "127.0.0.1", port: int =
             if parsed.path == "/manifest.webmanifest":
                 self._write_raw(200, "application/manifest+json", PWA_MANIFEST_JSON.encode("utf-8"))
                 return
-            if parsed.path in ("/icon.png", "/apple-touch-icon.png", "/favicon.ico"):
+            if parsed.path in ("/icon.png", "/favicon.ico"):
                 if APP_ICON_PNG_PATH.is_file():
                     self._write_raw(200, "image/png", APP_ICON_PNG_PATH.read_bytes())
+                else:
+                    self._write_raw(200, "image/svg+xml", PWA_ICON_SVG.encode("utf-8"))
+                return
+            if parsed.path in ("/apple-touch-icon.png", "/icon-maskable.png"):
+                target = APP_ICON_MASKABLE_PNG_PATH if APP_ICON_MASKABLE_PNG_PATH.is_file() else APP_ICON_PNG_PATH
+                if target.is_file():
+                    self._write_raw(200, "image/png", target.read_bytes())
                 else:
                     self._write_raw(200, "image/svg+xml", PWA_ICON_SVG.encode("utf-8"))
                 return

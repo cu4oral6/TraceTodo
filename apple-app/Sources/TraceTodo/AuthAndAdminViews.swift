@@ -152,7 +152,7 @@ struct AuthGateSheet: View {
                 appBrandIcon
                     .shadow(color: Color(red: 0.31, green: 0.36, blue: 0.92).opacity(0.24), radius: 14, x: 0, y: 8)
 
-                Text(isRegisterMode ? "创建你的 TraceTodo 账号" : "欢迎回到 TraceTodo")
+                Text(isRegisterMode ? "创建你的 有迹 账号" : "欢迎回到 有迹")
                     .font(.system(size: 21, weight: .bold, design: .rounded))
                     .foregroundStyle(Color(red: 0.08, green: 0.11, blue: 0.18))
 

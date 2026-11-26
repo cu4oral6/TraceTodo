@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TraceTodo</string>
+    <string name="app_name">有迹</string>
     <string name="default_server_url">https://todo.531party.cn</string>
     <string name="fallback_server_url">http://43.228.79.133:18090</string>
     <string name="test_server_url">http://43.228.79.133:18091</string>
@@ -14,11 +14,11 @@
     <string name="sc_ask_long">💬 随手问记忆大脑</string>
     <string name="sc_auth_short">账号登录</string>
     <string name="sc_auth_long">🔐 登录或切换云端账号</string>
-    <string name="widget_label">TraceTodo 四象限待办</string>
+    <string name="widget_label">有迹 四象限待办</string>
     <string name="widget_desc">在手机桌面实时展示今日四象限优先待办，支持一键刷新、专注与新建</string>
-    <string name="memo_widget_label">TraceTodo 随记备忘录</string>
+    <string name="memo_widget_label">有迹 随记备忘录</string>
     <string name="memo_widget_desc">在手机桌面展示置顶灵感与最新随记便签，一键打开速记</string>
-    <string name="calendar_widget_label">TraceTodo 今日日历日程</string>
+    <string name="calendar_widget_label">有迹 今日日历日程</string>
     <string name="calendar_widget_desc">在手机桌面展示今日日期、时间段排期与全天事项，一键直达周时间轴</string>
-    <color name="ic_launcher_background">#0F172A</color>
+    <color name="ic_launcher_background">#154050</color>
 </resources>

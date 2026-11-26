@@ -773,7 +773,7 @@ struct MenuBarQuickView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("🧠 TraceTodo 快捷待办")
+                Text("🧠 有迹 快捷待办")
                     .font(.headline)
                 Spacer()
                 Button {
@@ -891,7 +891,7 @@ struct TraceTodoApp: App {
     }
 
     var body: some Scene {
-        WindowGroup(id: "main") {
+        WindowGroup("有迹", id: "main") {
             MainContentView()
                 .environmentObject(store)
         }

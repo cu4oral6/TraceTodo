@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#2563eb" />
-  <meta name="description" content="TraceTodo — AI 长期记忆驱动的艾森豪威尔四象限待办、时间画布、沉浸番茄钟、双链星图与全端实时同步中心。" />
+  <meta name="description" content="有迹 — AI 长期记忆驱动的艾森豪威尔四象限待办、时间画布、沉浸番茄钟、双链星图与全端实时同步中心。" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="icon" type="image/png" href="/icon.png" />
-  <link rel="apple-touch-icon" href="/icon.png" />
-  <title>TraceTodo · AI 长期记忆驱动的四象限待办与执行中心</title>
+  <link rel="icon" type="image/png" href="/icon.png?v=4" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
+  <title>有迹 · AI 长期记忆驱动的四象限待办与执行中心</title>
   <style>
     :root {
       --bg: #f8fafc;
@@ -106,8 +106,10 @@
     .nav-brand img {
       width: 36px;
       height: 36px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+      border-radius: 22.4%;
+      background: transparent;
+      display: block;
+      filter: drop-shadow(0 4px 10px rgba(15, 45, 55, 0.25));
     }
     .nav-wordmark {
       font-weight: 800;
@@ -1080,7 +1082,7 @@
       font-weight: 700;
     }
     .auth-hero { text-align: center; display: grid; gap: 6px; justify-items: center; }
-    .auth-hero img { width: 52px; height: 52px; border-radius: 14px; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.22); }
+    .auth-hero img { width: 56px; height: 56px; border-radius: 22.4%; background: transparent; display: block; filter: drop-shadow(0 8px 18px rgba(15, 45, 55, 0.24)); }
     .auth-hero h2 { margin: 4px 0 0; font-size: 20px; font-weight: 800; }
     .auth-hero p { margin: 0; font-size: 13px; color: var(--muted); }
     .seg-tabs {
@@ -1191,9 +1193,9 @@
     <!-- 1. Top Navigation -->
     <header class="site-nav">
       <div class="container nav-inner">
-        <a href="/home" class="nav-brand" aria-label="TraceTodo 官网首页">
-          <img src="/icon.png" alt="TraceTodo 图标" />
-          <span class="nav-wordmark">TraceTodo</span>
+        <a href="/home" class="nav-brand" aria-label="有迹 官网首页">
+          <img src="/icon.png?v=4" alt="有迹 图标" />
+          <span class="nav-wordmark">有迹</span>
           <span class="nav-badge">AI 记忆待办</span>
         </a>
 
@@ -1224,11 +1226,11 @@
             把一句话变成<span class="grad-txt">四象限行动</span>，<br />让每一次思考都沉淀为长期记忆。
           </h1>
           <p class="hero-sub">
-            TraceTodo 融合可追溯长期记忆、艾森豪威尔四象限待办、周/月时间画布、沉浸番茄钟与双链星图。
+            有迹 融合可追溯长期记忆、艾森豪威尔四象限待办、周/月时间画布、沉浸番茄钟与双链星图。
             语音或截屏随手记下，AI 自动归类排序、随截止时间动态提权，并在 Web、macOS、iOS 与 MCP Agent 间毫秒级同步。
           </p>
           <div class="hero-cta-row">
-            <button type="button" class="btn btn-primary btn-lg" id="heroPrimaryCta" onclick="handleHeroPrimaryAction()">立即开启 TraceTodo →</button>
+            <button type="button" class="btn btn-primary btn-lg" id="heroPrimaryCta" onclick="handleHeroPrimaryAction()">立即开启 有迹 →</button>
             <a href="https://github.com/cu4oral6/TraceTodo/releases" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-lg" id="heroDownloadAppCta">📲 下载客户端 (Mac / iOS / Android) ↗</a>
             <button type="button" class="btn btn-ghost btn-lg" id="heroSecondaryCta" onclick="handleHeroSecondaryAction()">已有账号？立即登录</button>
             <button type="button" class="btn btn-subtle btn-lg" id="heroGuestBtn" hidden onclick="enterLocalGuestMode()">本地免登录体验 →</button>
@@ -1242,7 +1244,7 @@
         </div>
 
         <!-- Interactive macOS Product Preview -->
-        <div class="preview-frame" aria-label="TraceTodo 产品交互预览">
+        <div class="preview-frame" aria-label="有迹 产品交互预览">
           <div class="frame-topbar">
             <div class="win-dots" aria-hidden="true"><i></i><i></i><i></i></div>
             <div class="preview-tabs" role="tablist" aria-label="工作台视图切换">
@@ -1520,7 +1522,7 @@
           <span class="sec-kicker" style="margin-bottom:10px;">Grounded Evidence Q&amp;A</span>
           <h3 style="margin:0 0 10px;font-size:22px;font-weight:800;">双源证据问答与全链路 Trace 审计</h3>
           <p style="margin:0 0 16px;font-size:14.5px;color:var(--ink-2);line-height:1.7;">
-            无论询问「我最近的学习作息偏好」还是「某项备考计划为何调高优先级」，TraceTodo 都能同时区分「当前有效状态」与「历史演进轨迹」，并附带可点击核验的原文出处与每次检索耗时、Token 审计。
+            无论询问「我最近的学习作息偏好」还是「某项备考计划为何调高优先级」，有迹 都能同时区分「当前有效状态」与「历史演进轨迹」，并附带可点击核验的原文出处与每次检索耗时、Token 审计。
           </p>
           <div class="metric-row">
             <span class="metric-pill">RRF Score: 0.0328</span>
@@ -1694,9 +1696,9 @@
   <section class="container" style="padding-top:12px;">
     <div class="cta-banner">
       <h2 id="closingCtaTitle">准备好让待办与记忆彼此赋能了吗？</h2>
-      <p id="closingCtaDesc">注册或登录你的 TraceTodo 专属空间，所有灵感、任务、时间块与知识图谱立即跨端同步。</p>
+      <p id="closingCtaDesc">注册或登录你的 有迹 专属空间，所有灵感、任务、时间块与知识图谱立即跨端同步。</p>
       <div class="hero-cta-row">
-        <button type="button" class="btn btn-white btn-lg" id="closingPrimaryBtn" onclick="handleHeroPrimaryAction()">立即开启 TraceTodo →</button>
+        <button type="button" class="btn btn-white btn-lg" id="closingPrimaryBtn" onclick="handleHeroPrimaryAction()">立即开启 有迹 →</button>
         <button type="button" class="btn btn-white-outline btn-lg" id="closingSecondaryBtn" onclick="handleHeroSecondaryAction()">登录已有账号</button>
       </div>
     </div>
@@ -1706,8 +1708,8 @@
   <footer class="site-footer">
     <div class="container footer-inner">
       <div style="display:flex;align-items:center;gap:10px;">
-        <img src="/icon.png" alt="TraceTodo" style="width:26px;height:26px;border-radius:7px;" />
-        <span><strong>TraceTodo</strong> · 可追溯长期记忆与四象限待办引擎</span>
+        <img src="/icon.png?v=4" alt="有迹" style="width:28px;height:28px;border-radius:22.4%;background:transparent;display:block;" />
+        <span><strong>有迹</strong> · 可追溯长期记忆与四象限待办引擎</span>
       </div>
       <div class="footer-links">
         <a href="#features">核心能力</a>
@@ -1725,8 +1727,8 @@
     <div class="auth-sheet">
       <button type="button" class="auth-close" aria-label="关闭登录弹窗" onclick="closeLandingAuth()">✕</button>
       <div class="auth-hero">
-        <img src="/icon.png" alt="TraceTodo" />
-        <h2 id="landingAuthTitle">欢迎回到 TraceTodo</h2>
+        <img src="/icon.png?v=4" alt="有迹" />
+        <h2 id="landingAuthTitle">欢迎回到 有迹</h2>
         <p>登录或创建你的专属记忆与四象限待办空间</p>
       </div>
 
@@ -1836,8 +1838,8 @@
       }
       document.getElementById('lAuthPassword').autocomplete = landingAuthMode === 'register' ? 'new-password' : 'current-password';
       document.getElementById('landingAuthTitle').textContent = !landingAuthState.has_users
-        ? '初始化 TraceTodo 管理员'
-        : (landingAuthMode === 'register' ? '创建你的 TraceTodo 账号' : '欢迎回到 TraceTodo');
+        ? '初始化 有迹 管理员'
+        : (landingAuthMode === 'register' ? '创建你的 有迹 账号' : '欢迎回到 有迹');
       document.getElementById('landingAuthSubmitBtn').textContent = landingAuthMode === 'register'
         ? '注册并进入工作台 →'
         : '立即登录并进入工作台 →';
@@ -1936,7 +1938,7 @@
         try { sessionStorage.removeItem(GUEST_KEY); } catch (e) {}
         window.location.replace(safeNextPath);
       } catch (e) {
-        errEl.textContent = '无法连接 TraceTodo 服务，请确认服务已启动';
+        errEl.textContent = '无法连接 有迹 服务，请确认服务已启动';
         errEl.style.display = 'block';
       } finally {
         btn.disabled = false;
@@ -1981,7 +1983,7 @@
         if (canReg) {
           navPrimaryBtn.textContent = '免费注册';
           navPrimaryBtn.onclick = () => openLandingAuth('register');
-          heroPrimary.textContent = '立即开启 TraceTodo →';
+          heroPrimary.textContent = '立即开启 有迹 →';
           heroSecondary.textContent = '已有账号？立即登录';
           heroSecondary.style.display = 'inline-flex';
           closingPrimary.textContent = '免费注册并开启 →';
@@ -1989,7 +1991,7 @@
         } else {
           navPrimaryBtn.textContent = '立即登录';
           navPrimaryBtn.onclick = () => openLandingAuth('login');
-          heroPrimary.textContent = '登录 TraceTodo 工作台 →';
+          heroPrimary.textContent = '登录 有迹 工作台 →';
           heroSecondary.style.display = 'none';
           closingPrimary.textContent = '登录我的工作台 →';
           closingSecondary.style.display = 'none';

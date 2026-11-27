@@ -82,7 +82,6 @@ class TraceMemoryConfig:
     admin_username: str = ""
     admin_password: str = ""
     session_ttl_hours: int = 720
-    judge_demo_enabled: bool = False
 
     # Low-cost defense & quota defaults
     noise_filter_enabled: bool = True
@@ -183,7 +182,6 @@ class TraceMemoryConfig:
             admin_username=_get("TRACE_MEMORY_ADMIN_USERNAME", ""),
             admin_password=env.get("TRACE_MEMORY_ADMIN_PASSWORD", ""),
             session_ttl_hours=int(_get("TRACE_MEMORY_SESSION_TTL_HOURS", "720")),
-            judge_demo_enabled=_as_bool(env.get("TRACE_MEMORY_JUDGE_DEMO_ENABLED"), False),
             noise_filter_enabled=_as_bool(env.get("TRACE_MEMORY_NOISE_FILTER_ENABLED"), True),
             max_note_chars=int(_get("TRACE_MEMORY_MAX_NOTE_CHARS", "2000")),
             min_meaningful_chars=int(_get("TRACE_MEMORY_MIN_MEANINGFUL_CHARS", "3")),

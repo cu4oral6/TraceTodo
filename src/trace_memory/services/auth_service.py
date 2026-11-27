@@ -275,14 +275,11 @@ class AuthService:
             raise ValidationError("密码长度需在 6 到 128 位之间")
         return uname
 
-    def _issue_session(
-        self, user: UserAccount, device_label: str = "", *, ttl_hours: int | None = None
-    ) -> dict[str, Any]:
+    def _issue_session(self, user: UserAccount, device_label: str = "") -> dict[str, Any]:
         raw_token = f"tm_{uuid.uuid4().hex}{uuid.uuid4().hex[:16]}"
         token_hash = _sha256_hex(raw_token)
         now_dt = beijing_now().replace(microsecond=0)
-        hours = self.config.session_ttl_hours if ttl_hours is None else ttl_hours
-        exp_dt = now_dt + timedelta(hours=max(1, int(hours)))
+        exp_dt = now_dt + timedelta(hours=max(1, int(self.config.session_ttl_hours)))
         now_iso = now_dt.isoformat()
         exp_iso = exp_dt.isoformat()
         with self.db.transaction() as conn:
@@ -305,54 +302,6 @@ class AuthService:
             "user": user.to_dict(),
             "quota": usage,
         }
-
-    def judge_demo_available(self) -> bool:
-        return (
-            self.config.judge_demo_enabled
-            and self.config.auth_required
-            and self.db.query_one(
-                "SELECT 1 FROM users WHERE role = 'admin' AND status = 'active' LIMIT 1"
-            ) is not None
-        )
-
-    def start_judge_demo(self, client_ip: str, user: UserAccount | None) -> dict[str, Any]:
-        if not self.judge_demo_available():
-            raise NotFoundError("评委免密体验暂未开放")
-        if user is not None:
-            return {"authenticated": True}
-        self.guard.check_rate_limit(
-            f"judge_demo:{client_ip}", limit=20, window_seconds=60, action_label="评委体验请求"
-        )
-        self.guard.check_rate_limit(
-            "judge_demo:global", limit=120, window_seconds=3600, action_label="评委体验请求"
-        )
-        cfg = self.settings.get_all()
-        now = utc_now_iso()
-        suffix = uuid.uuid4().hex
-        user_id = new_id("usr")
-        with self.db.transaction() as conn:
-            conn.execute(
-                """
-                INSERT INTO users (
-                    user_id, username, display_name, password_hash, role, status,
-                    space_id, daily_note_limit, daily_llm_limit, daily_token_limit,
-                    created_at, updated_at
-                ) VALUES (?, ?, '评委体验', '', 'user', 'active', ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    user_id,
-                    f"judge_{suffix[:24]}",
-                    f"judge_{suffix}",
-                    min(int(cfg["default_daily_note_limit"]), 20),
-                    min(int(cfg["default_daily_llm_limit"]), 20),
-                    min(int(cfg["default_daily_token_limit"]), 20000),
-                    now,
-                    now,
-                ),
-            )
-            user = self.get_user_by_id(user_id)
-            assert user is not None
-            return self._issue_session(user, device_label="judge-demo", ttl_hours=24)
 
     def register(
         self,

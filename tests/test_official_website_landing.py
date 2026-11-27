@@ -224,6 +224,13 @@ class TestOfficialWebsiteLanding(unittest.TestCase):
             "[hidden] { display: none !important; }",
             "tm_auth_token",
             "tm_guest_mode",
+            "GalaxyFX",
+            'id="landingBlackHoleDemoBtn"',
+            "triggerLandingBlackHoleDemo",
+            "☀ Dream恒星",
+            "黑洞（拖入吞噬）",
+            "虫洞出口",
+            "startLandingBlackHoleDevour",
         ]
         for marker in required_markers:
             self.assertIn(marker, html, f"Missing expected marker in landing.html: {marker}")

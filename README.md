@@ -1,4 +1,11 @@
-# 🧠 Trace-Memory：可追溯、自演化的融合记忆与四象限待办引擎
+# 🧠 有迹 TraceTodo：可追溯、自演化的融合记忆与四象限待办引擎
+
+## 评委体验链接
+
+1. 在工作台服务中设置 `TRACE_MEMORY_AUTH_REQUIRED=true` 和 `TRACE_MEMORY_JUDGE_DEMO_ENABLED=true`，并确认已有可用管理员。部署后从无痕窗口打开 `/home?demo=1`，应直接进入工作台。普通访客也可以从 `/home` 点击「评委一键免密体验」。
+2. 将 `deploy/qoder-site/` 作为静态站点发布到现有的 Qoder Sites 作品。入口会立即跳转到 `https://todo.531party.cn/home?demo=1`。若工作台域名变化，同步更新入口文件里的两个网址。
+
+每个首次访问的浏览器会获得独立的普通用户工作台和 24 小时会话。已有有效登录会话时复用当前工作台。评审结束后可关闭 `TRACE_MEMORY_JUDGE_DEMO_ENABLED` 停止发放体验会话，已发放的会话会正常到期。
 
 > 深度融合 **随心记 (`suixinji`)**、**`basic-memory`** 与 **阿里 `ReMe`** 三大架构流派的核心精髓，去除繁重的 IM 渠道耦合，开箱即用的个人与多 Agent 跨会话长期记忆系统。
 

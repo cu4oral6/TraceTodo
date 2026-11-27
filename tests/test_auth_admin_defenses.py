@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta
 from pathlib import Path
 import tempfile
 import unittest
@@ -11,6 +12,59 @@ from trace_memory.config import TraceMemoryConfig
 from trace_memory.container import AppContainer
 from trace_memory.llm.mock_provider import DeterministicLLMProvider, SemanticHashEmbedder
 from trace_memory.llm.protocol import ExtractionBatch
+
+
+def test_judge_demo_sessions_are_isolated(tmp_path: Path) -> None:
+    app = AppContainer.build(TraceMemoryConfig(
+        data_dir=tmp_path / "data",
+        knowledge_dir=tmp_path / "knowledge",
+        auth_required=True,
+        judge_demo_enabled=True,
+    ))
+    api = ApiDispatcher(app)
+    try:
+        endpoint = "/api/auth/judge-demo"
+        _, status = api.dispatch("GET", "/api/auth/status")
+        assert not status["judge_demo_enabled"]
+        assert api.dispatch("POST", endpoint)[0] == 404
+
+        _, admin = api.dispatch(
+            "POST", "/api/auth/register", body={"username": "owner", "password": "password123"}
+        )
+        api.dispatch(
+            "POST", "/api/admin/settings", body={"allow_registration": False},
+            auth_token=admin["token"],
+        )
+        _, status = api.dispatch("GET", "/api/auth/status")
+        assert status["judge_demo_enabled"]
+        assert not status["allow_registration"]
+
+        code, first = api.dispatch("POST", endpoint)
+        assert code == 200
+        code, second = api.dispatch("POST", endpoint)
+        assert code == 200
+        assert first["user"]["role"] == "user"
+        assert first["user"]["space_id"] != second["user"]["space_id"]
+        assert first["user"]["space_id"] != admin["user"]["space_id"]
+        expires_at = datetime.fromisoformat(first["expires_at"])
+        remaining = expires_at - datetime.now(expires_at.tzinfo)
+        assert timedelta(hours=23, minutes=59) < remaining <= timedelta(hours=24)
+
+        code, reused = api.dispatch("POST", endpoint, auth_token=first["token"])
+        assert (code, reused) == (200, {"authenticated": True})
+        assert api.dispatch("POST", endpoint, auth_token=admin["token"]) == (200, reused)
+
+        code, boot = api.dispatch("GET", "/api/bootstrap", auth_token=first["token"])
+        assert code == 200
+        assert boot["auth"]["user"]["space_id"] == first["user"]["space_id"]
+        code, _ = api.dispatch(
+            "GET", "/api/tasks/matrix", {"space_id": [second["user"]["space_id"]]},
+            auth_token=first["token"],
+        )
+        assert code == 403
+        assert api.dispatch("GET", "/api/admin/overview", auth_token=first["token"])[0] == 403
+    finally:
+        app.close()
 
 
 class _CountingLLM(DeterministicLLMProvider):
@@ -88,6 +142,7 @@ class TestAuthAdminAndDefenses(unittest.TestCase):
         self.assertEqual(reg1["user"]["role"], "admin")
         self.assertEqual(reg1["user"]["space_id"], "default")
         admin_tok = reg1["token"]
+        self.assertEqual(self.api.dispatch("POST", "/api/auth/judge-demo")[0], 404)
 
         # Admin creates a private personal task and a supervised task
         self.api.dispatch(

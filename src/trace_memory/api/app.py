@@ -41,8 +41,8 @@ PWA_ICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
 
 PWA_MANIFEST_JSON = json.dumps(
     {
-        "name": "有迹 · 四象限记忆待办",
-        "short_name": "有迹",
+        "name": "有迹 TraceTodo",
+        "short_name": "有迹 TraceTodo",
         "description": "AI 记忆驱动的艾森豪威尔四象限待办与长期记忆中心",
         "start_url": "/",
         "display": "standalone",
@@ -57,7 +57,7 @@ PWA_MANIFEST_JSON = json.dumps(
     ensure_ascii=False,
 )
 
-PWA_SW_JS = """const CACHE_NAME = 'trace-todo-shell-v5';
+PWA_SW_JS = """const CACHE_NAME = 'trace-todo-shell-v6';
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE_NAME).then((c) => c.addAll(['/', '/home', '/manifest.webmanifest', '/icon.png?v=4', '/icon-maskable.png?v=4', '/icon.svg?v=4'])));
   self.skipWaiting();
@@ -307,6 +307,7 @@ class ApiDispatcher:
             "/api/auth/status",
             "/api/auth/captcha",
             "/api/auth/login",
+            "/api/auth/judge-demo",
             "/api/auth/register",
             "/api/bootstrap",
         }
@@ -495,6 +496,7 @@ class ApiDispatcher:
             "register_captcha_required": bool(self.container.config.register_captcha_required),
             "has_users": self.container.auth_service.has_users(),
             "authenticated": user is not None,
+            "judge_demo_enabled": self.container.auth_service.judge_demo_available(),
             "user": user.to_dict() if user is not None else None,
             "quota": quota,
             "defense": {
@@ -569,6 +571,9 @@ class ApiDispatcher:
 
             if method == "GET" and path == "/api/auth/captcha":
                 return 200, self.container.auth_service.issue_captcha(client_ip=client_ip)
+
+            if method == "POST" and path == "/api/auth/judge-demo":
+                return 200, self.container.auth_service.start_judge_demo(client_ip, user)
 
             if method == "POST" and path == "/api/auth/register":
                 out = self.container.auth_service.register(
@@ -1935,7 +1940,7 @@ def create_fastapi_app(container: AppContainer) -> Any:
             await self.gzip_app(scope, receive, send)
 
     dispatcher = ApiDispatcher(container)
-    app = FastAPI(title="Trace-Memory Console & API", version="0.1.0", lifespan=_lifespan)
+    app = FastAPI(title="有迹 TraceTodo API", version="0.1.0", lifespan=_lifespan)
     app.add_middleware(_SelectiveGZipMiddleware)
     app.add_middleware(
         CORSMiddleware,
@@ -2158,7 +2163,8 @@ def create_fastapi_app(container: AppContainer) -> Any:
             headers=hdrs,
             client_ip=client_ip,
         )
-        return JSONResponse(content=payload, status_code=status_code)
+        response_headers = {"Cache-Control": "no-store"} if rest_of_path == "auth/judge-demo" else None
+        return JSONResponse(content=payload, status_code=status_code, headers=response_headers)
 
     return app
 
@@ -2380,7 +2386,8 @@ def run_web_server(container: AppContainer, host: str = "127.0.0.1", port: int =
             code, resp = dispatcher.dispatch(
                 "POST", parsed.path, qp, body, headers=hdrs, client_ip=client_ip
             )
-            self._write_json(code, resp)
+            response_headers = {"Cache-Control": "no-store"} if parsed.path == "/api/auth/judge-demo" else None
+            self._write_json(code, resp, response_headers)
 
         def _send_cors(self) -> None:
             self.send_header("Access-Control-Allow-Origin", "*")
@@ -2406,11 +2413,14 @@ def run_web_server(container: AppContainer, host: str = "127.0.0.1", port: int =
             self.end_headers()
             self.wfile.write(data)
 
-        def _write_json(self, code: int, data: dict[str, Any]) -> None:
+        def _write_json(
+            self, code: int, data: dict[str, Any], extra_headers: dict[str, str] | None = None
+        ) -> None:
             self._write_raw(
                 code,
                 "application/json; charset=utf-8",
                 json.dumps(data, ensure_ascii=False).encode("utf-8"),
+                extra_headers=extra_headers,
             )
 
         def log_message(self, fmt: str, *args: Any) -> None:

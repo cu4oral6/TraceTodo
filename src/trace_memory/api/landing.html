@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#2563eb" />
-  <meta name="description" content="有迹 — AI 长期记忆驱动的艾森豪威尔四象限待办、时间画布、沉浸番茄钟、双链星图与全端实时同步中心。" />
+  <meta name="description" content="有迹 — AI 长期记忆驱动的艾森豪威尔四象限待办、时间画布、沉浸番茄钟、记忆星系与全端实时同步中心。" />
   <link rel="manifest" href="/manifest.webmanifest" />
   <link rel="icon" type="image/png" href="/icon.png?v=4" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
@@ -590,7 +590,7 @@
       height: 310px;
       border-radius: 18px;
       overflow: hidden;
-      background: radial-gradient(circle at 30% 25%, #1e1b4b, #090d1a 70%);
+      background: #02040B;
       border: 1px solid rgba(129, 140, 248, 0.28);
     }
     #miniGraphCanvas { width: 100%; height: 100%; display: block; }
@@ -798,14 +798,15 @@
     }
     .graph-canvas-card {
       position: relative;
-      height: 410px;
+      height: 430px;
       border-radius: var(--radius-lg);
       overflow: hidden;
-      background: radial-gradient(circle at 50% 45%, #161b33 0%, #070a14 100%);
+      background: #02040B;
       border: 1px solid rgba(148, 163, 184, 0.24);
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
     }
-    #landingGraphCanvas { width: 100%; height: 100%; display: block; cursor: pointer; }
+    #landingGraphCanvas { width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; }
+    #landingGraphCanvas.dragging { cursor: grabbing; touch-action: none; }
     .graph-legend-bar {
       position: absolute;
       top: 14px;
@@ -829,6 +830,37 @@
       font-size: 11.5px;
       color: #e2e8f0;
       backdrop-filter: blur(8px);
+    }
+    .graph-demo-btn {
+      pointer-events: auto;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(15, 23, 42, 0.84);
+      border: 1px solid rgba(251, 191, 36, 0.42);
+      color: #fde68a;
+      padding: 6px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .graph-demo-btn:hover {
+      background: rgba(251, 191, 36, 0.18);
+      border-color: rgba(251, 191, 36, 0.75);
+      transform: translateY(-1px);
+    }
+    .insp-hint {
+      margin-top: auto;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px dashed rgba(251, 191, 36, 0.32);
+      font-size: 12px;
+      line-height: 1.55;
+      color: #fde68a;
     }
     .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
 
@@ -1180,7 +1212,7 @@
       }
       .scene-thumbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .cta-banner { padding: 34px 20px; }
-      .graph-canvas-card { height: 320px; }
+      .graph-canvas-card { height: 340px; }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -1202,7 +1234,7 @@
         <nav class="nav-links" aria-label="主导航">
           <a href="#features">核心能力</a>
           <a href="#memory-engine">记忆引擎</a>
-          <a href="#star-graph">双链星图</a>
+          <a href="#star-graph">记忆星系</a>
           <a href="#themes">主题场景</a>
           <a href="#ecosystem">全端 &amp; MCP</a>
           <a href="https://github.com/cu4oral6/TraceTodo/releases" target="_blank" rel="noopener noreferrer">客户端下载 ↗</a>
@@ -1226,7 +1258,7 @@
             把一句话变成<span class="grad-txt">四象限行动</span>，<br />让每一次思考都沉淀为长期记忆。
           </h1>
           <p class="hero-sub">
-            有迹 融合可追溯长期记忆、艾森豪威尔四象限待办、周/月时间画布、沉浸番茄钟与双链星图。
+            有迹 融合可追溯长期记忆、艾森豪威尔四象限待办、周/月时间画布、沉浸番茄钟与记忆星系。
             语音或截屏随手记下，AI 自动归类排序、随截止时间动态提权，并在 Web、macOS、iOS 与 MCP Agent 间毫秒级同步。
           </p>
           <div class="hero-cta-row">
@@ -1251,7 +1283,7 @@
               <button type="button" class="preview-tab-btn active" role="tab" aria-selected="true" data-pane="quadrant" onclick="switchPreviewPane('quadrant', this)">田 四象限</button>
               <button type="button" class="preview-tab-btn" role="tab" aria-selected="false" data-pane="calendar" onclick="switchPreviewPane('calendar', this)">📅 时间画布</button>
               <button type="button" class="preview-tab-btn" role="tab" aria-selected="false" data-pane="focus" onclick="switchPreviewPane('focus', this)">🍅 沉浸专注</button>
-              <button type="button" class="preview-tab-btn" role="tab" aria-selected="false" data-pane="graph" onclick="switchPreviewPane('graph', this)">🕸️ 双链星图</button>
+              <button type="button" class="preview-tab-btn" role="tab" aria-selected="false" data-pane="graph" onclick="switchPreviewPane('graph', this)">🌌 记忆星系</button>
             </div>
             <div class="frame-status-pill">● SSE 实时同步已就绪</div>
           </div>
@@ -1416,13 +1448,13 @@
               </div>
             </div>
 
-            <!-- Tab 4: Mini Star Graph -->
+            <!-- Tab 4: Mini Memory Galaxy -->
             <div class="preview-pane" id="pane-graph">
               <div class="mini-graph-wrap">
-                <canvas id="miniGraphCanvas" aria-label="双链记忆星图预览"></canvas>
+                <canvas id="miniGraphCanvas" aria-label="记忆星系预览"></canvas>
                 <div class="mini-graph-hud">
-                  <span class="hud-chip">━━ [[wikilinks]] 显式双链 · ┈┈ 语义余弦关联</span>
-                  <span class="hud-chip">点击下方「双链星图」区块可交互探索完整节点</span>
+                  <span class="hud-chip">☀ Dream 恒星 · ☄ 记忆小行星 · 🕳 黑洞吞噬 &amp; 虫洞归位</span>
+                  <span class="hud-chip">向下滚动到「记忆星系」体验拖拽投入黑洞</span>
                 </div>
               </div>
             </div>
@@ -1544,27 +1576,28 @@
     </div>
   </section>
 
-  <!-- 5. Dark Signature Showcase: Interactive Star Graph & Real Scene Gallery -->
+  <!-- 5. Dark Signature Showcase: Interactive Memory Galaxy & Real Scene Gallery -->
   <section class="dark-showcase" id="star-graph">
     <div class="container">
       <div class="sec-head">
-        <span class="sec-kicker">Knowledge Graph &amp; Aesthetics</span>
-        <h2 class="sec-title" style="color:#ffffff;">双链星图漫游与沉浸式主题美学</h2>
-        <p class="sec-desc">悬停或点击下方任意节点，实时查看双链引用（[[wikilinks]]）、Dream 归纳来源与跨主题语义关联。</p>
+        <span class="sec-kicker">Memory Galaxy &amp; Aesthetics</span>
+        <h2 class="sec-title" style="color:#ffffff;">记忆星系漫游与沉浸式主题美学</h2>
+        <p class="sec-desc">Dream 归纳汇聚为发光恒星，记忆沉淀为环绕星团；点击查看双链溯源，或将任意记忆拖入黑洞体验「吞噬后经虫洞重返星轨」（仅动画演示，不删数据）。</p>
       </div>
 
       <div class="graph-split">
         <div class="graph-canvas-card">
-          <canvas id="landingGraphCanvas" aria-label="交互式双链记忆星图"></canvas>
+          <canvas id="landingGraphCanvas" aria-label="交互式记忆星系"></canvas>
           <div class="graph-legend-bar">
             <div class="graph-legend-pills">
+              <span><i class="legend-dot" style="background:#fbbf24;"></i>☀ Dream恒星</span>
               <span><i class="legend-dot" style="background:#3b82f6;"></i>任务</span>
               <span><i class="legend-dot" style="background:#8b5cf6;"></i>事实</span>
               <span><i class="legend-dot" style="background:#f59e0b;"></i>偏好</span>
               <span><i class="legend-dot" style="background:#14b8a6;"></i>情景</span>
-              <span><i class="legend-dot" style="background:#ec4899;"></i>归纳</span>
+              <span>━━ 显式双链 · ┈┈ 语义相似</span>
             </div>
-            <div class="graph-legend-pills">━━ 显式双链 · ┈┈ 语义相似</div>
+            <button type="button" class="graph-demo-btn" id="landingBlackHoleDemoBtn" onclick="triggerLandingBlackHoleDemo()">🕳 黑洞演示</button>
           </div>
         </div>
 
@@ -1582,6 +1615,7 @@
             <div class="insp-label" style="margin-bottom:8px;">关联节点（点击切换焦点）</div>
             <div class="insp-links" id="inspNeighborLinks"></div>
           </div>
+          <div class="insp-hint">💡 提示：拖拽左侧星系中的任意节点靠近黑洞松手，或点击右上角「🕳 黑洞演示」，可查看黑洞吞噬后经虫洞归位动画（仅演示，不改数据）。</div>
         </aside>
       </div>
 
@@ -1714,7 +1748,7 @@
       <div class="footer-links">
         <a href="#features">核心能力</a>
         <a href="#memory-engine">记忆引擎</a>
-        <a href="#star-graph">双链星图</a>
+        <a href="#star-graph">记忆星系</a>
         <a href="#ecosystem">MCP 接入</a>
         <a href="https://github.com/cu4oral6/TraceTodo/releases" target="_blank" rel="noopener noreferrer">App 下载</a>
         <a href="/" id="footerWorkspaceLink">进入工作台</a>
@@ -2092,7 +2126,10 @@
       document.querySelectorAll('.preview-pane').forEach(p => p.classList.remove('active'));
       const target = document.getElementById(`pane-${name}`);
       if (target) target.classList.add('active');
-      if (name === 'graph') drawGraphCanvas('miniGraphCanvas', false);
+      if (name === 'graph') {
+        drawGraphCanvas('miniGraphCanvas', false);
+        ensureLandingLoopRunning();
+      }
     }
 
     /* Demo Pomodoro Timer */
@@ -2119,49 +2156,370 @@
       }, 1000);
     }
 
-    /* Interactive Star Graph */
+    /* Interactive Memory Galaxy Engine (synced with workspace GalaxyFX) */
+    function hashGraphId(str) {
+      let h = 2166136261;
+      const s = String(str || '');
+      for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return (h >>> 0) / 4294967296;
+    }
+
+    const GalaxyFX = (function () {
+      function rng(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+      function noise(seed) {
+        var r = rng(seed), p = new Float32Array(1024), i;
+        for (i = 0; i < 1024; i++) p[i] = r();
+        function h(x, y) { var k = (x * 374761393 + y * 668265263) | 0; k = Math.imul(k ^ (k >>> 13), 1274126177); return p[(k >>> 0) & 1023]; }
+        function n(x, y) { var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf), a = h(xi, yi), b = h(xi + 1, yi), c = h(xi, yi + 1), d = h(xi + 1, yi + 1); return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v; }
+        function fbm(x, y, o) { var s = 0, a = 0.5, f = 1, t = 0; for (var i = 0; i < o; i++) { s += a * n(x * f, y * f); t += a; f *= 2.03; a *= 0.5; } return s / t; }
+        return { n: n, fbm: fbm };
+      }
+      function cv(w, h) { var c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w)); c.height = Math.max(1, Math.round(h)); return c; }
+      function rgba(c, a) { return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + (a < 0 ? 0 : a > 1 ? 1 : a) + ')'; }
+      function glow(x, cx, cy, r, col, a) { if (r <= 0) return; var g = x.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, rgba(col, a)); g.addColorStop(0.2, rgba(col, a * 0.38)); g.addColorStop(0.5, rgba(col, a * 0.1)); g.addColorStop(1, rgba(col, 0)); x.fillStyle = g; x.fillRect(cx - r, cy - r, 2 * r, 2 * r); }
+      function spikes(x, cx, cy, len, col, a, n, rot, w) {
+        x.save(); x.translate(cx, cy); x.rotate(rot || 0);
+        for (var i = 0; i < n; i++) { x.rotate(Math.PI * 2 / n); var g = x.createLinearGradient(0, 0, len, 0); g.addColorStop(0, rgba(col, a)); g.addColorStop(0.35, rgba(col, a * 0.35)); g.addColorStop(1, rgba(col, 0)); x.fillStyle = g; x.beginPath(); x.moveTo(0, -w); x.lineTo(len, 0); x.lineTo(0, w); x.closePath(); x.fill(); }
+        x.restore();
+      }
+      function starTile(S, seed, neb) {
+        var c = cv(S, S), x = c.getContext('2d'), r = rng(seed), N = noise(seed + 5), i;
+        x.fillStyle = '#02040B'; x.fillRect(0, 0, S, S);
+        if (neb) {
+          var q = 4, s = cv(S / q, S / q), sx = s.getContext('2d'), im = sx.createImageData(S / q, S / q), d = im.data, w = S / q;
+          for (var j = 0; j < w; j++) for (i = 0; i < w; i++) {
+            var u = i / w * 6.2832, v = j / w * 6.2832;
+            var f = N.fbm(Math.cos(u) * 1.4 + Math.cos(v) * 0.7 + 9, Math.sin(u) * 1.4 + Math.sin(v) * 0.9 + 3, 5);
+            var g2 = N.fbm(Math.cos(u) * 2.6 + 30, Math.sin(v) * 2.6 + 30, 4);
+            var m = Math.max(0, f - 0.48) * neb, k = (j * w + i) * 4;
+            d[k] = 8 + m * (70 + 120 * g2); d[k + 1] = 10 + m * 60; d[k + 2] = 22 + m * (150 - 60 * g2); d[k + 3] = 255;
+          }
+          sx.putImageData(im, 0, 0); x.imageSmoothingEnabled = true; x.drawImage(s, 0, 0, S, S);
+        }
+        var cols = [[255, 244, 232], [255, 214, 170], [196, 214, 255], [255, 255, 255], [255, 190, 150], [168, 196, 255]];
+        var n = Math.floor(S * S / 700);
+        for (i = 0; i < n; i++) {
+          var px = r() * S, py = r() * S, m2 = Math.pow(r(), 7), c0 = cols[Math.floor(r() * cols.length)], rad = 0.3 + m2 * 1.5;
+          for (var ox = -1; ox <= 1; ox++) for (var oy = -1; oy <= 1; oy++) {
+            var X = px + ox * S, Y = py + oy * S; if (X < -12 || Y < -12 || X > S + 12 || Y > S + 12) continue;
+            x.fillStyle = rgba(c0, 0.22 + m2 * 0.78); x.beginPath(); x.arc(X, Y, rad, 0, 6.2832); x.fill();
+            if (m2 > 0.3) { glow(x, X, Y, rad * 6, c0, 0.4 * m2); }
+          }
+        }
+        return c;
+      }
+      function granTex(S, seed, c1, c2, scale) {
+        var c = cv(S, S), x = c.getContext('2d'), im = x.createImageData(S, S), d = im.data, N = noise(seed);
+        for (var j = 0; j < S; j++) for (var i = 0; i < S; i++) {
+          var v = N.fbm(i / scale, j / scale, 3), cell = 1 - Math.abs(N.n(i / (scale * 0.45), j / (scale * 0.45)) * 2 - 1);
+          v = 0.45 * v + 0.55 * Math.pow(cell, 0.7); v = Math.min(1, Math.max(0, (v - 0.25) * 1.5));
+          var k = (j * S + i) * 4; d[k] = c2[0] + (c1[0] - c2[0]) * v; d[k + 1] = c2[1] + (c1[1] - c2[1]) * v; d[k + 2] = c2[2] + (c1[2] - c2[2]) * v; d[k + 3] = 255;
+        }
+        x.putImageData(im, 0, 0); return c;
+      }
+      function diskStar(x, cx, cy, R, tex, col, limb, t, bright) {
+        var b = bright || 1;
+        x.globalCompositeOperation = 'lighter'; glow(x, cx, cy, R * 7, col, 0.16 * b); glow(x, cx, cy, R * 2.6, col, 0.32 * b);
+        x.globalCompositeOperation = 'source-over';
+        x.save(); x.beginPath(); x.arc(cx, cy, R, 0, 6.2832); x.clip();
+        var sc = (R * 2.6) / tex.width;
+        x.drawImage(tex, cx - R * 1.3 + Math.sin(t * 0.05) * R * 0.25, cy - R * 1.3 + Math.cos(t * 0.04) * R * 0.15, tex.width * sc, tex.height * sc);
+        var g = x.createRadialGradient(cx - R * 0.1, cy - R * 0.1, R * 0.05, cx, cy, R);
+        g.addColorStop(0, 'rgba(255,255,255,0.28)'); g.addColorStop(0.45, 'rgba(255,255,255,0)'); g.addColorStop(0.8, rgba(limb, 0.35)); g.addColorStop(1, rgba(limb, 0.85));
+        x.fillStyle = g; x.fillRect(cx - R, cy - R, 2 * R, 2 * R); x.restore();
+        x.globalCompositeOperation = 'lighter'; glow(x, cx, cy, R * 1.35, col, 0.3 * b); x.globalCompositeOperation = 'source-over';
+      }
+      function pointStar(x, cx, cy, R, col, b, spk, rot) {
+        x.globalCompositeOperation = 'lighter';
+        glow(x, cx, cy, R * 9, col, 0.14 * b); glow(x, cx, cy, R * 3.2, col, 0.45 * b);
+        if (spk) { spikes(x, cx, cy, spk * b, [255, 255, 255], 0.55 * b, 4, rot || 0, Math.max(0.6, R * 0.09)); spikes(x, cx, cy, spk * 0.5 * b, col, 0.4 * b, 4, (rot || 0) + Math.PI / 4, Math.max(0.5, R * 0.06)); }
+        var g = x.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.45, rgba([255, 255, 255], 0.95)); g.addColorStop(0.75, rgba(col, 0.8)); g.addColorStop(1, rgba(col, 0));
+        x.fillStyle = g; x.beginPath(); x.arc(cx, cy, R, 0, 6.2832); x.fill();
+        x.globalCompositeOperation = 'source-over';
+      }
+      function Rock(R, seed, o) {
+        var N = noise(seed), r = rng(seed + 11), i, j, k;
+        this.R = R; this.o = o;
+        var sh = new Float32Array(256), mx = 0;
+        for (i = 0; i < 256; i++) { var a = i / 256 * 6.2832; sh[i] = 0.62 + 0.6 * N.fbm(Math.cos(a) * (o.lumpy || 1.2) + 20, Math.sin(a) * (o.lumpy || 1.2) + 20, 4); if (sh[i] > mx) mx = sh[i]; }
+        for (i = 0; i < 256; i++) sh[i] /= mx;
+        this.sh = sh;
+        var GS = 96; this.GS = GS;
+        var H = new Float32Array(GS * GS), A = new Float32Array(GS * GS), C = new Float32Array(GS * GS), crs = [];
+        for (i = 0; i < (o.cr || 0); i++) crs.push([(r() - 0.5) * 1.5, (r() - 0.5) * 1.5, 0.08 + Math.pow(r(), 1.6) * 0.32]);
+        for (j = 0; j < GS; j++) for (i = 0; i < GS; i++) {
+          var u = i / (GS - 1) * 2.8 - 1.4, v = j / (GS - 1) * 2.8 - 1.4, h = N.fbm(u * 2.3 + 3, v * 2.3 + 7, 5) * (o.rough || 0.5);
+          for (k = 0; k < crs.length; k++) { var c = crs[k], du = (u - c[0]) / c[2], dv = (v - c[1]) / c[2], dd = Math.sqrt(du * du + dv * dv); if (dd < 1) h -= (1 - dd * dd) * c[2] * 0.6; else if (dd < 1.45) h += (1 - Math.abs(dd - 1.15) / 0.3) * c[2] * 0.14; }
+          H[j * GS + i] = h; A[j * GS + i] = 0.72 + 0.56 * N.fbm(u * 6 + 40, v * 6 + 40, 3);
+          C[j * GS + i] = Math.pow(1 - Math.abs(N.fbm(u * 3.5 + 70, v * 3.5 + 70, 4) * 2 - 1), 10);
+        }
+        this.H = H; this.A = A; this.C = C;
+        this.S = Math.ceil(R * 2) + 4; this.c = cv(this.S, this.S); this.x = this.c.getContext('2d'); this.img = this.x.createImageData(this.S, this.S);
+      }
+      Rock.prototype.render = function (rot, emit, ex, ey, sx, sy) {
+        var S = this.S, h = S / 2, R = this.R, d = this.img.data, sh = this.sh, H = this.H, A = this.A, C = this.C, GS = this.GS, o = this.o, cs = Math.cos(rot), sn = Math.sin(rot);
+        var Lx = -0.6, Ly = -0.45, Lz = 0.66, Hx = -0.33, Hy = -0.247, Hz = 0.912, sc = (GS - 1) / 2.8, bs = o.bump || 1.3, b0 = o.base, sp = o.spec || 0;
+        sx = sx || 1; sy = sy || 1;
+        for (var j = 0; j < S; j++) for (var i = 0; i < S; i++) {
+          var k = (j * S + i) * 4, dx = (i + 0.5 - h) / R / sx, dy = (j + 0.5 - h) / R / sy, dd = Math.sqrt(dx * dx + dy * dy);
+          var ang = Math.atan2(dy, dx) - rot, id = ((Math.floor(ang * 40.7437) % 256) + 256) % 256, rr = sh[id], ed = (rr - dd) * R;
+          if (ed <= 0) { d[k + 3] = 0; continue; }
+          var q = dd / rr; if (q > 0.999) q = 0.999;
+          var nz = Math.sqrt(1 - q * q), nx = 0, ny = 0; if (dd > 1e-4) { nx = dx / dd * q; ny = dy / dd * q; }
+          var ux = dx * cs + dy * sn, uy = -dx * sn + dy * cs, gi = Math.floor((ux + 1.4) * sc), gj = Math.floor((uy + 1.4) * sc);
+          if (gi < 1) gi = 1; if (gj < 1) gj = 1; if (gi > GS - 2) gi = GS - 2; if (gj > GS - 2) gj = GS - 2;
+          var p = gj * GS + gi, gx = (H[p + 1] - H[p - 1]) * sc * 0.5, gy = (H[p + GS] - H[p - GS]) * sc * 0.5, Gx = gx * cs - gy * sn, Gy = gx * sn + gy * cs;
+          nx -= Gx * bs * nz; ny -= Gy * bs * nz; var nl = Math.sqrt(nx * nx + ny * ny + nz * nz); nx /= nl; ny /= nl; var nn = nz / nl;
+          var df = nx * Lx + ny * Ly + nn * Lz; if (df < 0) df = 0;
+          var al = A[p], lum = 0.03 + df * 1.08, cr = b0[0] * al * lum, cg = b0[1] * al * lum, cb = b0[2] * al * lum;
+          if (sp) { var s = nx * Hx + ny * Hy + nn * Hz; if (s > 0) { s = Math.pow(s, 22) * sp * 255; cr += s; cg += s; cb += s * 1.05; } }
+          if (emit > 0) {
+            var e = emit * (0.12 + C[p] * 1.3);
+            if (ex || ey) { var f = nx * ex + ny * ey; e = emit * Math.max(0, f * 0.9 + 0.25) * (0.7 + C[p] * 0.8); }
+            cr += 255 * e; cg += (60 + 150 * e) * e; cb += 40 * e * e;
+          }
+          d[k] = cr > 255 ? 255 : cr; d[k + 1] = cg > 255 ? 255 : cg; d[k + 2] = cb > 255 ? 255 : cb; d[k + 3] = ed >= 1 ? 255 : ed * 255;
+        }
+        this.x.putImageData(this.img, 0, 0); return this.c;
+      };
+      function Parts() { this.p = []; }
+      Parts.prototype.add = function (x, y, vx, vy, life, size, kind) { this.p.push({ x: x, y: y, vx: vx, vy: vy, a: 0, l: life, s: size, k: kind }); };
+      Parts.prototype.step = function (dt, ax, ay, pull) {
+        for (var i = this.p.length - 1; i >= 0; i--) {
+          var q = this.p[i]; q.a += dt; if (q.a >= q.l) { this.p.splice(i, 1); continue; }
+          if (pull) { var dx = pull.x - q.x, dy = pull.y - q.y, d2 = dx * dx + dy * dy + 400, f = pull.g / d2; q.vx += dx * f * dt; q.vy += dy * f * dt; }
+          var drag = q.k === 1 ? 0.6 : 1.6; q.vx *= 1 - drag * dt; q.vy *= 1 - drag * dt; q.x += q.vx * dt; q.y += q.vy * dt;
+        }
+      };
+      Parts.prototype.draw = function (x) {
+        var i, q, t;
+        for (i = 0; i < this.p.length; i++) { q = this.p[i]; if (q.k !== 1) continue; t = q.a / q.l; x.fillStyle = 'rgba(110,100,95,' + ((1 - t) * 0.18) + ')'; x.beginPath(); x.arc(q.x, q.y, q.s * (1 + t * 3), 0, 6.2832); x.fill(); }
+        x.globalCompositeOperation = 'lighter';
+        for (i = 0; i < this.p.length; i++) {
+          q = this.p[i]; if (q.k === 1) continue; t = q.a / q.l;
+          var col = t < 0.3 ? [255, 236 - t * 200, 200 - t * 500] : [255 - (t - 0.3) * 160, 176 - (t - 0.3) * 200, 40];
+          if (q.k === 2) col = [200 + 55 * (1 - t), 225, 255];
+          x.fillStyle = rgba(col, (1 - t) * 0.22); x.beginPath(); x.arc(q.x, q.y, q.s * 2.6, 0, 6.2832); x.fill();
+          x.fillStyle = rgba(col, (1 - t) * 0.9); x.beginPath(); x.arc(q.x, q.y, q.s * (1 - t * 0.5), 0, 6.2832); x.fill();
+        }
+        x.globalCompositeOperation = 'source-over';
+      };
+      function meteor(x, hx, hy, ux, uy, len, head, a, w) {
+        var tx = hx - ux * len, ty = hy - uy * len, g = x.createLinearGradient(tx, ty, hx, hy);
+        g.addColorStop(0, rgba([255, 120, 60], 0)); g.addColorStop(0.6, rgba([255, 190, 140], 0.22 * a)); g.addColorStop(0.92, rgba(head, 0.75 * a)); g.addColorStop(1, rgba([255, 255, 255], a));
+        x.globalCompositeOperation = 'lighter'; x.strokeStyle = g; x.lineCap = 'round'; x.lineWidth = w || 1.4; x.beginPath(); x.moveTo(tx, ty); x.lineTo(hx, hy); x.stroke();
+        glow(x, hx, hy, 10 * (w || 1.4), head, 0.55 * a); x.globalCompositeOperation = 'source-over';
+      }
+      function Lens(Rl, q) { this.Rl = Rl; this.q = q; this.N = Math.ceil(2 * Rl / q); this.c = cv(this.N, this.N); this.x = this.c.getContext('2d'); this.img = this.x.createImageData(this.N, this.N); }
+      Lens.prototype.render = function (src, sw, sh, ox, oy, thE, Rs, inner) {
+        var N = this.N, d = this.img.data, q = this.q, Rl = this.Rl, e2 = thE * thE, out = [0, 0, 0, 0];
+        for (var j = 0; j < N; j++) for (var i = 0; i < N; i++) {
+          var X = (i + 0.5) * q - Rl, Y = (j + 0.5) * q - Rl, b2 = X * X + Y * Y, b = Math.sqrt(b2), k = (j * N + i) * 4;
+          if (b > Rl) { d[k + 3] = 0; continue; }
+          if (b < Rs) {
+            if (inner) { inner(X / Rs, Y / Rs, b / Rs, out); d[k] = out[0]; d[k + 1] = out[1]; d[k + 2] = out[2]; d[k + 3] = 255; }
+            else { d[k] = 0; d[k + 1] = 0; d[k + 2] = 0; d[k + 3] = 255; }
+            continue;
+          }
+          var f = 1 - e2 / b2, sx = X * f + ox, sy = Y * f + oy;
+          var u = ((Math.floor(sx) % sw) + sw) % sw, v = ((Math.floor(sy) % sh) + sh) % sh, p = (v * sw + u) * 4;
+          var mag = 1 + 0.9 * e2 / (b2 + 1);
+          d[k] = Math.min(255, src[p] * mag); d[k + 1] = Math.min(255, src[p + 1] * mag); d[k + 2] = Math.min(255, src[p + 2] * mag);
+          var fade = (Rl - b) / (Rl * 0.25); d[k + 3] = fade >= 1 ? 255 : fade * 255;
+        }
+        this.x.putImageData(this.img, 0, 0); return this.c;
+      };
+      function diskTex(seed) {
+        var S = 600, c = cv(S, S), x = c.getContext('2d'), im = x.createImageData(S, S), d = im.data, N = noise(seed), h = S / 2;
+        for (var j = 0; j < S; j++) for (var i = 0; i < S; i++) {
+          var dx = (i - h) / h, dy = (j - h) / h, rn = Math.sqrt(dx * dx + dy * dy), k = (j * S + i) * 4;
+          if (rn < 0.34 || rn > 1) { d[k + 3] = 0; continue; }
+          var t = (rn - 0.34) / 0.66, a = Math.atan2(dy, dx), w = N.fbm(Math.cos(a) * 1.6 + 5, Math.sin(a) * 1.6 + 5, 3);
+          var band = N.fbm(rn * 34 + w * 4, 3.3, 3), clump = N.fbm(Math.cos(a) * 6 + rn * 9, Math.sin(a) * 6 + rn * 9, 3);
+          var I = (Math.pow(1 - t, 1.6) * 1.25 + 0.06) * (0.4 + 1.1 * band) * (0.75 + 0.5 * clump);
+          var ef = Math.min(1, (rn - 0.34) / 0.03) * Math.min(1, (1 - rn) / 0.25);
+          var cr = 255, cg = 120 + 130 * Math.pow(1 - t, 1.3), cb = 50 + 190 * Math.pow(1 - t, 3);
+          d[k] = cr; d[k + 1] = cg; d[k + 2] = cb; d[k + 3] = Math.min(255, I * ef * 255);
+        }
+        x.putImageData(im, 0, 0); return c;
+      }
+      function BlackHole(Rs, seed) {
+        this.Rs = Rs; this.tex = diskTexCached(seed || 3); var W = Math.ceil(Rs * 9); this.W = W;
+        this.layer = cv(W, W); this.lx = this.layer.getContext('2d');
+        this.halo = cv(W, W); this.hx = this.halo.getContext('2d');
+      }
+      BlackHole.prototype.draw = function (x, cx, cy, t, act, flash) {
+        var Rs = this.Rs * (1 + 0.06 * act), W = this.W, h = W / 2, L = this.lx, HX = this.hx, tex = this.tex, rot = t * (0.18 + 0.35 * act);
+        var br = 1 + 0.45 * act + 1.2 * flash, outer = Rs * 3.5, s = outer / 300;
+        L.setTransform(1, 0, 0, 1, 0, 0); L.clearRect(0, 0, W, W); L.globalCompositeOperation = 'source-over';
+        L.save(); L.translate(h, h); L.scale(s, s * 0.15); L.rotate(rot); L.drawImage(tex, -300, -300); L.restore();
+        L.globalCompositeOperation = 'source-atop';
+        var g = L.createLinearGradient(h - outer, 0, h + outer, 0); g.addColorStop(0, 'rgba(255,250,240,0.45)'); g.addColorStop(0.5, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(40,10,0,0.55)');
+        L.fillStyle = g; L.fillRect(0, 0, W, W); L.globalCompositeOperation = 'source-over';
+        HX.setTransform(1, 0, 0, 1, 0, 0); HX.clearRect(0, 0, W, W); HX.globalCompositeOperation = 'source-over';
+        var s2 = (Rs * 1.05) / 102;
+        HX.save(); HX.translate(h, h); HX.scale(s2, s2 * 0.94); HX.rotate(-rot * 0.8); HX.drawImage(tex, -300, -300); HX.restore();
+        HX.globalCompositeOperation = 'destination-in';
+        var rg = HX.createRadialGradient(h, h, Rs * 1.0, h, h, Rs * 1.75); rg.addColorStop(0, 'rgba(0,0,0,1)'); rg.addColorStop(0.5, 'rgba(0,0,0,0.6)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
+        HX.fillStyle = rg; HX.fillRect(0, 0, W, W);
+        var vg = HX.createLinearGradient(0, h - Rs * 1.8, 0, h + Rs * 1.8); vg.addColorStop(0, 'rgba(0,0,0,1)'); vg.addColorStop(0.5, 'rgba(0,0,0,0.75)'); vg.addColorStop(1, 'rgba(0,0,0,0.25)');
+        HX.fillStyle = vg; HX.fillRect(0, 0, W, W); HX.globalCompositeOperation = 'source-over';
+        x.save(); x.globalCompositeOperation = 'lighter'; glow(x, cx, cy, Rs * 5, [255, 150, 60], 0.12 * br);
+        x.globalAlpha = Math.min(1, 0.9 * br); x.drawImage(this.halo, cx - h, cy - h);
+        x.globalAlpha = Math.min(1, br); x.beginPath(); x.rect(cx - h, cy - h, W, h); x.clip(); x.drawImage(this.layer, cx - h, cy - h); x.restore();
+        x.save(); var sg = x.createRadialGradient(cx, cy, Rs * 0.9, cx, cy, Rs * 1.02); sg.addColorStop(0, 'rgba(0,0,0,1)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+        x.fillStyle = '#000'; x.beginPath(); x.arc(cx, cy, Rs * 0.92, 0, 6.2832); x.fill(); x.fillStyle = sg; x.beginPath(); x.arc(cx, cy, Rs * 1.02, 0, 6.2832); x.fill();
+        x.globalCompositeOperation = 'lighter'; x.strokeStyle = rgba([255, 226, 190], 0.75 * Math.min(1.4, br)); x.lineWidth = Math.max(1, Rs * 0.022); x.beginPath(); x.arc(cx, cy, Rs * 1.04, 0, 6.2832); x.stroke();
+        x.globalAlpha = Math.min(1, br); x.beginPath(); x.rect(cx - h, cy, W, h); x.clip(); x.drawImage(this.layer, cx - h, cy - h); x.restore();
+        if (flash > 0) { x.save(); x.globalCompositeOperation = 'lighter'; glow(x, cx, cy, Rs * 4 * (1 + flash), [255, 220, 170], 0.5 * flash); x.restore(); }
+      };
+      var diskTexByseed = new Map();
+      function diskTexCached(seed) { if (!diskTexByseed.has(seed)) diskTexByseed.set(seed, diskTex(seed)); return diskTexByseed.get(seed); }
+      var reducedMQ = (typeof window !== 'undefined' && window.matchMedia) ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+      var ROCK_TYPES = {
+        C: { base: [92, 86, 80], rough: 0.7, cr: 7, bump: 1.6 },
+        S: { base: [178, 150, 118], rough: 0.55, cr: 10, bump: 1.4 },
+        M: { base: [168, 174, 184], rough: 0.25, cr: 3, bump: 0.9, spec: 0.8, lumpy: 0.9 },
+      };
+      var cache = {};
+      var patMap = new WeakMap();
+      var holeMap = new Map();
+      function lazy(key, make) { if (!cache[key]) cache[key] = make(); return cache[key]; }
+      function hexRgb(hex) {
+        var m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(String(hex || ''));
+        return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [129, 140, 248];
+      }
+      function tile() { return lazy('tile', function () { return starTile(512, 63, 0.9); }); }
+      function tileData() { return lazy('tileData', function () { return tile().getContext('2d').getImageData(0, 0, 512, 512).data; }); }
+      function bgPattern(ctx) {
+        if (!patMap.has(ctx)) patMap.set(ctx, ctx.createPattern(tile(), 'repeat'));
+        return patMap.get(ctx);
+      }
+      function tex(key) {
+        return lazy('tex_' + key, function () {
+          switch (key) {
+            case 'sun': return granTex(128, 4, [255, 246, 214], [214, 120, 30], 6);
+            default: return granTex(64, 13, [255, 246, 200], [220, 150, 40], 4);
+          }
+        });
+      }
+      function corona() {
+        return lazy('corona', function () {
+          var cor = cv(400, 400), c2 = cor.getContext('2d'), rr = rng(5);
+          c2.translate(200, 200); c2.globalCompositeOperation = 'lighter';
+          for (var i = 0; i < 170; i++) {
+            var a = rr() * 6.2832, len = 44 * (0.3 + Math.pow(rr(), 2.2) * 2.4), w = 44 * (0.015 + rr() * 0.05);
+            c2.save(); c2.rotate(a);
+            var g = c2.createLinearGradient(40, 0, 44 + len, 0); g.addColorStop(0, 'rgba(255,236,190,0.16)'); g.addColorStop(1, 'rgba(255,220,160,0)');
+            c2.fillStyle = g; c2.beginPath(); c2.moveTo(40, -w);
+            c2.quadraticCurveTo(44 + len * 0.5, (rr() - 0.5) * w * 4, 44 + len, 0);
+            c2.quadraticCurveTo(44 + len * 0.5, (rr() - 0.5) * w * 4, 40, w); c2.fill(); c2.restore();
+          }
+          return cor;
+        });
+      }
+      function otherUniverse() {
+        return lazy('other', function () {
+          var O = 256, other = cv(O, O), ox = other.getContext('2d'), N = noise(91), q4 = cv(64, 64), qx = q4.getContext('2d'), im = qx.createImageData(64, 64), d = im.data, i, j;
+          for (j = 0; j < 64; j++) for (i = 0; i < 64; i++) {
+            var u = i / 64, v = j / 64, f = N.fbm(u * 3, v * 3, 5), g2 = N.fbm(u * 2 + 9, v * 2 + 4, 4), k = (j * 64 + i) * 4, m = Math.max(0, f - 0.38) * 2.4;
+            d[k] = 20 + m * (230 * g2 + 40); d[k + 1] = 18 + m * (120 + 90 * (1 - g2)); d[k + 2] = 30 + m * (60 + 170 * (1 - g2)); d[k + 3] = 255;
+          }
+          qx.putImageData(im, 0, 0); ox.drawImage(q4, 0, 0, O, O);
+          var rr = rng(4);
+          for (i = 0; i < 300; i++) { ox.fillStyle = rgba([255, 240, 220], 0.3 + rr() * 0.7); ox.beginPath(); ox.arc(rr() * O, rr() * O, 0.4 + Math.pow(rr(), 5) * 1.4, 0, 6.2832); ox.fill(); }
+          return ox.getImageData(0, 0, O, O).data;
+        });
+      }
+      function drawStar(x, style, R, t, low, bright) {
+        var b = bright || 1;
+        if (!low) { x.save(); x.globalCompositeOperation = 'lighter'; x.globalAlpha *= 0.85 + 0.1 * Math.sin(t * 0.9); x.rotate(t * 0.012); var k = R / 44; x.drawImage(corona(), -200 * k, -200 * k, 400 * k, 400 * k); x.restore(); }
+        diskStar(x, 0, 0, R, tex('sun'), [255, 214, 140], [120, 40, 0], t, (1 + 0.04 * Math.sin(t * 1.3)) * b);
+      }
+      var rocks = new Map(), rockBudget = 0, frame = 0;
+      function beginFrame() { rockBudget = 6; frame++; }
+      function rockFor(id, screenR, kind) {
+        var bucket = Math.max(4, Math.min(44, Math.round(screenR))), e = rocks.get(id);
+        var stale = !e || e.kind !== kind || Math.abs(e.bucket - bucket) > Math.max(2, e.bucket * 0.25);
+        if (stale) {
+          if (rockBudget <= 0) return e || null;
+          rockBudget--;
+          var seed = 1 + Math.floor(hashGraphId(id) * 1e6);
+          var rock = new Rock(bucket, seed, ROCK_TYPES[kind] || ROCK_TYPES.C);
+          var display = cv(rock.S, rock.S).getContext('2d');
+          display.globalCompositeOperation = 'copy';
+          e = { rock: rock, display: display, bucket: bucket, kind: kind, rot: null, slot: rocks.size % 4 };
+          rocks.set(id, e);
+        }
+        return e;
+      }
+      function rockImage(e, rot, emit, ex, ey) {
+        if (e.rot === null || emit > 0.01 || e.hot || (e.rot !== rot && (frame + e.slot) % 4 === 0)) {
+          e.display.drawImage(e.rock.render(rot, emit, ex, ey), 0, 0);
+          e.rot = rot;
+          e.hot = emit > 0.01;
+        }
+        return e.display.canvas;
+      }
+      function hole(Rs) {
+        if (!holeMap.has(Rs)) holeMap.set(Rs, new BlackHole(Rs, 5));
+        return holeMap.get(Rs);
+      }
+      function lens(key, Rl) { var k = 'lens_' + key; if (!cache[k] || cache[k].Rl !== Rl) cache[k] = new Lens(Rl, 2); return cache[k]; }
+      return {
+        rgba: rgba, glow: glow, Parts: Parts, meteor: meteor, ROCK_TYPES: ROCK_TYPES, hexRgb: hexRgb,
+        get reduced() { return Boolean(reducedMQ && reducedMQ.matches); },
+        tileData: tileData, bgPattern: bgPattern, otherUniverse: otherUniverse,
+        drawStar: drawStar, beginFrame: beginFrame, rockFor: rockFor, rockImage: rockImage,
+        hole: hole, lens: lens,
+      };
+    })();
+
     const GRAPH_NODES = [
       {
-        id: 'cet', label: '英语六级冲刺计划', type: 'task', badge: '📋 任务记忆',
+        id: 'dream', label: '劳逸结合高效规律', type: 'dream', isDream: true, rockKind: 'S', badge: '☀ Dream 恒星',
+        badgeStyle: 'background:rgba(251,191,36,0.22);color:#fde68a;',
+        meta: 'inferred · 夜间睡眠归纳恒星',
+        excerpt: '聚合多篇每日日记与番茄专注记录自动凝聚为恒星：上午专注核心课程学习、傍晚保持 5 公里慢跑的日期，次日复习专注度显著更高。',
+        x: 0.34, y: 0.54, r: 21, color: '#fbbf24', seedPhase: 0.4, spin: 0.16
+      },
+      {
+        id: 'cet', label: '英语六级冲刺计划', type: 'task', isDream: false, rockKind: 'M', badge: '📋 任务记忆',
         badgeStyle: 'background:rgba(59,130,246,0.22);color:#93c5fd;',
         meta: 'v2 · 置信度 0.94 · Q1/Q2',
         excerpt: '已锁定为 Q1/Q2 重点学习任务，关联听力错题规律与晨间黄金记忆偏好；包含 3 条 AI 拆解复习步骤与倒计时动态提权规则。',
-        x: 0.48, y: 0.44, r: 19, color: '#3b82f6'
+        x: 0.54, y: 0.36, r: 15, color: '#3b82f6', seedPhase: 1.7, spin: 0.22
       },
       {
-        id: 'pref', label: '晨间黄金记忆偏好', type: 'preference', badge: '💛 偏好记忆',
+        id: 'pref', label: '晨间黄金记忆偏好', type: 'preference', isDream: false, rockKind: 'S', badge: '💛 偏好记忆',
         badgeStyle: 'background:rgba(245,158,11,0.22);color:#fcd34d;',
         meta: 'v3 · 跨任务提权依据',
         excerpt: '原文：我早上八点半到十点半头脑最清醒，适合背英语单词和做深度阅读，晚上更适合轻松跑步和写日记。',
-        x: 0.25, y: 0.28, r: 16, color: '#f59e0b'
+        x: 0.19, y: 0.31, r: 13, color: '#f59e0b', seedPhase: 2.9, spin: -0.19
       },
       {
-        id: 'fact', label: '听力高频错题规律', type: 'semantic', badge: '🧠 语义事实',
+        id: 'fact', label: '听力高频错题规律', type: 'semantic', isDream: false, rockKind: 'C', badge: '🧠 语义事实',
         badgeStyle: 'background:rgba(139,92,246,0.22);color:#c4b5fd;',
         meta: 'v1 · 事实真值',
         excerpt: '长对话常在转折词后设置考点，精听时需先盲听抓主旨，再逐句跟读复核同义替换词组。',
-        x: 0.74, y: 0.28, r: 16, color: '#8b5cf6'
+        x: 0.62, y: 0.66, r: 13, color: '#8b5cf6', seedPhase: 4.1, spin: 0.18
       },
       {
-        id: 'epi', label: '上周图书馆复盘情景', type: 'episodic', badge: '📅 情景经历',
+        id: 'epi', label: '上周图书馆复盘情景', type: 'episodic', isDream: false, rockKind: 'S', badge: '📅 情景经历',
         badgeStyle: 'background:rgba(20,184,166,0.22);color:#5eead4;',
         meta: 'v1 · 时间线记录',
         excerpt: '上周六上午在图书馆用两轮 45 分钟番茄钟完成全套阅读模考，正确率提升明显且注意力更稳。',
-        x: 0.72, y: 0.72, r: 15, color: '#14b8a6'
+        x: 0.43, y: 0.78, r: 13, color: '#14b8a6', seedPhase: 5.2, spin: -0.24
       },
       {
-        id: 'dream', label: '劳逸结合高效规律', type: 'dream', badge: '🌙 Dream 归纳',
-        badgeStyle: 'background:rgba(236,72,153,0.22);color:#f9a8d4;',
-        meta: 'inferred · 夜间睡眠归纳',
-        excerpt: '聚合多篇每日日记归纳：上午专注核心课程学习、傍晚保持 5 公里慢跑的日期，次日复习专注度显著更高。',
-        x: 0.26, y: 0.73, r: 17, color: '#ec4899'
-      },
-      {
-        id: 'life', label: '每周慢跑与健康打卡', type: 'task', badge: '📋 任务记忆',
+        id: 'life', label: '每周慢跑与健康打卡', type: 'task', isDream: false, rockKind: 'M', badge: '📋 任务记忆',
         badgeStyle: 'background:rgba(59,130,246,0.22);color:#93c5fd;',
         meta: 'v1 · 开启好友监工',
         excerpt: '每周三、周六傍晚 5 公里慢跑并在监工小队同步打卡，保持体能与睡眠节律稳定。',
-        x: 0.50, y: 0.80, r: 14, color: '#3b82f6'
+        x: 0.18, y: 0.77, r: 12, color: '#3b82f6', seedPhase: 3.6, spin: 0.21
       }
     ];
 
@@ -2169,15 +2527,40 @@
       { from: 'cet', to: 'fact', kind: 'wikilink' },
       { from: 'cet', to: 'pref', kind: 'semantic' },
       { from: 'cet', to: 'epi', kind: 'wikilink' },
-      { from: 'dream', to: 'pref', kind: 'wikilink' },
-      { from: 'dream', to: 'epi', kind: 'semantic' },
-      { from: 'dream', to: 'cet', kind: 'semantic' },
+      { from: 'dream', to: 'pref', kind: 'derived_from' },
+      { from: 'dream', to: 'epi', kind: 'derived_from' },
+      { from: 'dream', to: 'cet', kind: 'derived_from' },
       { from: 'life', to: 'epi', kind: 'wikilink' },
-      { from: 'life', to: 'dream', kind: 'semantic' }
+      { from: 'life', to: 'dream', kind: 'derived_from' }
     ];
 
     let selectedGraphNodeId = 'cet';
     let hoveredGraphNodeId = null;
+
+    function createGalaxyCanvasState() {
+      return {
+        frame: 0,
+        lastMs: 0,
+        parts: new GalaxyFX.Parts(),
+        cosmicAnims: new Map(),
+        fxCool: new Map(),
+        springs: new Map(),
+        shockwaves: [],
+        dragging: null,
+        dragBurn: null,
+        bhHoverPull: 0,
+        fxAct: 0,
+        fxBhFlash: 0,
+        fxWhFlash: 0,
+        fxWhRippleMs: -1e9,
+        visible: false,
+      };
+    }
+
+    const landingGalaxyStates = {
+      landingGraphCanvas: createGalaxyCanvasState(),
+      miniGraphCanvas: createGalaxyCanvasState(),
+    };
 
     function updateGraphInspector(nodeId) {
       const node = GRAPH_NODES.find(n => n.id === nodeId) || GRAPH_NODES[0];
@@ -2211,106 +2594,735 @@
       });
     }
 
-    function drawGraphCanvas(canvasId, interactive) {
+    function getLandingPortals(w, h, isMini) {
+      const k = isMini ? Math.min(0.62, w / 680) : (w < 460 ? 0.52 : (w < 680 ? 0.68 : 0.84));
+      const Rs = Math.max(15, Math.round(30 * k));
+      const Rw = Math.max(18, Math.round(36 * k));
+      const whX = w - Math.max(Rw * 1.9, 58);
+      const whY = (isMini ? 22 : 58) + Rw;
+      const bhX = w - Math.max(Rs * 3.4, 88);
+      let bhY = h - (Rs * 1.9 + 30);
+      bhY = Math.max(bhY, whY + Rw + Rs * 1.8 + 24);
+      return {
+        bh: { x: bhX, y: bhY, Rs, k, captureRadius: Rs * 2.5 },
+        wh: { x: whX, y: whY, radius: Rw, k },
+      };
+    }
+
+    function getLandingNodeScreenPos(node, w, h, state) {
+      if (state.dragging && state.dragging.node.id === node.id) {
+        return { x: state.dragging.px, y: state.dragging.py };
+      }
+      const sp = state.springs.get(node.id);
+      if (sp) return { x: sp.x, y: sp.y };
+      return { x: node.x * w, y: node.y * h };
+    }
+
+    function drawLandingPortalPill(ctx, cx, y, text, color, k) {
+      ctx.save();
+      ctx.font = `600 ${Math.round(11 * Math.max(0.85, k))}px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif`;
+      const pw = ctx.measureText(text).width + 18;
+      const ph = Math.round(22 * Math.max(0.85, k));
+      const clampedX = Math.max(pw * 0.5 + 8, cx);
+      ctx.fillStyle = 'rgba(10,14,30,0.78)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(clampedX - pw / 2, y, pw, ph, ph / 2);
+      else ctx.rect(clampedX - pw / 2, y, pw, ph);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, clampedX, y + ph / 2 + 0.5);
+      ctx.restore();
+    }
+
+    function startLandingBlackHoleDevour(node, originPt = null) {
+      const state = landingGalaxyStates.landingGraphCanvas;
+      const canvas = document.getElementById('landingGraphCanvas');
+      if (!node || !canvas || state.cosmicAnims.has(node.id)) return;
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.max(240, rect.width || 640);
+      const h = Math.max(240, rect.height || 430);
+      const portals = getLandingPortals(w, h, false);
+      const startPt = originPt || { x: node.x * w, y: node.y * h };
+      const dx = startPt.x - portals.bh.x;
+      const dy = startPt.y - portals.bh.y;
+      state.springs.delete(node.id);
+      state.fxCool.delete(node.id);
+      state.cosmicAnims.set(node.id, {
+        node,
+        startMs: performance.now(),
+        phase: 'infall',
+        startSc: { x: startPt.x, y: startPt.y },
+        a0: Math.atan2(dy / 0.6, dx),
+        r0: Math.max(Math.hypot(dx, dy), portals.bh.Rs * 1.2),
+        sx: startPt.x,
+        sy: startPt.y,
+        radial: 0,
+        stretch: 1,
+        flat: 1,
+        scale: 1,
+        emit: 0,
+        ux: 0,
+        uy: 0,
+        e: 0,
+        alpha: 1,
+        flashed: false,
+        ejected: false,
+      });
+      ensureLandingLoopRunning();
+    }
+
+    function triggerLandingBlackHoleDemo() {
+      const state = landingGalaxyStates.landingGraphCanvas;
+      const selected = GRAPH_NODES.find(n => n.id === selectedGraphNodeId);
+      const candidate = (selected && !state.cosmicAnims.has(selected.id))
+        ? selected
+        : (GRAPH_NODES.find(n => !state.cosmicAnims.has(n.id) && !n.isDream)
+          || GRAPH_NODES.find(n => !state.cosmicAnims.has(n.id)));
+      if (!candidate) {
+        showLandingToast('🌌 当前已有节点正在穿越虫洞中...');
+        return;
+      }
+      updateGraphInspector(candidate.id);
+      startLandingBlackHoleDevour(candidate);
+    }
+
+    function stepLandingCanvasState(state, nowMs, w, h, interactive, portals) {
+      const reduced = GalaxyFX.reduced;
+      const dt = Math.min(0.05, Math.max(0, (nowMs - (state.lastMs || nowMs)) / 1000));
+      state.lastMs = nowMs;
+      const bh = portals.bh;
+      const wh = portals.wh;
+      const parts = state.parts;
+      const completed = [];
+
+      for (const [id, sp] of state.springs.entries()) {
+        const p = Math.min(1, (nowMs - sp.startMs) / 350);
+        const ease = 1 - Math.pow(1 - p, 3);
+        const hx = sp.node.x * w;
+        const hy = sp.node.y * h;
+        sp.x = sp.fromX + (hx - sp.fromX) * ease;
+        sp.y = sp.fromY + (hy - sp.fromY) * ease;
+        if (p >= 1) state.springs.delete(id);
+      }
+
+      for (const [id, anim] of state.cosmicAnims.entries()) {
+        const n = anim.node;
+        const el = (nowMs - anim.startMs) / 1000;
+        const home = { x: n.x * w, y: n.y * h };
+        if (reduced) {
+          if (el < 0.45) {
+            anim.phase = 'infall';
+            anim.alpha = 1 - el / 0.45;
+            anim.sx = anim.startSc.x;
+            anim.sy = anim.startSc.y;
+          } else if (el < 0.9) {
+            anim.phase = 'return';
+            anim.sx = home.x;
+            anim.sy = home.y;
+            anim.alpha = (el - 0.45) / 0.45;
+          } else {
+            completed.push(id);
+          }
+          anim.stretch = 1; anim.flat = 1; anim.scale = 1; anim.emit = 0;
+          continue;
+        }
+        if (el < 1.5) {
+          anim.phase = 'infall';
+          const e = el / 1.5;
+          const r = anim.r0 * Math.pow(1 - e, 1.5);
+          const ang = anim.a0 + 9 * e * e + 1.5 * e;
+          const squash = 0.6 - 0.45 * e;
+          anim.sx = bh.x + Math.cos(ang) * r;
+          anim.sy = bh.y + Math.sin(ang) * r * squash;
+          anim.radial = Math.atan2(anim.sy - bh.y, anim.sx - bh.x);
+          anim.stretch = 1 + 2.4 * e;
+          anim.flat = 1 - 0.6 * e;
+          anim.alpha = 1 - Math.pow(e, 3);
+          anim.emit = 0.6 + 0.4 * e;
+          anim.scale = 1;
+          if (Math.random() < 0.8) parts.add(anim.sx, anim.sy, -Math.sin(ang) * 120, Math.cos(ang) * 50, 0.3 + Math.random() * 0.4, 1 + Math.random() * 1.5, 0);
+        } else if (el < 2.2) {
+          anim.phase = 'void';
+          anim.alpha = 0;
+          anim.sx = bh.x;
+          anim.sy = bh.y;
+          if (!anim.flashed) {
+            anim.flashed = true;
+            state.fxBhFlash = 1;
+            state.shockwaves.push({ x: bh.x, y: bh.y, maxR: bh.Rs * 3.8, birth: nowMs, life: 700, color: '#fde047' });
+          }
+        } else if (el < 3.9) {
+          anim.phase = 'return';
+          if (!anim.ejected) {
+            anim.ejected = true;
+            state.fxWhFlash = 1;
+            state.fxWhRippleMs = nowMs;
+          }
+          const e3 = (el - 2.2) / 1.7;
+          const e4 = 1 - Math.pow(1 - e3, 3);
+          const mx = (wh.x + home.x) / 2 - 50;
+          const my = (wh.y + home.y) / 2 - 110;
+          const px = (1 - e4) * (1 - e4) * wh.x + 2 * (1 - e4) * e4 * mx + e4 * e4 * home.x;
+          const py = (1 - e4) * (1 - e4) * wh.y + 2 * (1 - e4) * e4 * my + e4 * e4 * home.y;
+          const vx = px - anim.sx;
+          const vy = py - anim.sy;
+          const vl = Math.hypot(vx, vy) || 1;
+          anim.ux = vx / vl;
+          anim.uy = vy / vl;
+          anim.sx = px;
+          anim.sy = py;
+          anim.e = e3;
+          anim.radial = 0;
+          anim.stretch = 1;
+          anim.flat = 1;
+          anim.alpha = 1;
+          anim.scale = Math.min(1, (el - 2.2) / 0.3);
+          anim.emit = 0.5 * (1 - e3);
+        } else {
+          completed.push(id);
+        }
+      }
+
+      for (const id of completed) {
+        const anim = state.cosmicAnims.get(id);
+        state.cosmicAnims.delete(id);
+        if (!anim?.node) continue;
+        const n = anim.node;
+        if (!reduced) {
+          const hx = n.x * w;
+          const hy = n.y * h;
+          for (let k = 0; k < 22; k++) {
+            const an = Math.random() * 6.2832;
+            const s2 = 28 + Math.random() * 48;
+            parts.add(hx, hy + 5, Math.cos(an) * s2, Math.sin(an) * s2 * 0.4, 0.9 + Math.random() * 0.9, 2 + Math.random() * 2.5, 1);
+          }
+          if (!n.isDream) state.fxCool.set(n.id, nowMs);
+        }
+        if (interactive) showLandingToast(`🌌 「${n.label}」被黑洞吞噬后经虫洞重返星轨（仅动画演示，记忆数据未改动）`);
+      }
+
+      let near = 0;
+      let pull = 0;
+      if (state.dragging) {
+        const d = Math.hypot(state.dragging.px - bh.x, state.dragging.py - bh.y);
+        near = Math.min(1, Math.max(0, 1 - (d - bh.Rs * 2.6) / (bh.Rs * 3.2)));
+        pull = d <= bh.captureRadius ? 1 : 0;
+        if (!reduced && !state.dragging.node.isDream) {
+          const b = state.dragBurn || { ux: 0, uy: 0, heat: 0.4 };
+          const vx = state.dragging.vx || 0;
+          const vy = state.dragging.vy || 0;
+          const nE = Math.round(1 + b.heat * 4);
+          for (let k = 0; k < nE; k++) {
+            parts.add(state.dragging.px - b.ux * 8 + (Math.random() - 0.5) * 4, state.dragging.py - b.uy * 8 + (Math.random() - 0.5) * 4, -vx * 0.18 + (Math.random() - 0.5) * 35, -vy * 0.18 + (Math.random() - 0.5) * 35, 0.2 + Math.random() * 0.4 * b.heat, 1 + Math.random() * 1.6, 0);
+          }
+          if (Math.random() < 0.45) parts.add(state.dragging.px - b.ux * 10, state.dragging.py - b.uy * 10, -vx * 0.08, -vy * 0.08, 0.9 + Math.random() * 0.8, 2.2 + Math.random() * 1.8, 1);
+        }
+      }
+      state.bhHoverPull = pull;
+      for (const anim of state.cosmicAnims.values()) if (anim.phase === 'infall') near = 1;
+      state.fxAct += (near - state.fxAct) * Math.min(1, dt * 4);
+      if (!near && state.fxAct < 0.005) state.fxAct = 0;
+      state.fxBhFlash = Math.max(0, state.fxBhFlash - dt * 1.6);
+      state.fxWhFlash = Math.max(0, state.fxWhFlash - dt * 1.4);
+      for (const [id, start] of state.fxCool.entries()) if (nowMs - start > 2600) state.fxCool.delete(id);
+      parts.step(dt, 0, 0, state.fxAct > 0.05 ? { x: bh.x, y: bh.y, g: 55000 * state.fxAct } : null);
+      state.shockwaves = state.shockwaves.filter(sw => (nowMs - sw.birth) < sw.life);
+    }
+
+    function drawLandingGalaxyFrame(canvasId, interactive, nowMs = performance.now()) {
       const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
+      const state = landingGalaxyStates[canvasId];
+      if (!canvas || !state) return;
       const rect = canvas.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
+      const w = rect.width;
+      const h = rect.height;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(rect.width * dpr);
-      canvas.height = Math.round(rect.height * dpr);
+      const cw = Math.round(w * dpr);
+      const ch = Math.round(h * dpr);
+      if (canvas.width !== cw || canvas.height !== ch) {
+        canvas.width = cw;
+        canvas.height = ch;
+      }
       const ctx = canvas.getContext('2d');
+      const isMini = !interactive;
+      const t = GalaxyFX.reduced ? 0 : nowMs / 1000;
+      state.frame = (state.frame || 0) + 1;
+      GalaxyFX.beginFrame();
+
+      const portals = getLandingPortals(w, h, isMini);
+      stepLandingCanvasState(state, nowMs, w, h, interactive, portals);
+
+      ctx.save();
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.clearRect(0, 0, w, h);
 
+      // 1. Starfield tile with slow cosmic drift
+      const bgOffX = t * 2.5;
+      const bgOffY = Math.sin(t * 0.08) * 12;
+      const oxOff = ((bgOffX % 512) + 512) % 512;
+      const oyOff = ((bgOffY % 512) + 512) % 512;
+      ctx.save();
+      ctx.translate(oxOff - 512, oyOff - 512);
+      ctx.fillStyle = GalaxyFX.bgPattern(ctx);
+      ctx.fillRect(0, 0, w + 1024, h + 1024);
+      ctx.restore();
+
+      // 2. Gravitational lens fields behind both portals
+      const srcData = GalaxyFX.tileData();
+      const bh = portals.bh;
+      const wh = portals.wh;
+      const lb = GalaxyFX.lens(canvasId + '_bh', Math.round(bh.Rs * 3.8));
+      if (!lb.img0 || state.frame % 2 === 0 || state.fxAct > 0.02) {
+        lb.render(srcData, 512, 512, bh.x - (oxOff - 512), bh.y - (oyOff - 512), bh.Rs * (1.7 + 0.4 * state.fxAct), bh.Rs * 0.95, null);
+        lb.img0 = true;
+      }
+      ctx.drawImage(lb.c, bh.x - lb.Rl, bh.y - lb.Rl, lb.Rl * 2, lb.Rl * 2);
+
+      const od = GalaxyFX.otherUniverse();
+      const Rw = wh.radius;
+      const whFlash = state.fxWhFlash;
+      const lw = GalaxyFX.lens(canvasId + '_wh', Math.round(Rw * 2.5));
+      if (!lw.img0 || state.frame % 2 === 1 || whFlash > 0.02) {
+        lw.render(srcData, 512, 512, wh.x - (oxOff - 512), wh.y - (oyOff - 512), Rw * 0.95, Rw, (nx, ny, q, out) => {
+          const ang = Math.atan2(ny, nx) + t * 0.06;
+          const s = Math.tan(q * 1.32) / Math.tan(1.32) * 118;
+          let uu = Math.floor(128 + Math.cos(ang) * s);
+          let vv = Math.floor(128 + Math.sin(ang) * s);
+          uu = uu < 0 ? 0 : uu > 255 ? 255 : uu;
+          vv = vv < 0 ? 0 : vv > 255 ? 255 : vv;
+          const p = (vv * 256 + uu) * 4;
+          const fr = 1 + 2.4 * Math.pow(q, 16) + whFlash * 1.8;
+          out[0] = Math.min(255, od[p] * fr);
+          out[1] = Math.min(255, od[p + 1] * fr);
+          out[2] = Math.min(255, od[p + 2] * fr);
+        });
+        lw.img0 = true;
+      }
+      ctx.drawImage(lw.c, wh.x - lw.Rl, wh.y - lw.Rl, lw.Rl * 2, lw.Rl * 2);
+
+      // 3. Dream star nebula & orbital rings
+      const dreamNode = GRAPH_NODES.find(n => n.isDream) || GRAPH_NODES[0];
+      const dreamPos = getLandingNodeScreenPos(dreamNode, w, h, state);
+      const nebR = Math.min(w, h) * 0.42;
+      const neb = ctx.createRadialGradient(dreamPos.x, dreamPos.y, 6, dreamPos.x, dreamPos.y, nebR);
+      neb.addColorStop(0, 'rgba(251, 191, 36, 0.14)');
+      neb.addColorStop(0.55, 'rgba(251, 191, 36, 0.04)');
+      neb.addColorStop(1, 'rgba(251, 191, 36, 0)');
+      ctx.fillStyle = neb;
+      ctx.beginPath();
+      ctx.arc(dreamPos.x, dreamPos.y, nebR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.save();
+      ctx.setLineDash([4, 7]);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(160, 190, 255, 0.14)';
+      for (const frac of [0.22, 0.36]) {
+        ctx.beginPath();
+        ctx.arc(dreamPos.x, dreamPos.y, Math.round(Math.min(w, h) * frac), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // 4. Edges
       const focusId = interactive ? (hoveredGraphNodeId || selectedGraphNodeId) : 'cet';
-      const nodesById = Object.fromEntries(GRAPH_NODES.map(n => [n.id, {
-        ...n,
-        px: n.x * rect.width,
-        py: n.y * rect.height,
-      }]));
+      const nodesById = Object.fromEntries(GRAPH_NODES.map(n => {
+        const pos = getLandingNodeScreenPos(n, w, h, state);
+        return [n.id, { ...n, px: pos.x, py: pos.y }];
+      }));
 
-      // Edges
       GRAPH_EDGES.forEach(e => {
         const a = nodesById[e.from];
         const b = nodesById[e.to];
+        const inTransit = state.cosmicAnims.has(e.from) || state.cosmicAnims.has(e.to);
         const connected = e.from === focusId || e.to === focusId;
         ctx.save();
-        ctx.beginPath();
         if (e.kind === 'semantic') ctx.setLineDash([5, 5]);
+        let stroke = 'rgba(148, 163, 184, 0.25)';
+        if (e.kind === 'derived_from') stroke = connected ? '#fbbf24' : 'rgba(251, 191, 36, 0.45)';
+        else if (e.kind === 'wikilink') stroke = connected ? 'rgba(96, 165, 250, 0.95)' : 'rgba(96, 165, 250, 0.45)';
+        else if (e.kind === 'semantic') stroke = connected ? 'rgba(167, 139, 250, 0.92)' : 'rgba(167, 139, 250, 0.30)';
+        ctx.globalAlpha = inTransit ? 0.08 : (connected ? 0.96 : 0.7);
+        ctx.lineWidth = connected ? 2 : 1.1;
+        ctx.strokeStyle = stroke;
+        ctx.beginPath();
         ctx.moveTo(a.px, a.py);
         ctx.lineTo(b.px, b.py);
-        ctx.lineWidth = connected ? 2.2 : 1.1;
-        ctx.strokeStyle = connected
-          ? (e.kind === 'wikilink' ? 'rgba(165, 180, 252, 0.92)' : 'rgba(56, 189, 248, 0.85)')
-          : 'rgba(148, 163, 184, 0.25)';
         ctx.stroke();
         ctx.restore();
       });
 
-      // Nodes
-      Object.values(nodesById).forEach(n => {
-        const isFocus = n.id === focusId;
-        const isNeighbor = GRAPH_EDGES.some(
-          e => (e.from === focusId && e.to === n.id) || (e.to === focusId && e.from === n.id)
-        );
-        ctx.save();
-        if (isFocus) {
+      // 5. Gravitational capture tether during drag
+      if (state.dragging) {
+        const dp = { x: state.dragging.px, y: state.dragging.py };
+        const dist = Math.hypot(dp.x - bh.x, dp.y - bh.y);
+        if (dist <= bh.captureRadius) {
+          ctx.save();
+          ctx.setLineDash([6, 6]);
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'rgba(251, 191, 36, 0.85)';
           ctx.beginPath();
-          ctx.arc(n.px, n.py, n.r + 9, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(129, 140, 248, 0.26)';
-          ctx.fill();
+          ctx.moveTo(dp.x, dp.y);
+          ctx.lineTo(bh.x, bh.y);
+          ctx.stroke();
+          ctx.restore();
         }
-        ctx.beginPath();
-        ctx.arc(n.px, n.py, n.r, 0, Math.PI * 2);
-        ctx.fillStyle = n.color;
-        ctx.globalAlpha = (!interactive || isFocus || isNeighbor) ? 1 : 0.45;
-        ctx.fill();
-        ctx.lineWidth = isFocus ? 3 : 1.5;
-        ctx.strokeStyle = isFocus ? '#ffffff' : 'rgba(255,255,255,0.45)';
-        ctx.stroke();
+      }
 
-        ctx.font = `${isFocus ? '700' : '600'} 12px "PingFang SC", -apple-system, sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.fillStyle = isFocus ? '#ffffff' : '#e2e8f0';
-        ctx.fillText(n.label, n.px, n.py + n.r + 17);
+      // 6. Nodes (Dream Star & Procedural Asteroids)
+      const neighborSet = new Set();
+      GRAPH_EDGES.forEach(e => {
+        if (e.from === focusId) neighborSet.add(e.to);
+        if (e.to === focusId) neighborSet.add(e.from);
+      });
+
+      const scaleFactor = isMini ? 0.78 : 1;
+      function renderBody(n, bx, by, emitOverride = null, isFocus = false, isSelected = false, alpha = 1, stretch = 1, flat = 1, radial = 0, bodyScale = 1) {
+        ctx.save();
+        ctx.globalAlpha *= alpha;
+        ctx.translate(bx, by);
+        if (radial) ctx.rotate(radial);
+        if (stretch !== 1 || flat !== 1 || bodyScale !== 1) ctx.scale(stretch * bodyScale, flat * bodyScale);
+        if (radial) ctx.rotate(-radial);
+
+        const rNode = n.r * scaleFactor;
+        if (n.isDream) {
+          GalaxyFX.drawStar(ctx, 'dream', rNode, t, isMini, 1);
+          if (isFocus || isSelected) {
+            ctx.beginPath();
+            ctx.arc(0, 0, rNode * 1.55, 0, Math.PI * 2);
+            ctx.lineWidth = isSelected ? 1.8 : 1.2;
+            ctx.strokeStyle = 'rgba(254, 240, 138, 0.78)';
+            ctx.stroke();
+          }
+        } else {
+          const R = rNode * (0.95 + 0.15 * hashGraphId(n.id + ':size'));
+          const glowCol = GalaxyFX.hexRgb(n.color);
+          const isDraggingThis = state.dragging && state.dragging.node.id === n.id;
+          let emit = 0, ex = 0, ey = 0;
+          if (emitOverride !== null) {
+            emit = emitOverride;
+          } else if (isDraggingThis && state.dragBurn) {
+            emit = 0.85 * state.dragBurn.heat;
+            ex = state.dragBurn.ux;
+            ey = state.dragBurn.uy;
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            GalaxyFX.glow(ctx, 0, 0, R * 3.2 * state.dragBurn.heat, [255, 150, 60], 0.4 * state.dragBurn.heat);
+            ctx.restore();
+          } else if (state.fxCool.has(n.id)) {
+            const ce = Math.min(1, (nowMs - state.fxCool.get(n.id)) / 2600);
+            emit = 0.7 * (1 - ce) * (1 - ce);
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            GalaxyFX.glow(ctx, 0, 0, R * 2.8, [255, 120, 50], 0.28 * (1 - ce));
+            ctx.restore();
+          } else {
+            ctx.save();
+            ctx.globalCompositeOperation = 'lighter';
+            GalaxyFX.glow(ctx, 0, 0, R * 2.6, glowCol, 0.14);
+            ctx.restore();
+          }
+          const entry = R >= 4.5 ? GalaxyFX.rockFor(n.id, R, n.rockKind) : null;
+          if (!entry) {
+            const base = (GalaxyFX.ROCK_TYPES[n.rockKind] || GalaxyFX.ROCK_TYPES.C).base;
+            const g = ctx.createRadialGradient(-R * 0.35, -R * 0.35, R * 0.1, 0, 0, R * 0.9);
+            g.addColorStop(0, GalaxyFX.rgba(base.map(c => Math.min(255, c * 1.25)), 1));
+            g.addColorStop(1, GalaxyFX.rgba(base.map(c => c * 0.25), 1));
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(0, 0, R * 0.9, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            const rot = n.seedPhase + t * (n.spin || 0.2);
+            const img = GalaxyFX.rockImage(entry, rot, emit, ex, ey);
+            const S = entry.rock.S * (R / entry.bucket);
+            ctx.drawImage(img, -S / 2, -S / 2, S, S);
+          }
+          if (isFocus || isSelected) {
+            ctx.beginPath();
+            ctx.arc(0, 0, R * 1.55, 0, Math.PI * 2);
+            ctx.lineWidth = isSelected ? 1.8 : 1.2;
+            ctx.strokeStyle = isSelected ? 'rgba(255,255,255,0.85)' : GalaxyFX.rgba(glowCol, 0.85);
+            ctx.stroke();
+          }
+        }
         ctx.restore();
+      }
+
+      Object.values(nodesById).forEach(n => {
+        if (state.cosmicAnims.has(n.id)) return;
+        const isFocus = n.id === focusId;
+        const isNb = neighborSet.has(n.id);
+        const isSelected = interactive && n.id === selectedGraphNodeId;
+        const dimmed = interactive && !isFocus && !isNb && !state.dragging;
+        const isDraggingThis = state.dragging && state.dragging.node.id === n.id;
+        const drift = (GalaxyFX.reduced || isDraggingThis) ? 0 : 2.5 * scaleFactor;
+        const ox = Math.sin(t * 0.45 + n.seedPhase) * drift;
+        const oy = Math.cos(t * 0.38 + n.seedPhase) * drift * 0.8;
+        renderBody(n, n.px + ox, n.py + oy, null, isFocus, isSelected, dimmed ? 0.52 : 1);
+
+        // Node label
+        ctx.save();
+        ctx.font = `${isFocus ? '700' : '600'} ${isMini ? 10.5 : 11.5}px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif`;
+        const lw2 = ctx.measureText(n.label).width + 12;
+        const ly = n.py + oy + n.r * scaleFactor + (n.isDream ? 12 : 10);
+        ctx.globalAlpha = dimmed ? 0.55 : 0.94;
+        ctx.fillStyle = 'rgba(2, 4, 11, 0.68)';
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(n.px + ox - lw2 / 2, ly - 8, lw2, 17, 6);
+        else ctx.rect(n.px + ox - lw2 / 2, ly - 8, lw2, 17);
+        ctx.fill();
+        ctx.fillStyle = isFocus ? '#ffffff' : (n.isDream ? '#fde68a' : '#e2e8f0');
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(n.label, n.px + ox, ly + 0.5);
+        ctx.restore();
+      });
+
+      // 7. Wormhole & Black Hole portals + Labels
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.strokeStyle = 'rgba(200,225,255,0.38)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.arc(wh.x, wh.y, Rw * 1.01, 0, Math.PI * 2);
+      ctx.stroke();
+      GalaxyFX.glow(ctx, wh.x, wh.y, Rw * 1.6, [160, 190, 255], 0.08);
+      const rp = (nowMs - state.fxWhRippleMs) / 1200;
+      if (rp >= 0 && rp < 1) {
+        ctx.strokeStyle = GalaxyFX.rgba([190, 230, 255], 0.65 * (1 - rp));
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(wh.x, wh.y, Rw * (1 + rp * 1.4), 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      if (whFlash > 0) GalaxyFX.glow(ctx, wh.x, wh.y, Rw * 2.4, [200, 230, 255], 0.35 * whFlash);
+      ctx.restore();
+      drawLandingPortalPill(ctx, wh.x, wh.y + Rw + 8, whFlash > 0.25 ? '虫洞吐出归位' : '虫洞出口', '#BFF5D6', wh.k);
+
+      GalaxyFX.hole(bh.Rs).draw(ctx, bh.x, bh.y, t, state.fxAct || 0, state.fxBhFlash || 0);
+      drawLandingPortalPill(ctx, bh.x, bh.y + bh.Rs * 1.85 + 4, state.bhHoverPull > 0.2 ? '松手吞噬（仅演示）' : '黑洞（拖入吞噬）', '#FFC98A', bh.k);
+
+      // 8. Particles, nodes in transit, and shockwaves
+      state.parts.draw(ctx);
+      for (const anim of state.cosmicAnims.values()) {
+        if (anim.alpha <= 0.01 || anim.phase === 'void') continue;
+        if (anim.phase === 'return' && !GalaxyFX.reduced && anim.e < 0.95) {
+          GalaxyFX.meteor(ctx, anim.sx, anim.sy, anim.ux, anim.uy, 26 + 100 * (1 - anim.e), [200, 255, 220], 1 - anim.e * 0.6, 1.7);
+        }
+        renderBody(anim.node, anim.sx, anim.sy, anim.emit || 0, false, false, anim.alpha, anim.stretch || 1, anim.flat || 1, anim.radial || 0, anim.scale || 1);
+      }
+      for (const sw of state.shockwaves) {
+        const p = Math.min(1, (nowMs - sw.birth) / sw.life);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, Math.max(4, p * sw.maxR), 0, Math.PI * 2);
+        ctx.strokeStyle = sw.color || '#fde047';
+        ctx.globalAlpha = (1 - p) * 0.78;
+        ctx.lineWidth = 2.4 * (1 - p * 0.65);
+        ctx.stroke();
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+
+    function drawGraphCanvas(canvasId, interactive) {
+      drawLandingGalaxyFrame(canvasId, interactive, performance.now());
+    }
+
+    let _landingRafId = null;
+    function hasActiveLandingLoopWork() {
+      if (GalaxyFX.reduced || document.hidden) return false;
+      const mainSt = landingGalaxyStates.landingGraphCanvas;
+      const miniSt = landingGalaxyStates.miniGraphCanvas;
+      const miniOpen = document.getElementById('pane-graph')?.classList.contains('active');
+      return mainSt.visible || (miniOpen && miniSt.visible) || mainSt.cosmicAnims.size > 0 || mainSt.springs.size > 0 || Boolean(mainSt.dragging);
+    }
+    function tickLandingGalaxies(nowMs) {
+      _landingRafId = null;
+      const mainSt = landingGalaxyStates.landingGraphCanvas;
+      const miniSt = landingGalaxyStates.miniGraphCanvas;
+      const miniOpen = document.getElementById('pane-graph')?.classList.contains('active');
+      if (mainSt.visible || mainSt.cosmicAnims.size > 0 || mainSt.springs.size > 0 || mainSt.dragging) {
+        drawLandingGalaxyFrame('landingGraphCanvas', true, nowMs);
+      }
+      if (miniOpen && miniSt.visible) {
+        drawLandingGalaxyFrame('miniGraphCanvas', false, nowMs);
+      }
+      if (hasActiveLandingLoopWork()) {
+        _landingRafId = requestAnimationFrame(tickLandingGalaxies);
+      }
+    }
+    function ensureLandingLoopRunning() {
+      if (!_landingRafId && hasActiveLandingLoopWork()) {
+        _landingRafId = requestAnimationFrame(tickLandingGalaxies);
+      }
+    }
+
+    function setupGalaxyObservers() {
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(ent => {
+            const id = ent.target.id === 'star-graph' ? 'landingGraphCanvas' : 'miniGraphCanvas';
+            const st = landingGalaxyStates[id];
+            if (st) st.visible = ent.isIntersecting;
+          });
+          if (GalaxyFX.reduced) {
+            if (landingGalaxyStates.landingGraphCanvas.visible) drawGraphCanvas('landingGraphCanvas', true);
+            if (landingGalaxyStates.miniGraphCanvas.visible && document.getElementById('pane-graph')?.classList.contains('active')) {
+              drawGraphCanvas('miniGraphCanvas', false);
+            }
+          } else {
+            ensureLandingLoopRunning();
+          }
+        }, { threshold: 0.05 });
+        const starSec = document.getElementById('star-graph');
+        const miniPane = document.getElementById('pane-graph');
+        if (starSec) io.observe(starSec);
+        if (miniPane) io.observe(miniPane);
+      } else {
+        landingGalaxyStates.landingGraphCanvas.visible = true;
+        landingGalaxyStates.miniGraphCanvas.visible = true;
+      }
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) ensureLandingLoopRunning();
       });
     }
 
     function bindInteractiveGraph() {
       const canvas = document.getElementById('landingGraphCanvas');
       if (!canvas) return;
-      function hitNode(ev) {
+      const state = landingGalaxyStates.landingGraphCanvas;
+      function clientToCanvas(ev) {
         const rect = canvas.getBoundingClientRect();
-        const x = ev.clientX - rect.left;
-        const y = ev.clientY - rect.top;
+        return { x: ev.clientX - rect.left, y: ev.clientY - rect.top, w: rect.width, h: rect.height };
+      }
+      function hitNodeAt(pt) {
         return GRAPH_NODES.find(n => {
-          const dx = x - n.x * rect.width;
-          const dy = y - n.y * rect.height;
-          return Math.hypot(dx, dy) <= n.r + 10;
+          if (state.cosmicAnims.has(n.id)) return false;
+          const pos = getLandingNodeScreenPos(n, pt.w, pt.h, state);
+          return Math.hypot(pt.x - pos.x, pt.y - pos.y) <= n.r + 12;
         });
       }
-      canvas.addEventListener('mousemove', ev => {
-        const hit = hitNode(ev);
+
+      canvas.addEventListener('pointerdown', ev => {
+        if (ev.button !== 0 && ev.pointerType === 'mouse') return;
+        const pt = clientToCanvas(ev);
+        const hit = hitNodeAt(pt);
+        if (!hit) return;
+        const pos = getLandingNodeScreenPos(hit, pt.w, pt.h, state);
+        state.springs.delete(hit.id);
+        state.dragging = {
+          node: hit,
+          pointerId: ev.pointerId,
+          startX: pt.x,
+          startY: pt.y,
+          px: pos.x,
+          py: pos.y,
+          offsetX: pos.x - pt.x,
+          offsetY: pos.y - pt.y,
+          lastX: pos.x,
+          lastY: pos.y,
+          lastMs: performance.now(),
+          vx: 0,
+          vy: 0,
+          moved: false,
+        };
+        try { canvas.setPointerCapture(ev.pointerId); } catch (e) {}
+        canvas.classList.add('dragging');
+        ensureLandingLoopRunning();
+      });
+
+      canvas.addEventListener('pointermove', ev => {
+        const pt = clientToCanvas(ev);
+        if (state.dragging && state.dragging.pointerId === ev.pointerId) {
+          const d = state.dragging;
+          const nx = Math.max(24, Math.min(pt.w - 24, pt.x + d.offsetX));
+          const ny = Math.max(24, Math.min(pt.h - 24, pt.y + d.offsetY));
+          if (!d.moved && Math.hypot(pt.x - d.startX, pt.y - d.startY) > 4) {
+            d.moved = true;
+          }
+          const nowMs = performance.now();
+          const dt = Math.max(0.004, (nowMs - d.lastMs) / 1000);
+          d.vx = d.vx * 0.6 + ((nx - d.lastX) / dt) * 0.4;
+          d.vy = d.vy * 0.6 + ((ny - d.lastY) / dt) * 0.4;
+          d.lastX = nx;
+          d.lastY = ny;
+          d.lastMs = nowMs;
+          d.px = nx;
+          d.py = ny;
+          const sp = Math.hypot(d.vx, d.vy);
+          state.dragBurn = {
+            ux: sp > 1 ? d.vx / sp : 0,
+            uy: sp > 1 ? d.vy / sp : 0,
+            heat: Math.min(1, 0.35 + sp / 600),
+          };
+          drawLandingGalaxyFrame('landingGraphCanvas', true, nowMs);
+          return;
+        }
+        const hit = hitNodeAt(pt);
         const nextHover = hit ? hit.id : null;
         if (nextHover !== hoveredGraphNodeId) {
           hoveredGraphNodeId = nextHover;
-          canvas.style.cursor = hit ? 'pointer' : 'default';
-          drawGraphCanvas('landingGraphCanvas', true);
+          canvas.style.cursor = hit ? 'pointer' : 'grab';
+          if (GalaxyFX.reduced) drawGraphCanvas('landingGraphCanvas', true);
         }
       });
+
+      function finishDrag(ev) {
+        const d = state.dragging;
+        if (!d || (ev.pointerId !== undefined && d.pointerId !== ev.pointerId)) return;
+        state.dragging = null;
+        state.dragBurn = null;
+        canvas.classList.remove('dragging');
+        try { canvas.releasePointerCapture(d.pointerId); } catch (e) {}
+
+        const pt = clientToCanvas(ev);
+        const portals = getLandingPortals(pt.w, pt.h, false);
+        if (!d.moved) {
+          updateGraphInspector(d.node.id);
+          drawGraphCanvas('landingGraphCanvas', true);
+          return;
+        }
+        const dist = Math.hypot(d.px - portals.bh.x, d.py - portals.bh.y);
+        if (dist <= portals.bh.captureRadius) {
+          updateGraphInspector(d.node.id);
+          startLandingBlackHoleDevour(d.node, { x: d.px, y: d.py });
+          return;
+        }
+        if (!GalaxyFX.reduced && !d.node.isDream) {
+          state.fxCool.set(d.node.id, performance.now());
+          for (let i = 0; i < 24; i++) {
+            const an = Math.random() * 6.2832;
+            const s2 = 35 + Math.random() * 60;
+            state.parts.add(d.px + Math.cos(an) * 10, d.py + 8 + Math.sin(an) * 4, Math.cos(an) * s2, Math.sin(an) * s2 * 0.3 - 8, 1 + Math.random(), 2.5 + Math.random() * 3, 1);
+          }
+        }
+        state.springs.set(d.node.id, {
+          node: d.node,
+          fromX: d.px,
+          fromY: d.py,
+          x: d.px,
+          y: d.py,
+          startMs: performance.now(),
+        });
+        ensureLandingLoopRunning();
+      }
+
+      canvas.addEventListener('pointerup', finishDrag);
+      canvas.addEventListener('pointercancel', finishDrag);
       canvas.addEventListener('mouseleave', () => {
-        if (hoveredGraphNodeId !== null) {
+        if (!state.dragging && hoveredGraphNodeId !== null) {
           hoveredGraphNodeId = null;
-          drawGraphCanvas('landingGraphCanvas', true);
-        }
-      });
-      canvas.addEventListener('click', ev => {
-        const hit = hitNode(ev);
-        if (hit) {
-          updateGraphInspector(hit.id);
-          drawGraphCanvas('landingGraphCanvas', true);
+          canvas.style.cursor = 'grab';
+          if (GalaxyFX.reduced) drawGraphCanvas('landingGraphCanvas', true);
         }
       });
     }
@@ -2382,7 +3394,9 @@
 
     updateGraphInspector('cet');
     bindInteractiveGraph();
+    setupGalaxyObservers();
     drawGraphCanvas('landingGraphCanvas', true);
+    ensureLandingLoopRunning();
     hydrateAuthStatus();
 
     if ('serviceWorker' in navigator) {
